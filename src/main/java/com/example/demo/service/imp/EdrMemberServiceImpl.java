@@ -2,9 +2,11 @@ package com.example.demo.service.imp;
 
 import com.example.demo.dto.EdrMemberDto;
 import com.example.demo.service.EdrMemberService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class EdrMemberServiceImpl implements EdrMemberService {
     @Override
     public List<EdrMemberDto> findAll() {
