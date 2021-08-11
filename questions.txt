@@ -1,39 +1,24 @@
-# Deployment ok
-
-1) own server
-2) aws
-3) google cloud
-
-# SMTP
-
-1) google smtp server - free - ok
-
 # Externi db - EZ DAJTE ME API CYKA
+
+kazdy den proveryat externi db?
+
+oni cerez post dobavlayut?
+
+
 
 1) hardware sun monitor - jak zjistim ze maji hardware?
 2) smlouva sysel
 3) zapojeni fve
-
-# WATT penezenka - EZ CUKA BLYAT
-
-1) udaje jsou stejne jako u klientskeho uctu?
-
-# Faktura, supersmlouva - EZ CYKA
-
-1) VS na zaklade ceho?
-2)Design, podklady?
-
-# Fio banka - LOL EZ
-
-1) pristupne udaje treba
-2) kontrola VS s prichozi castkou
 
 
 ---
 
 SEDNYA:
 
-1) Front tupo bez css, 4isto bootstrap + routing
+1) Frontend: 1) formular
+             2) odeslat supersmlouvu
+             3) controll every day
+             4)
 
 2) Klienty v db
 

@@ -19,9 +19,6 @@ public class WalletEntity {
     String surname;
     String phone;
     String email;
-
-    @Enumerated(EnumType.ORDINAL)
-    WalletClientStatus walletClientStatus;
     Long salesmanId;
     String city;
     String psc;

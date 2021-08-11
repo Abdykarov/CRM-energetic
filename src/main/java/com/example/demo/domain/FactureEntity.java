@@ -17,13 +17,9 @@ public class FactureEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
-    String clientName;
-    String clientSurname;
-    String clientPhone;
-    String clientEmail;
 
-    Date creationDate;
-    Time creationTime;
+    @OneToOne
+    WalletEntity walletEntity;
 
     String variableSymbol;
     String item;
