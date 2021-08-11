@@ -15,6 +15,8 @@ public class WalletEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
+    // or USE CustomerEntity JOIN
+    boolean B2B;
     String name;
     String surname;
     String phone;
@@ -22,13 +24,16 @@ public class WalletEntity {
     Long salesmanId;
     String city;
     String psc;
-    boolean B2B;
+
+    // WALLET ATRIBUTES
     boolean generatedRequestToEdr;
     boolean paidRequestToEdr;
     boolean acceptedRequestToEdr;
+
     boolean generatedFacture;
     boolean paidFacture;
     boolean sendedConfirmationAboutPayment;
+
     boolean HWSunMonitor;
     boolean SyselAgreement;
     boolean connectedFVE;

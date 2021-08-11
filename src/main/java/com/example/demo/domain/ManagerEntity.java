@@ -1,4 +1,4 @@
 package com.example.demo.domain;
 
-public class EdrAcceptionEntity {
+public class ManagerEntity {
 }
