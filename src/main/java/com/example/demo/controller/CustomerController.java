@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @AllArgsConstructor
 @RequestMapping("/edr_api/customer")
@@ -17,6 +19,11 @@ public class CustomerController {
     @GetMapping("{customerId}")
     public CustomerResponseDto getCustomerById(@PathVariable("customerId") Long id){
         return customerService.getCustomerById(id);
+    }
+
+    @GetMapping
+    public List<CustomerResponseDto> getAll(){
+        return customerService.getAll();
     }
 
     @GetMapping("/name/{customerName}")
@@ -35,9 +42,18 @@ public class CustomerController {
         return customerService.updateCustomer(customerRequestDto, customerId);
     }
 
+    @GetMapping("/update/{customerId}/state/{stateName}")
+    public CustomerResponseDto changeCustomerState(@PathVariable Long customerId,
+                                                   @PathVariable String stateName){
+        return customerService.changeCustomerState(customerId, stateName);
+    }
+
+
     @DeleteMapping("/delete/{customerId}")
     public HttpStatus updateCustomer(@PathVariable Long customerId){
         return customerService.deleteCustomer(customerId);
     }
+
+
 
 }

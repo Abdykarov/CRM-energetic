@@ -1,31 +1,36 @@
 package com.example.demo.domain;
 
-
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
-import java.sql.Date;
-import java.sql.Time;
 
 @Entity
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Data
-@Table(name = "facture")
-public class FactureEntity {
+@Table(name = "client_wallet")
+public class AccountEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    Long id;
+    Long walletId;
 
     @OneToOne
-    WalletEntity walletEntity;
+    @JoinColumn(name = "customer_id")
+    CustomerEntity customerEntity;
 
-    String variableSymbol;
-    String item;
-    Integer sumToPay;
-    Integer discount;
+    // WALLET ATRIBUTES
+    boolean generatedRequestToEdr;
+    boolean paidRequestToEdr;
+    boolean acceptedRequestToEdr;
+
     boolean generatedFacture;
     boolean paidFacture;
     boolean sendedConfirmationAboutPayment;
+
+    boolean HWSunMonitor;
+    boolean SyselAgreement;
+    boolean connectedFVE;
+
 }
