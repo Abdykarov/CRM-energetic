@@ -10,27 +10,16 @@ import javax.persistence.*;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Data
 @Table(name = "client_wallet")
-public class AccountEntity {
+public class AccountEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    Long walletId;
+    Long id;
 
     @OneToOne
     @JoinColumn(name = "customer_id")
     CustomerEntity customerEntity;
 
-    // WALLET ATRIBUTES
-    boolean generatedRequestToEdr;
-    boolean paidRequestToEdr;
-    boolean acceptedRequestToEdr;
-
-    boolean generatedFacture;
-    boolean paidFacture;
-    boolean sendedConfirmationAboutPayment;
-
-    boolean HWSunMonitor;
-    boolean SyselAgreement;
-    boolean connectedFVE;
-
+    String login;
+    String password;
 }

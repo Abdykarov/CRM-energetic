@@ -17,16 +17,4 @@ public class SuperContractEntity {
     @JoinColumn(name = "customerId")
     private CustomerEntity customerEntity;
 
-    // WALLET ATRIBUTES
-    boolean generatedRequestToEdr;
-    boolean paidRequestToEdr;
-    boolean acceptedRequestToEdr;
-
-    boolean generatedFacture;
-    boolean paidFacture;
-    boolean sendedConfirmationAboutPayment;
-
-    boolean HWSunMonitor;
-    boolean SyselAgreement;
-    boolean connectedFVE;
 }

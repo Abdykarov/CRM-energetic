@@ -42,7 +42,7 @@ public class EmailServiceImpl implements EmailService {
     public EmailResponseDto sendEmail(EmailRequestDto emailRequestDto) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(emailRequestDto.getFrom());
-        message.setTo(emailRequestDto.getTo());
+        message.setTo(emailRequestDto.getTarget());
         message.setSubject(emailRequestDto.getSubject());
         message.setText(emailRequestDto.getText());
         try{

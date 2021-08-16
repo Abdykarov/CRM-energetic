@@ -13,28 +13,30 @@ import javax.persistence.*;
 @Data
 @Accessors(chain = true)
 @Table(name = "customer")
-public class CustomerEntity {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "customerId")
-    private Long customerId;
-
-    private String name;
-    private String surname;
-    private String phone;
-    private String email;
+public class CustomerEntity extends UserEntity{
 
     @Enumerated(EnumType.ORDINAL)
-    private CustomerState customerState;
+    CustomerState customerState;
 
     // LEAD
-    private String B2B;
+    String B2B;
 
     // POTENTIAL
-    private boolean generatedContract;
-    private boolean sendedContract;
-    private boolean signedContract;
+    boolean generatedContract;
+    boolean sendedContract;
+    boolean signedContract;
 
+    // APPLIED ATRIBUTES
+    boolean generatedRequestToEdr;
+    boolean paidRequestToEdr;
+    boolean acceptedRequestToEdr;
+
+    boolean generatedFacture;
+    boolean paidFacture;
+    boolean sendedConfirmationAboutPayment;
+
+    boolean HWSunMonitor;
+    boolean SyselAgreement;
+    boolean connectedFVE;
 
 }
