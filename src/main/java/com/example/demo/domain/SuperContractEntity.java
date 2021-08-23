@@ -13,8 +13,4 @@ public class SuperContractEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long contractId;
 
-    @OneToOne
-    @JoinColumn(name = "customerId")
-    private CustomerEntity customerEntity;
-
 }

@@ -1,43 +1,6 @@
-# Externi db - EZ DAJTE ME API CYKA
-
-kazdy den proveryat externi db?
-
-oni cerez post dobavlayut?
+DNESKA
 
 
-
-1) hardware sun monitor - jak zjistim ze maji hardware?
-2) smlouva sysel
-3) zapojeni fve
-
-
----
-
-SEDNYA:
-
-1) Frontend: 1) formular
-             2) odeslat supersmlouvu
-             3) controll every day
-             4)
-
-2) Klienty v db
-
-3) Klient ucty
-
-4) Spring roles + jwt
-
-5)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+1) React auth
+2) Admin page
+3)

@@ -5,7 +5,7 @@ services:
     container_name: postgres-crm
     image: library/postgres:13.1
     ports:
-      - "1337:5432"
+      - "1338:5432"
     environment:
       - POSTGRES_USER=abdykili
       - POSTGRES_PASSWORD=281001ilyas
