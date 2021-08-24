@@ -1,13 +1,23 @@
-import React from 'react';
+import React, {useContext} from 'react';
+import {Context} from "../index";
+import {observer} from "mobx-react-lite";
+import {useHistory} from "react-router-dom";
+import {DASHBOARD_ROUTE} from "../utils/const";
 
-const Auth = () => {
+const Auth = observer(() => {
+    const {user} = useContext(Context);
+    let history = useHistory()
+    const auth = async () => {
+        user.setUser(user)
+        user.setIsAuth(true)
+        localStorage.setItem('user', user.user())
+        history.push(DASHBOARD_ROUTE)
+    }
     return (
             <div className="auth-fluid">
             <div className="auth-fluid-form-box">
                 <div className="align-items-center d-flex h-100">
                     <div className="card-body">
-
-
                         <h4 className="mt-0">Sign In</h4>
                         <p className="text-muted mb-4">Enter your email address and password to access account.</p>
 
@@ -38,7 +48,7 @@ const Auth = () => {
                                 </div>
                             </div>
                             <div className="text-center d-grid">
-                                <button className="btn btn-primary" type="submit">Log In</button>
+                                <button onClick={auth} className="btn btn-primary" type="submit">Log In</button>
                             </div>
 
                         </form>
@@ -62,6 +72,6 @@ const Auth = () => {
             </div>
         </div>
     );
-};
+});
 
 export default Auth;

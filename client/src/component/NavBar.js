@@ -69,7 +69,7 @@ const NavBar = () => {
                     <img src="/images/logo-sm.png" alt="" height="22"/>
                 </span>
                                 <span className="logo-lg">
-                    <img src="/images/logo-light.png" alt="" height="20"/>
+                    <img src="/images/logoEDR.png" alt="" width={200}/>
                 </span>
                             </a>
                         </div>

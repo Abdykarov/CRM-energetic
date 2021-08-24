@@ -4,8 +4,8 @@ import {
     CONTACTS_ROUTE, DASHBOARD_ROUTE,
     EDR_ROUTE,
     LEAD_ROUTE,
-    LOGIN_ROUTE,
-    PROFILE_ROUTE, REGISTRATION_ROUTE,
+    LOGIN_ROUTE, MANAGER_ROUTE,
+    PROFILE_ROUTE, REGISTRATION_ROUTE, SALESMAN_ROUTE,
     WATT_ROUTE
 } from "./utils/const";
 import Lead from "./page/Lead";
@@ -16,6 +16,8 @@ import Watt from "./page/Watt";
 import Auth from "./page/Auth";
 import Registration from "./page/Registration";
 import Dashboard from "./page/Dashboard";
+import Manager from "./page/Manager";
+import Salesman from "./page/Salesman";
 
 export const authRoutes = [
     {
@@ -41,6 +43,14 @@ export const authRoutes = [
     {
         path: WATT_ROUTE,
         Component: Watt
+    },
+    {
+        path: MANAGER_ROUTE,
+        Component: Manager
+    },
+    {
+        path: SALESMAN_ROUTE,
+        Component: Salesman
     },
     {
         path: DASHBOARD_ROUTE,

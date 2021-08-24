@@ -17,11 +17,11 @@ public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
+    String username;
     String name;
     String surname;
     String phone;
     String email;
-    String login;
     String password;
 
     @ManyToOne
