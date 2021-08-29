@@ -2,6 +2,7 @@ package com.example.demo.service.imp;
 
 import com.example.demo.domain.RoleEntity;
 import com.example.demo.domain.UserEntity;
+import com.example.demo.dto.AuthRequestDto;
 import com.example.demo.dto.UserRequestDto;
 import com.example.demo.dto.UserResponseDto;
 import com.example.demo.mapper.UserMapper;
@@ -16,6 +17,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.management.relation.Role;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -40,23 +42,30 @@ public class UserServiceImp implements UserDetailsService, UserService {
         if(user == null){
             throw new UsernameNotFoundException("Username doesnt exist");
         }
-        return new User(user.getEmail(), user.getPassword(), getAuthority(user));
+        return new User(user.getUsername(), user.getPassword(), getAuthority(user));
     }
 
     private Set<SimpleGrantedAuthority> getAuthority(UserEntity user) {
         Set<SimpleGrantedAuthority> authorities = new HashSet<>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_" + user.getRole()));
+        user.getRoles().forEach(role -> {
+            authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getName()));
+        });
         return authorities;
     }
 
     @Override
-    public UserResponseDto saveContact(UserRequestDto user) {
-        UserEntity userEntity = userMapper.toEntity(user);
+    public UserResponseDto saveContact(AuthRequestDto user) {
+        UserEntity userEntity = new UserEntity()
+                .setUsername(user.getUsername());
+
         userEntity.setPassword(passwordEncoder.encode(user.getPassword()));
 
-        RoleEntity role = roleService.findByName("New");
-
-        userEntity.setRole(role);
+        RoleEntity role1 = roleService.findByName("CONTACT");
+        RoleEntity role2 = roleService.findByName("NEW");
+        Set<RoleEntity> roleSet = new HashSet<>();
+        roleSet.add(role1);
+        roleSet.add(role2);
+        userEntity.setRoles(roleSet);
         UserEntity save = userRepository.save(userEntity);
 
         return userMapper.toResponse(save);

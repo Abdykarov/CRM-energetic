@@ -7,7 +7,6 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class UserRequestDto {
 
-    private String username;
-    private String password;
+    private Long id;
 
 }

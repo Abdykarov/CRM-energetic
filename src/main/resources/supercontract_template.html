@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <style>
+        #header {
+            display: block;
+            position: running(header);
+        }
+        #footer {
+            display: block;
+            position: running(footer);
+        }
+
+        #content {
+            page-break-after: always;
+        }
+
+        .pagenumber:before {
+            content: counter(page);
+        }
+
+        .pagecount:before {
+            content: counter(pages);
+        }
+
+        @page {
+            @top-center { content: element(header) }
+        }
+
+        @page {
+            @bottom-center { content: element(footer) }
+        }
+
+        @page {
+            margin-bottom: 5cm;
+            margin-left: 3.5cm;
+            margin-right: 0.5cm;
+        }
+    </style>
+</head>
+<body>
+<div id="header">
+   <h1>Header</h1>
+</div>
+<div id="footer">
+    <h1>Footer</h1><br />
+    Page <span class="pagenumber"></span> of <span class="pagecount"></span>
+</div>
+<div id="content">
+    <h1 style="text-align: center" th:text="CENTER"></h1>
+    <h3 th:text="'Jméno a příjmení:' + ${name} + ' ' + ${surname}"></h3>
+    <h4 th:text="'e-mail: ' + ${email}"></h4>
+</div>
+</body>
+</html>

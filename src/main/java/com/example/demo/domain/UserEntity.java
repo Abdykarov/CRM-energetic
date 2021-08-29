@@ -24,9 +24,9 @@ public class UserEntity {
     String email;
     String password;
 
-    @ManyToOne
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "roleId")
-    RoleEntity role;
+    Set<RoleEntity> roles;
 
     // LEAD
     String B2B;
