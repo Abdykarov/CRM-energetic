@@ -104,12 +104,14 @@ public class UserController {
         return ResponseEntity.ok(new AuthToken(token));
     }
 
-    @PostMapping("/account/")
-    public AccountResponseDto createAccount(@RequestBody AuthRequestDto authRequestDto){
-        return userService.saveContact(authRequestDto);
+    @PostMapping("/admin/")
+    public AccountResponseDto createAdmin(@RequestBody AuthRequestDto authRequestDto){
+        return userService.saveAdmin(authRequestDto);
     }
 
-    @PostMapping("/contact/")
-    public C
+    @PostMapping("/manager/")
+    public AccountResponseDto createManager(@RequestBody AuthRequestDto authRequestDto){
+        return userService.saveManager(authRequestDto);
+    }
 
 }

@@ -44,8 +44,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/edr_api/user/refresh",
                         "/edr_api/user/login/",
                         "/edr_api/user/login",
-                        "/edr_api/user/account",
-                        "/edr_api/user/account/").permitAll()
+                        "/edr_api/user/admin",
+                        "/edr_api/user/admin/").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedEntryPoint).and()

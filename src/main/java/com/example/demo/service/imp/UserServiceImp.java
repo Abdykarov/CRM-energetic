@@ -2,9 +2,8 @@ package com.example.demo.service.imp;
 
 import com.example.demo.domain.RoleEntity;
 import com.example.demo.domain.UserEntity;
-import com.example.demo.dto.AuthRequestDto;
-import com.example.demo.dto.UserRequestDto;
-import com.example.demo.dto.UserResponseDto;
+import com.example.demo.dto.*;
+import com.example.demo.mapper.AccountMapper;
 import com.example.demo.mapper.UserMapper;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.UserService;
@@ -16,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.management.relation.Role;
 import java.util.ArrayList;
@@ -31,6 +31,8 @@ public class UserServiceImp implements UserDetailsService, UserService {
     private final UserRepository userRepository;
 
     private final UserMapper userMapper;
+
+    private final AccountMapper accountMapper;
 
     private final RoleServiceImp roleService;
 
@@ -54,90 +56,35 @@ public class UserServiceImp implements UserDetailsService, UserService {
     }
 
     @Override
-    public UserResponseDto saveContact(AuthRequestDto user) {
+    @Transactional
+    public AccountResponseDto saveAdmin(AuthRequestDto user) {
         UserEntity userEntity = new UserEntity()
                 .setUsername(user.getUsername());
 
         userEntity.setPassword(passwordEncoder.encode(user.getPassword()));
 
-        RoleEntity role1 = roleService.findByName("CONTACT");
-        RoleEntity role2 = roleService.findByName("NEW");
+        RoleEntity role = roleService.findByName("ADMIN");
         Set<RoleEntity> roleSet = new HashSet<>();
-        roleSet.add(role1);
-        roleSet.add(role2);
+        roleSet.add(role);
         userEntity.setRoles(roleSet);
         UserEntity save = userRepository.save(userEntity);
 
-        return userMapper.toResponse(save);
-    }
-
-//    @Override
-//    public UserResponseDto saveLead(UserRequestDto user) {
-//        UserEntity userEntity = userMapper.toEntity(user);
-//        userEntity.setPassword(passwordEncoder.encode(user.getPassword()));
-//
-//        RoleEntity role = roleService.findByName("Lead");
-//        Set<Role> roleSet = new HashSet<>();
-//        roleSet.add(role);
-//
-//        if(nUser.getEmail().split("@")[1].equals("admin.edu")){
-//            role = roleService.findByName("ADMIN");
-//            roleSet.add(role);
-//        }
-//
-//        nUser.setRole(roleSet);
-//        return userRepository.save(nUser);
-//    }
-//
-//    @Override
-//    public UserResponseDto saveManager(UserRequestDto user) {
-//        UserEntity userEntity = userMapper.toEntity(user);
-//        userEntity.setPassword(passwordEncoder.encode(user.getPassword()));
-//
-//        RoleEntity role = roleService.findByName("Manager");
-//        Set<Role> roleSet = new HashSet<>();
-//        roleSet.add(role);
-//
-//        if(nUser.getEmail().split("@")[1].equals("admin.edu")){
-//            role = roleService.findByName("ADMIN");
-//            roleSet.add(role);
-//        }
-//
-//        nUser.setRole(roleSet);
-//        return userRepository.save(nUser);
-//    }
-//
-//    @Override
-//    public UserResponseDto saveSalesman(UserRequestDto user) {
-//        UserEntity userEntity = userMapper.toEntity(user);
-//        userEntity.setPassword(passwordEncoder.encode(user.getPassword()));
-//
-//        RoleEntity role = roleService.findByName("New");
-//        Set<Role> roleSet = new HashSet<>();
-//        roleSet.add(role);
-//
-//        if(nUser.getEmail().split("@")[1].equals("admin.edu")){
-//            role = roleService.findByName("ADMIN");
-//            roleSet.add(role);
-//        }
-//
-//        nUser.setRole(roleSet);
-//        return userRepository.save(nUser);
-//    }
-
-
-    @Override
-    public List<UserResponseDto> findAll() {
-        List<UserEntity> all = userRepository.findAll();
-        List<UserResponseDto> responseDtos = all.stream()
-                .map(user -> userMapper.toResponse(user))
-                .collect(Collectors.toList());
-        return responseDtos;
+        return accountMapper.toResponse(save);
     }
 
     @Override
-    public UserResponseDto findByEmail(String email) {
-        UserEntity userEntity = userRepository.findByEmail(email);
-        return userMapper.toResponse(userEntity);
+    public AccountResponseDto saveManager(AuthRequestDto user) {
+        return null;
     }
+
+    @Override
+    public SalesmanRequestDto saveSalesman(SalesmanRequestDto user) {
+        return null;
+    }
+
+    @Override
+    public UserResponseDto saveNewContact(SalesmanRequestDto user) {
+        return null;
+    }
+
 }
