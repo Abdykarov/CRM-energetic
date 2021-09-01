@@ -7,8 +7,6 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.SignatureException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,13 +15,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 @AllArgsConstructor
 @RestController
@@ -41,19 +38,6 @@ public class UserController {
     private TokenProvider tokenProvider;
 
     private UserServiceImp userService;
-
-    @PreAuthorize("hasRole('ROLE_USER')")
-    @RequestMapping(value="/userping", method = RequestMethod.GET)
-    public String userPing(){
-        return "Any User Can Read This";
-    }
-
-    
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @RequestMapping(value="/adminping", method = RequestMethod.GET)
-    public String adminPing(){
-        return "Any Admin Can Read This";
-    }
 
     @GetMapping("/refresh/")
     public ResponseEntity<?> refreshToken(HttpServletRequest request, HttpServletResponse response) {
@@ -109,9 +93,60 @@ public class UserController {
         return userService.saveAdmin(authRequestDto);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/manager/")
     public AccountResponseDto createManager(@RequestBody AuthRequestDto authRequestDto){
         return userService.saveManager(authRequestDto);
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')")
+    @PostMapping("/salesman/")
+    public SalesmanResponseDto createSalesman(@RequestBody SalesmanRequestDto salesmanRequestDto){
+        return userService.saveSalesman(salesmanRequestDto);
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_SALESMAN')")
+    @PostMapping("/contact/")
+    public ContactResponseDto createContact(@RequestBody ContactRequestDto contactRequestDto){
+        return userService.saveContact(contactRequestDto);
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')")
+    @GetMapping("/contact/contacts")
+    public List<ContactResponseDto> getContacts(){
+        return userService.getContacts();
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')")
+    @GetMapping("/contact/leads")
+    public List<LeadResponseDto> getLeads(){
+        return userService.getContacts();
+    }
+
+
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')")
+    @GetMapping("/contact/{contactId}")
+    public ContactResponseDto getContact(@PathVariable Long contactId){
+        return userService.getContact(contactId);
+    }
+
+
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_SALESMAN')")
+    @GetMapping("/contact/contacts/{salesmanId}")
+    public List<ContactResponseDto> getSalesmanContacts(@PathVariable Long salesmanId){
+        return userService.getSalesmanContacts(salesmanId);
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_SALESMAN','ROLE_EDR')")
+    @GetMapping("/account/{username}")
+    public AccountResponseDto getAccountByUsername(@PathVariable("username") String username){
+        return userService.getAccountByUsername(username);
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_SALESMAN','ROLE_EDR')")
+    @GetMapping("/{id}")
+    public UserResponseDto getUser(@PathVariable("id") Long userId){
+        return userService.findById(userId);
     }
 
 }

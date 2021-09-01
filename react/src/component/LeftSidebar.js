@@ -82,12 +82,12 @@ const LeftSidebar = observer(() => {
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#sidebarDashboards" data-bs-toggle="collapse">
+                                    <a aria-expanded={true} href="#sidebarDashboards" data-bs-toggle="collapse">
                                         <i className="fe-user"></i>
                                         <span> Kontakty </span>
                                         <span className="menu-arrow"></span>
                                     </a>
-                                    <div className="collapse" id="sidebarDashboards">
+                                    <div className="collapse show" id="sidebarDashboards">
                                         <ul className="nav-second-level">
                                             <li>
                                                 <a href={CONTACTS_ROUTE}>Kontakty</a>

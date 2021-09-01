@@ -16,7 +16,6 @@ const Auth = observer(() => {
         try {
             let data;
             data = await login(username, password);
-            console.log(data)
             user.setUser(user)
             user.setIsAuth(true)
             history.push(DASHBOARD_ROUTE)

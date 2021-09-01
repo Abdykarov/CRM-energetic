@@ -23,8 +23,10 @@ public class UserEntity {
     String phone;
     String email;
     String password;
-
-
+    String city;
+    String jobPosition;
+    String ico;
+    String companyName;
     Long salesmanId;
 
     @ManyToMany(fetch = FetchType.EAGER)

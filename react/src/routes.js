@@ -2,17 +2,16 @@ import Admin from "./page/Admin";
 import {
     ACCEPTED_ROUTE,
     ADMIN_ROUTE, CONTACT_PROFILE_ROUTE,
-    CONTACTS_ROUTE, CURRENT_ROUTE, DASHBOARD_ROUTE,
+    CONTACTS_ROUTE, CREATE_CONTACT_ROUTE, CURRENT_ROUTE, DASHBOARD_ROUTE,
     EDR_ROUTE, FACTURE_ROUTE, INBOX_ROUTE,
     LEAD_ROUTE,
     LOGIN_ROUTE, MANAGER_ROUTE, POTENTIAL_ROUTE,
-    PROFILE_ROUTE, REGISTRATION_ROUTE, SALESMAN_ROUTE,
+    REGISTRATION_ROUTE, SALESMAN_ROUTE,
     WATT_ROUTE
 } from "./utils/const";
 import Lead from "./page/Lead";
 import Contacts from "./page/Contacts";
 import Edr from "./page/Edr";
-import UserProfile from "./page/UserProfile";
 import Watt from "./page/Watt";
 import Auth from "./page/Auth";
 import Registration from "./page/Registration";
@@ -25,6 +24,7 @@ import Accepted from "./page/Accepted";
 import ContactProfile from "./page/ContactProfile";
 import Inbox from "./page/Inbox";
 import Facture from "./page/Facture";
+import CreationForm from "./page/CreationForm";
 
 export const authRoutes = [
     {
@@ -56,10 +56,6 @@ export const authRoutes = [
         Component: Accepted
     },
     {
-        path: PROFILE_ROUTE + '/:id',
-        Component: UserProfile
-    },
-    {
         path: CONTACT_PROFILE_ROUTE + '/:id',
         Component: ContactProfile
     },
@@ -82,6 +78,10 @@ export const authRoutes = [
     {
         path: FACTURE_ROUTE,
         Component: Facture
+    },
+    {
+        path: CREATE_CONTACT_ROUTE,
+        Component: CreationForm
     },
     {
         path: DASHBOARD_ROUTE,

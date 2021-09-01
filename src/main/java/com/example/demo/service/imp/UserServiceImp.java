@@ -4,6 +4,8 @@ import com.example.demo.domain.RoleEntity;
 import com.example.demo.domain.UserEntity;
 import com.example.demo.dto.*;
 import com.example.demo.mapper.AccountMapper;
+import com.example.demo.mapper.ContactMapper;
+import com.example.demo.mapper.SalesmanMapper;
 import com.example.demo.mapper.UserMapper;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.UserService;
@@ -18,27 +20,25 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.management.relation.Role;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import javax.persistence.EntityNotFoundException;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service(value = "userService")
 @AllArgsConstructor
 public class UserServiceImp implements UserDetailsService, UserService {
 
-    private final UserRepository userRepository;
-
     private final UserMapper userMapper;
-
+    private final UserRepository userRepository;
+    private final ContactMapper contactMapper;
+    private final SalesmanMapper salesmanMapper;
     private final AccountMapper accountMapper;
-
     private final RoleServiceImp roleService;
-
     private final BCryptPasswordEncoder passwordEncoder;
 
     @Override
+    @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException{
         UserEntity user = userRepository.findByUsername(username);
         if(user == null){
@@ -73,18 +73,89 @@ public class UserServiceImp implements UserDetailsService, UserService {
     }
 
     @Override
+    @Transactional
     public AccountResponseDto saveManager(AuthRequestDto user) {
+        UserEntity userEntity = new UserEntity()
+                .setUsername(user.getUsername());
+
+        userEntity.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        RoleEntity role = roleService.findByName("MANAGER");
+        Set<RoleEntity> roleSet = new HashSet<>();
+        roleSet.add(role);
+        userEntity.setRoles(roleSet);
+        UserEntity save = userRepository.save(userEntity);
+
+        return accountMapper.toResponse(save);
+    }
+
+    @Override
+    @Transactional
+    public SalesmanResponseDto saveSalesman(SalesmanRequestDto user) {
+        UserEntity userEntity = salesmanMapper.toEntity(user);
+
+        userEntity.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        RoleEntity role = roleService.findByName("SALESMAN");
+        Set<RoleEntity> roleSet = new HashSet<>();
+        roleSet.add(role);
+        userEntity.setRoles(roleSet);
+        UserEntity save = userRepository.save(userEntity);
+
+        return salesmanMapper.toResponse(save);
+    }
+
+    @Override
+    @Transactional
+    public ContactResponseDto saveContact(ContactRequestDto contactRequestDto) {
+        UserEntity userEntity = contactMapper.toEntity(contactRequestDto);
+        RoleEntity role = roleService.findByName("NEW");
+        Set<RoleEntity> roleSet = new HashSet<>();
+        roleSet.add(role);
+        userEntity.setRoles(roleSet);
+        UserEntity save = userRepository.save(userEntity);
+        return contactMapper.toResponse(save);
+    }
+
+    @Override
+    public List<ContactResponseDto> getContacts() {
+        List<UserEntity> newContacts = userRepository.findByRoles_Name("NEW");
+        List<UserEntity> oldContacts = userRepository.findByRoles_Name("OLD");
+        List<ContactResponseDto> collectNew = newContacts.stream()
+                .map(user -> contactMapper.toResponse(user))
+                .collect(Collectors.toList());
+        List<ContactResponseDto> collectOld = oldContacts.stream()
+                .map(user -> contactMapper.toResponse(user))
+                .collect(Collectors.toList());
+        List<ContactResponseDto> collect = Stream.concat(collectNew.stream(), collectOld.stream())
+                .collect(Collectors.toList());
+        return collect;
+    }
+
+    @Override
+    public List<ContactResponseDto> getSalesmanContacts(Long salesmanId) {
         return null;
     }
 
     @Override
-    public SalesmanRequestDto saveSalesman(SalesmanRequestDto user) {
-        return null;
+    public ContactResponseDto getContact(Long contactId) {
+        final UserEntity userEntity = userRepository.findById(contactId)
+                .orElseThrow(() -> new EntityNotFoundException("Contact doesnt exist"));
+        return contactMapper.toResponse(userEntity);
     }
 
     @Override
-    public UserResponseDto saveNewContact(SalesmanRequestDto user) {
-        return null;
+    public AccountResponseDto getAccountByUsername(String username) {
+        final UserEntity userEntity = userRepository.findByUsername(username);
+
+        return accountMapper.toResponse(userEntity);
+    }
+
+    @Override
+    public UserResponseDto findById(Long userId) {
+        final UserEntity userEntity = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("Not found"));
+        return userMapper.toResponse(userEntity);
     }
 
 }

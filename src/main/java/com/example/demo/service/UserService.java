@@ -8,7 +8,16 @@ import java.util.List;
 public interface UserService {
     AccountResponseDto saveAdmin(AuthRequestDto user);
     AccountResponseDto saveManager(AuthRequestDto user);
-    SalesmanRequestDto saveSalesman(SalesmanRequestDto user);
-    UserResponseDto saveNewContact(SalesmanRequestDto user);
+    SalesmanResponseDto saveSalesman(SalesmanRequestDto user);
+    ContactResponseDto saveContact(ContactRequestDto user);
 
+    List<ContactResponseDto> getContacts();
+
+    List<ContactResponseDto> getSalesmanContacts(Long salesmanId);
+
+    ContactResponseDto getContact(Long contactId);
+
+    AccountResponseDto getAccountByUsername(String username);
+
+    UserResponseDto findById(Long userId);
 }

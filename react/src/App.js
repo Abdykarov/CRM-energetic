@@ -14,9 +14,11 @@ const App = observer(() => {
 
     useEffect(() => {
         auth().then(data => {
-            user.setUser(true)
+            user.setUser(data)
             user.setRole(data.roles)
             user.setIsAuth(true)
+            user.setUsername(data.sub)
+            console.log(user)
         }).finally(() => setLoading(false))
     }, [])
 

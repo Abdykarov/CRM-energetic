@@ -45,7 +45,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/edr_api/user/login/",
                         "/edr_api/user/login",
                         "/edr_api/user/admin",
-                        "/edr_api/user/admin/").permitAll()
+                        "/edr_api/user/admin/",
+                        "/swagger-ui.html/**",
+                        "/configuration/**",
+                        "/swagger-resources/**",
+                        "/swagger-ui/**",
+                        "/api-docs/**",
+                        "/v2/api-docs").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedEntryPoint).and()

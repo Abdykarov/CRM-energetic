@@ -44,7 +44,7 @@ CREATE  TABLE user_entity_roles
     roles_id       int8 not null,
     PRIMARY KEY (user_entity_id, roles_id)
 );
-CREATE  SEQUENCE hibernate_sequence start 100 increment 1;
+create sequence hibernate_sequence start 1 increment 1;
 ALTER TABLE IF EXISTS user_entity_roles
     ADD CONSTRAINT FKr70hb6wpq5vq5ennenkk12nqk FOREIGN KEY (roles_id) REFERENCES role_entity;
 ALTER TABLE IF EXISTS user_entity_roles

@@ -1,7 +1,14 @@
 /* eslint-disable */
-import React from 'react';
+import React, {useContext, useEffect} from 'react';
+import {Context} from "../index";
+import {fetchContacts, fetchLeads} from "../http/contactAPI";
 
 const Lead = () => {
+    const {lead} = useContext(Context)
+    useEffect(() => {
+        fetchLeads().then(data => lead.setContacts(data))
+    }, [])
+
     return (
         <div>
             <div className="content-page">
