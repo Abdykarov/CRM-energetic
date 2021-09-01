@@ -4,16 +4,17 @@ import {Context} from "../index";
 import {Row} from "react-bootstrap";
 import ContactItem from "./ContactItem";
 import LeadItem from "./LeadItem";
+import PotentialItem from "./PotentialItem";
 
-const LeadTable = observer(() => {
-    const {lead} = useContext(Context)
+const PotentialTable = observer(() => {
+    const {potential} = useContext(Context)
     return (
         <tbody>
-        {lead.contacts.map(contact =>
-            <LeadItem key={contact.id} contact={contact}/>
+        {potential.contacts.map(contact =>
+            <PotentialItem key={contact.id} contact={contact}/>
         )}
         </tbody>
     );
 });
 
-export default LeadTable;
+export default PotentialTable;

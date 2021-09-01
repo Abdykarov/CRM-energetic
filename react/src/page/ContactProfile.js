@@ -1,15 +1,26 @@
 /* eslint-disable */
 import React, {useContext, useEffect, useState} from 'react';
 import {Context} from "../index";
-import {fetchContacts, fetchUserById} from "../http/contactAPI";
-import {useParams} from "react-router-dom";
+import {
+    fetchContacts,
+    fetchUserById,
+    updateToAccepted,
+    updateToCurrent, updateToEdr,
+    updateToLead,
+    updateToPotential
+} from "../http/contactAPI";
+import {useHistory, useParams} from "react-router-dom";
 import {DASHBOARD_ROUTE} from "../utils/const";
+import {login} from "../http/userAPI";
+import {observer} from "mobx-react-lite";
 
-const ContactProfile = () => {
+const ContactProfile = observer(() => {
     const {user} = useContext(Context)
     const [contact, setContact] = useState({info: []})
     const [role,setRole] = useState('')
     const {id} = useParams()
+    const history = useHistory()
+
     useEffect(() => {
         fetchUserById(id).then(data => {
             setContact(data)
@@ -17,8 +28,55 @@ const ContactProfile = () => {
         })
     }, [])
 
-    console.log(contact)
+    const changeToLead = async () => {
+        try {
+            let response
+            response = await updateToLead(id)
+            window.location.reload();
+        } catch (e) {
+            alert(e.response.data.message)
+        }
+    }
 
+    const changeToPotential = async () => {
+        try {
+            let response
+            response = await updateToPotential(id)
+            window.location.reload();
+        } catch (e) {
+            alert(e.response.data.message)
+        }
+    }
+
+    const changeToCurrent = async () => {
+        try {
+            let response
+            response = await updateToCurrent(id)
+            window.location.reload();
+        } catch (e) {
+            alert(e.response.data.message)
+        }
+    }
+
+    const changeToAccepted = async () => {
+        try {
+            let response
+            response = await updateToAccepted(id)
+            window.location.reload();
+        } catch (e) {
+            alert(e.response.data.message)
+        }
+    }
+
+    const changeToEdr = async () => {
+        try {
+            let response
+            response = await updateToEdr(id)
+            window.location.reload();
+        } catch (e) {
+            alert(e.response.data.message)
+        }
+    }
     return (
         <div>
                 <div className="content-page">
@@ -241,7 +299,7 @@ const ContactProfile = () => {
                                                                 (role === "NEW")?
                                                                     <div className="row">
                                                                        <div className="col-md-6">
-                                                                           <button type="button"
+                                                                           <button onClick={changeToLead} type="button"
                                                                                    className="mb-3 btn btn-primary waves-effect waves-light">Změnit stav na Lead
 
                                                                            </button>
@@ -263,7 +321,7 @@ const ContactProfile = () => {
                                                                 (role === "OLD")?
                                                                     <div className="row">
                                                                         <div className="col-md-6">
-                                                                            <button type="button"
+                                                                            <button onClick={changeToLead} type="button"
                                                                                     className="mb-3 btn btn-primary waves-effect waves-light">Změnit stav na Lead
 
                                                                             </button>
@@ -285,7 +343,7 @@ const ContactProfile = () => {
                                                                 (role === "LEAD")?
                                                                     <div className="row">
                                                                         <div className="col-md-6">
-                                                                            <button type="button"
+                                                                            <button onClick={changeToPotential} type="button"
                                                                                     className="mb-3 btn btn-primary waves-effect waves-light">Změnit stav na Příležitosti
 
                                                                             </button>
@@ -307,7 +365,7 @@ const ContactProfile = () => {
                                                                 (role === "POTENTIAL")?
                                                                     <div className="row">
                                                                         <div className="col-md-6">
-                                                                            <button type="button"
+                                                                            <button onClick={changeToCurrent} type="button"
                                                                                     className="mb-3 btn btn-primary waves-effect waves-light">Změnit stav na Stavající klient
 
                                                                             </button>
@@ -329,7 +387,7 @@ const ContactProfile = () => {
                                                                 (role === "CURRENT")?
                                                                     <div className="row">
                                                                         <div className="col-md-6">
-                                                                            <button type="button"
+                                                                            <button onClick={changeToAccepted} type="button"
                                                                                     className="mb-3 btn btn-primary waves-effect waves-light">Změnit stav na Přihlášený klient
 
                                                                             </button>
@@ -351,7 +409,7 @@ const ContactProfile = () => {
                                                                 (role === "ACCEPTED")?
                                                                     <div className="row">
                                                                         <div className="col-md-6">
-                                                                            <button type="button"
+                                                                            <button onClick={changeToEdr} type="button"
                                                                                     className="mb-3 btn btn-primary waves-effect waves-light">Změnit stav na EDR a odeslat odkaz na registraci v sýstemu
 
                                                                             </button>
@@ -464,6 +522,6 @@ const ContactProfile = () => {
                 </div>
         </div>
     );
-};
+});
 
 export default ContactProfile;

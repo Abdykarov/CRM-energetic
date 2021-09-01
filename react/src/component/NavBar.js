@@ -10,7 +10,10 @@ import {fetchContacts, fetchUserByUsername} from "../http/contactAPI";
 const NavBar = observer(() => {
     const {user} = useContext(Context)
     useEffect(() => {
-        fetchUserByUsername(user.username).then(data => user.setUser(data))
+        fetchUserByUsername(user.username).then(data => {
+            user.setUser(data)
+            user.setId(data.id)
+        })
     }, [])
     const click = async () => {
         localStorage.removeItem('token')
@@ -41,7 +44,7 @@ const NavBar = observer(() => {
                                         <h6 className="text-overflow m-0">Dobrý den {user.username} !</h6>
                                     </div>
 
-                                    <a href={CONTACT_PROFILE_ROUTE + user.id} className="dropdown-item notify-item">
+                                    <a href={CONTACT_PROFILE_ROUTE + '/'+ user.id} className="dropdown-item notify-item">
                                         <i className="fe-user"></i>
                                         <span>Osobní stranka</span>
                                     </a>

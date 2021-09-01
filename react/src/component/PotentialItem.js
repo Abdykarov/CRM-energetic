@@ -2,9 +2,9 @@ import React from 'react';
 import {useHistory} from "react-router-dom";
 import {CONTACT_PROFILE_ROUTE} from "../utils/const";
 
-const ContactItem = ({contact}) => {
+const PotentialItem = ({contact}) => {
     const history = useHistory()
-    console.log(contact)
+    console.log(contact.signedContract)
     return (
         <tr>
             <td>
@@ -35,7 +35,7 @@ const ContactItem = ({contact}) => {
                 <span className="badge bg-soft-secondary text-secondary">{contact.roles[0].name}</span>
             </td>
             <td>
-                {contact.salesmanId}
+                {contact.salesManId}
             </td>
             <td>
                 {contact.companyName}
@@ -47,6 +47,10 @@ const ContactItem = ({contact}) => {
                 {contact.city}
             </td>
             <td>{contact.ico}</td>
+            <td>{contact.b2B}</td>
+            <td>{contact.generatedContract ? 'Ano' : 'Ne'}</td>
+            <td>{contact.sendedContract ? 'Ano' : 'Ne'}</td>
+            <td>{contact.signedContract ? 'Ano' : 'Ne'}</td>
             <td>
                 <a href={CONTACT_PROFILE_ROUTE + '/'+ contact.id} className="action-icon"> <i
                     className="mdi mdi-square-edit-outline"></i></a>
@@ -55,4 +59,4 @@ const ContactItem = ({contact}) => {
     );
 };
 
-export default ContactItem;
+export default PotentialItem;

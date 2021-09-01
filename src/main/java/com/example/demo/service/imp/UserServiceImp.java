@@ -3,10 +3,8 @@ package com.example.demo.service.imp;
 import com.example.demo.domain.RoleEntity;
 import com.example.demo.domain.UserEntity;
 import com.example.demo.dto.*;
-import com.example.demo.mapper.AccountMapper;
-import com.example.demo.mapper.ContactMapper;
-import com.example.demo.mapper.SalesmanMapper;
-import com.example.demo.mapper.UserMapper;
+import com.example.demo.mapper.*;
+import com.example.demo.repository.RoleRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.UserService;
 import lombok.AllArgsConstructor;
@@ -30,11 +28,17 @@ import java.util.stream.Stream;
 public class UserServiceImp implements UserDetailsService, UserService {
 
     private final UserMapper userMapper;
+    private final LeadMapper leadMapper;
     private final UserRepository userRepository;
     private final ContactMapper contactMapper;
     private final SalesmanMapper salesmanMapper;
     private final AccountMapper accountMapper;
+    private final PotentialMapper potentialMapper;
+    private final CurrentMapper currentMapper;
+    private final AcceptedMapper acceptedMapper;
+    private final EdrMapper edrMapper;
     private final RoleServiceImp roleService;
+    private final RoleRepository roleRepository;
     private final BCryptPasswordEncoder passwordEncoder;
 
     @Override
@@ -131,6 +135,114 @@ public class UserServiceImp implements UserDetailsService, UserService {
                 .collect(Collectors.toList());
         return collect;
     }
+
+    @Override
+    public List<LeadResponseDto> getLeads() {
+        List<UserEntity> leadEntities = userRepository.findByRoles_Name("LEAD");
+        List<LeadResponseDto> collection = leadEntities.stream()
+                .map(user -> leadMapper.toResponse(user))
+                .collect(Collectors.toList());
+        return collection;
+    }
+
+    @Override
+    public List<PotentialResponseDto> getPotentials() {
+        List<UserEntity> leadEntities = userRepository.findByRoles_Name("POTENTIAL");
+        List<PotentialResponseDto> collection = leadEntities.stream()
+                .map(user -> potentialMapper.toResponse(user))
+                .collect(Collectors.toList());
+        return collection;
+    }
+
+    @Override
+    public List<CurrentResponseDto> getCurrents() {
+        List<UserEntity> leadEntities = userRepository.findByRoles_Name("CURRENT");
+        List<CurrentResponseDto> collection = leadEntities.stream()
+                .map(user -> currentMapper.toResponse(user))
+                .collect(Collectors.toList());
+        return collection;
+    }
+
+    @Override
+    public List<AcceptedResponseDto> getAccepted() {
+        List<UserEntity> leadEntities = userRepository.findByRoles_Name("ACCEPTED");
+        List<AcceptedResponseDto> collection = leadEntities.stream()
+                .map(user -> acceptedMapper.toResponse(user))
+                .collect(Collectors.toList());
+        return collection;
+    }
+
+    @Override
+    public List<EdrResponseDto> getEdr() {
+        List<UserEntity> leadEntities = userRepository.findByRoles_Name("EDR");
+        List<EdrResponseDto> collection = leadEntities.stream()
+                .map(user -> edrMapper.toResponse(user))
+                .collect(Collectors.toList());
+        return collection;
+    }
+
+
+    @Override
+    public UserResponseDto changeToLead(Long userId) {
+        final UserEntity userEntity = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User doesnt exist"));
+        RoleEntity lead = roleService.findByName("LEAD");
+        Set<RoleEntity> roleSet = new HashSet<>();
+        roleSet.add(lead);
+        userEntity.setRoles(roleSet);
+        UserEntity save = userRepository.save(userEntity);
+        return userMapper.toResponse(save);
+    }
+
+    @Override
+    public UserResponseDto changeToPotential(Long userId) {
+        final UserEntity userEntity = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User doesnt exist"));
+        RoleEntity lead = roleService.findByName("POTENTIAL");
+        Set<RoleEntity> roleSet = new HashSet<>();
+        roleSet.add(lead);
+        userEntity.setRoles(roleSet);
+        UserEntity save = userRepository.save(userEntity);
+        return userMapper.toResponse(save);
+    }
+
+
+    @Override
+    public UserResponseDto changeToCurrent(Long userId) {
+        final UserEntity userEntity = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User doesnt exist"));
+        RoleEntity lead = roleService.findByName("CURRENT");
+        Set<RoleEntity> roleSet = new HashSet<>();
+        roleSet.add(lead);
+        userEntity.setRoles(roleSet);
+        UserEntity save = userRepository.save(userEntity);
+        return userMapper.toResponse(save);
+    }
+
+    @Override
+    public UserResponseDto changeToAccepted(Long userId) {
+        final UserEntity userEntity = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User doesnt exist"));
+        RoleEntity lead = roleService.findByName("ACCEPTED");
+        Set<RoleEntity> roleSet = new HashSet<>();
+        roleSet.add(lead);
+        userEntity.setRoles(roleSet);
+        UserEntity save = userRepository.save(userEntity);
+        return userMapper.toResponse(save);
+    }
+
+    @Override
+    public UserResponseDto changeToEdr(Long userId) {
+        final UserEntity userEntity = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User doesnt exist"));
+        RoleEntity lead = roleService.findByName("EDR");
+        Set<RoleEntity> roleSet = new HashSet<>();
+        roleSet.add(lead);
+        userEntity.setRoles(roleSet);
+        UserEntity save = userRepository.save(userEntity);
+        return userMapper.toResponse(save);
+    }
+
 
     @Override
     public List<ContactResponseDto> getSalesmanContacts(Long salesmanId) {

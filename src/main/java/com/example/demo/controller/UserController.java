@@ -47,14 +47,14 @@ public class UserController {
         String authToken = null;
         String token = null;
         if (header != null && header.startsWith(TOKEN_PREFIX)) {
-            authToken = header.replace(TOKEN_PREFIX,"");
+            authToken = header.replace(TOKEN_PREFIX, "");
             try {
                 username = tokenProvider.getUsernameFromToken(authToken);
             } catch (IllegalArgumentException e) {
                 log.error("An error occurred while fetching Username from Token", e);
             } catch (ExpiredJwtException e) {
                 log.warn("The token has expired", e);
-            } catch(SignatureException e){
+            } catch (SignatureException e) {
                 log.error("Authentication Failed. Username or Password not valid.");
             }
         } else {
@@ -89,64 +89,118 @@ public class UserController {
     }
 
     @PostMapping("/admin/")
-    public AccountResponseDto createAdmin(@RequestBody AuthRequestDto authRequestDto){
+    public AccountResponseDto createAdmin(@RequestBody AuthRequestDto authRequestDto) {
         return userService.saveAdmin(authRequestDto);
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/manager/")
-    public AccountResponseDto createManager(@RequestBody AuthRequestDto authRequestDto){
+    public AccountResponseDto createManager(@RequestBody AuthRequestDto authRequestDto) {
         return userService.saveManager(authRequestDto);
     }
 
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')")
     @PostMapping("/salesman/")
-    public SalesmanResponseDto createSalesman(@RequestBody SalesmanRequestDto salesmanRequestDto){
+    public SalesmanResponseDto createSalesman(@RequestBody SalesmanRequestDto salesmanRequestDto) {
         return userService.saveSalesman(salesmanRequestDto);
     }
 
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_SALESMAN')")
     @PostMapping("/contact/")
-    public ContactResponseDto createContact(@RequestBody ContactRequestDto contactRequestDto){
+    public ContactResponseDto createContact(@RequestBody ContactRequestDto contactRequestDto) {
         return userService.saveContact(contactRequestDto);
     }
 
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')")
     @GetMapping("/contact/contacts")
-    public List<ContactResponseDto> getContacts(){
+    public List<ContactResponseDto> getContacts() {
         return userService.getContacts();
     }
 
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')")
     @GetMapping("/contact/leads")
-    public List<LeadResponseDto> getLeads(){
-        return userService.getContacts();
+    public List<LeadResponseDto> getLeads() {
+        return userService.getLeads();
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')")
+    @GetMapping("/contact/potentials")
+    public List<PotentialResponseDto> getPotentials() {
+        return userService.getPotentials();
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')")
+    @GetMapping("/contact/currents")
+    public List<CurrentResponseDto> getCurrents() {
+        return userService.getCurrents();
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')")
+    @GetMapping("/contact/accepted")
+    public List<AcceptedResponseDto> getAccepted() {
+        return userService.getAccepted();
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')")
+    @GetMapping("/contact/edr")
+    public List<EdrResponseDto> getEdr() {
+        return userService.getEdr();
+    }
 
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')")
     @GetMapping("/contact/{contactId}")
-    public ContactResponseDto getContact(@PathVariable Long contactId){
+    public ContactResponseDto getContact(@PathVariable Long contactId) {
         return userService.getContact(contactId);
     }
 
 
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_SALESMAN')")
     @GetMapping("/contact/contacts/{salesmanId}")
-    public List<ContactResponseDto> getSalesmanContacts(@PathVariable Long salesmanId){
+    public List<ContactResponseDto> getSalesmanContacts(@PathVariable Long salesmanId) {
         return userService.getSalesmanContacts(salesmanId);
     }
 
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_SALESMAN','ROLE_EDR')")
     @GetMapping("/account/{username}")
-    public AccountResponseDto getAccountByUsername(@PathVariable("username") String username){
+    public AccountResponseDto getAccountByUsername(@PathVariable("username") String username) {
         return userService.getAccountByUsername(username);
     }
 
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_SALESMAN','ROLE_EDR')")
     @GetMapping("/{id}")
-    public UserResponseDto getUser(@PathVariable("id") Long userId){
+    public UserResponseDto getUser(@PathVariable("id") Long userId) {
         return userService.findById(userId);
+    }
+
+
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_SALESMAN')")
+    @GetMapping("/to_lead/{id}")
+    public UserResponseDto changeToLead(@PathVariable Long id) {
+        return userService.changeToLead(id);
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_SALESMAN')")
+    @GetMapping("/to_potential/{id}")
+    public UserResponseDto changeToPotential(@PathVariable Long id) {
+        return userService.changeToPotential(id);
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_SALESMAN')")
+    @GetMapping("/to_current/{id}")
+    public UserResponseDto changeToCurrent(@PathVariable Long id) {
+        return userService.changeToCurrent(id);
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_SALESMAN')")
+    @GetMapping("/to_accepted/{id}")
+    public UserResponseDto changeToAccepted(@PathVariable Long id) {
+        return userService.changeToAccepted(id);
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_SALESMAN')")
+    @GetMapping("/to_edr/{id}")
+    public UserResponseDto changeToEdr(@PathVariable Long id) {
+        return userService.changeToEdr(id);
     }
 
 }

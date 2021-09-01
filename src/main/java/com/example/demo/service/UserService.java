@@ -7,8 +7,11 @@ import java.util.List;
 
 public interface UserService {
     AccountResponseDto saveAdmin(AuthRequestDto user);
+
     AccountResponseDto saveManager(AuthRequestDto user);
+
     SalesmanResponseDto saveSalesman(SalesmanRequestDto user);
+
     ContactResponseDto saveContact(ContactRequestDto user);
 
     List<ContactResponseDto> getContacts();
@@ -20,4 +23,24 @@ public interface UserService {
     AccountResponseDto getAccountByUsername(String username);
 
     UserResponseDto findById(Long userId);
+
+    List<LeadResponseDto> getLeads();
+
+    UserResponseDto changeToLead(Long userId);
+
+    UserResponseDto changeToPotential(Long userId);
+
+    UserResponseDto changeToCurrent(Long userId);
+
+    UserResponseDto changeToAccepted(Long userId);
+
+    UserResponseDto changeToEdr(Long id);
+
+    List<PotentialResponseDto> getPotentials();
+
+    List<CurrentResponseDto> getCurrents();
+
+    List<AcceptedResponseDto> getAccepted();
+
+    List<EdrResponseDto> getEdr();
 }

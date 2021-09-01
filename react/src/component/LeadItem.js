@@ -4,6 +4,7 @@ import {CONTACT_PROFILE_ROUTE} from "../utils/const";
 
 const LeadItem = ({contact}) => {
     const history = useHistory()
+    console.log(contact)
     return (
         <tr>
             <td>
@@ -15,7 +16,7 @@ const LeadItem = ({contact}) => {
                 </div>
             </td>
             <td className="table-user">
-                <a href="javascript:void(0);" className="text-body fw-semibold">{contact.name}</a>
+                <a href={CONTACT_PROFILE_ROUTE + '/' + contact.id} className="text-body fw-semibold">{contact.name}</a>
             </td>
             <td>
                 {contact.id}
@@ -46,6 +47,7 @@ const LeadItem = ({contact}) => {
                 {contact.city}
             </td>
             <td>{contact.ico}</td>
+            <td>{contact.b2B}</td>
             <td>
                 <a href={CONTACT_PROFILE_ROUTE + '/'+ contact.id} className="action-icon"> <i
                     className="mdi mdi-square-edit-outline"></i></a>
