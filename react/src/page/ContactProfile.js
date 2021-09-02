@@ -24,6 +24,7 @@ const ContactProfile = observer(() => {
     useEffect(() => {
         fetchUserById(id).then(data => {
             setContact(data)
+
             setRole(data.roles[0].name)
         })
     }, [])
