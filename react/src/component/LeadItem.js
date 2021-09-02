@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import React from 'react';
 import {useHistory} from "react-router-dom";
 import {CONTACT_PROFILE_ROUTE} from "../utils/const";

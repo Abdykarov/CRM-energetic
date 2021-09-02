@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import React, {useContext, useEffect} from 'react';
 import {Navbar} from "react-bootstrap";
 import {Context} from "../index";

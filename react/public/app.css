@@ -3,6 +3,12 @@
     padding: 0;
     margin: 0;
 }
+.auth-user-testimonial{
+    bottom: 8rem;
+}
+.auth-fluid{
+    background-image: url("https://www.energetickedruzstvo.cz/templates/default/assets/media/img/home-slides/1.jpg");
+}
 [class^="fe-"] {
     font-family: feather !important;
     speak: none;

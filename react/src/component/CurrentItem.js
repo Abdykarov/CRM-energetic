@@ -1,9 +1,8 @@
 import React from 'react';
-import {useHistory} from "react-router-dom";
 import {CONTACT_PROFILE_ROUTE} from "../utils/const";
 
-const CurrentItem = ({contact}) => {
-    const history = useHistory()
+const CurrentItem = ({current}) => {
+    console.log(current)
     return (
         <tr>
             <td>
@@ -15,45 +14,40 @@ const CurrentItem = ({contact}) => {
                 </div>
             </td>
             <td className="table-user">
-                <a href={CONTACT_PROFILE_ROUTE + '/' + contact.id} className="text-body fw-semibold">{contact.name}</a>
+                <a href={CONTACT_PROFILE_ROUTE + '/' + current.id} className="text-body fw-semibold">{current.name}</a>
             </td>
             <td>
-                {contact.id}
+                {current.name}
             </td>
             <td>
-                {contact.name}
+                {current.surname}
             </td>
             <td>
-                {contact.surname}
+                {current.phone}
+            </td>
+            <td>{current.email}</td>
+            <td>
+                <span className="badge bg-soft-secondary text-secondary">{current.roles[0].name}</span>
             </td>
             <td>
-                {contact.phone}
-            </td>
-            <td>{contact.email}</td>
-            <td>
-                <span className="badge bg-soft-secondary text-secondary">{contact.roles[0].name}</span>
+                {current.salesmanId}
             </td>
             <td>
-                {contact.salesManId}
+                {current.companyName}
             </td>
             <td>
-                {contact.companyName}
+                {current.jobPosition}
             </td>
             <td>
-                {contact.jobPosition}
+                {current.city}
             </td>
+            <td>{current.ico}</td>
+            <td>{current.b2B}</td>
+            <td>{current.hwsunMonitor ? 'Ano' : 'Ne'}</td>
+            <td>{current.syselAgreement ? 'Ano' : 'Ne'}</td>
+            <td>{current.connectdFVE ? 'Ano' : 'Ne'}</td>
             <td>
-                {contact.city}
-            </td>
-            <td>{contact.ico}</td>
-            <td>{contact.b2B}</td>
-            <td>{contact.generatedContract ? 'Ano' : 'Ne'}</td>
-            <td>{contact.sendedContract ? 'Ano' : 'Ne'}</td>
-            <td>{contact.signedContract ? 'Ano' : 'Ne'}</td>
-            <td>{contact.paidFacture ? 'Ano' : 'Ne'}</td>
-            <td>{contact.sendedConfirmationAboutPayment ? 'Ano' : 'Ne'}</td>
-            <td>
-                <a href={CONTACT_PROFILE_ROUTE + '/'+ contact.id} className="action-icon"> <i
+                <a href={CONTACT_PROFILE_ROUTE + '/'+ current.id} className="action-icon"> <i
                     className="mdi mdi-square-edit-outline"></i></a>
             </td>
         </tr>

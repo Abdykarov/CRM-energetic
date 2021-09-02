@@ -1,13 +1,13 @@
 /* eslint-disable */
 import React, {useContext, useEffect} from 'react';
 import {Context} from "../index";
-import {fetchCurrents, fetchPotentials} from "../http/contactAPI";
+import {fetchCurrent, fetchCurrents, fetchPotentials} from "../http/contactAPI";
 import CurrentTable from "../component/CurrentTable";
 
 const Current = () => {
     const {current} = useContext(Context)
     useEffect(() => {
-        fetchCurrents().then(data => current.setContacts(data))
+        fetchCurrent().then(data => current.setContacts(data))
     }, [])
     return (
         <div>
@@ -67,7 +67,6 @@ const Current = () => {
                                                         </div>
                                                     </th>
                                                     <th>Kontakt</th>
-                                                    <th>Id</th>
                                                     <th>Jméno</th>
                                                     <th>Příjmení</th>
                                                     <th>Telefon</th>
@@ -127,15 +126,7 @@ const Current = () => {
                     <div className="container-fluid">
                         <div className="row">
                             <div className="col-md-6">
-                                <script>document.write(new Date().getFullYear())</script>
-                                &copy; UBold theme by <a href="">Coderthemes</a>
-                            </div>
-                            <div className="col-md-6">
-                                <div className="text-md-end footer-links d-none d-sm-block">
-                                    <a href="javascript:void(0);">About Us</a>
-                                    <a href="javascript:void(0);">Help</a>
-                                    <a href="javascript:void(0);">Contact Us</a>
-                                </div>
+                                &copy; Design by <a href="">Karlin It Group</a>
                             </div>
                         </div>
                     </div>

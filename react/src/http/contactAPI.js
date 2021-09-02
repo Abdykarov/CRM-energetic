@@ -17,7 +17,7 @@ export const fetchPotentials = async () =>{
 }
 
 
-export const fetchCurrents = async () =>{
+export const fetchCurrent = async () =>{
     const {data} = await $authHost.get('edr_api/user/contact/currents/')
     return data
 }

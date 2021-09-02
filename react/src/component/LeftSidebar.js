@@ -71,14 +71,14 @@ const LeftSidebar = observer(() => {
                                     <a href={SALESMAN_ROUTE}>
                                         <i className="fe-user-check"></i>
                                         <span className="badge bg-success rounded-pill float-end">15</span>
-                                        <span> Obchodní zástupce </span>
+                                        <span> Obchodní zástupci </span>
                                     </a>
                                 </li>
                                 <li>
                                     <a href={MANAGER_ROUTE}>
                                         <i className="fe-user-plus"></i>
                                         <span className="badge bg-success rounded-pill float-end">5</span>
-                                        <span> Manažery </span>
+                                        <span> Manažeři </span>
                                     </a>
                                 </li>
                                 <li>
@@ -99,13 +99,13 @@ const LeftSidebar = observer(() => {
                                                 <a href={POTENTIAL_ROUTE}>Přiležitosti</a>
                                             </li>
                                             <li>
-                                                <a href={CURRENT_ROUTE}>Stávající klienty</a>
+                                                <a href={CURRENT_ROUTE}>Stávající zákazníci</a>
                                             </li>
                                             <li>
-                                                <a href={ACCEPTED_ROUTE}>Příhlášení klienty</a>
+                                                <a href={ACCEPTED_ROUTE}>Přihlášení klienti</a>
                                             </li>
                                             <li>
-                                                <a href={EDR_ROUTE}>EDR členy</a>
+                                                <a href={EDR_ROUTE}>Členové EDR</a>
                                             </li>
                                         </ul>
                                     </div>

@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, {useContext, useState} from 'react';
 import {observer} from "mobx-react-lite";
 import {Button, Form} from "react-bootstrap";
@@ -29,8 +30,11 @@ const Auth = observer(() => {
             <div className="auth-fluid-form-box">
                 <div className="align-items-center d-flex h-100">
                     <div className="card-body">
-                        <h4 className="mt-0">Sign In</h4>
-                        <p className="text-muted mb-4">Enter your email address and password to access account.</p>
+                         <span className="logo-lg">
+                            <img src="/images/logoEDR.png" alt="" width={250}/>
+                        </span>
+                        <h4 className="mt-6">Přihlásit</h4>
+                        <p className="text-muted mb-4">Pro přístup k účtu zadejte svou e-mailovou adresu a heslo.</p>
 
                         <Form>
                             <div className="mb-3">
@@ -39,9 +43,8 @@ const Auth = observer(() => {
                                        placeholder="Enter your email" />
                             </div>
                             <div className="mb-3">
-                                <a href="auth-recoverpw-2.html" className="text-muted float-end"><small>Forgot your
-                                    password?</small></a>
-                                <label htmlFor="password" className="form-label">Password</label>
+                                <a href="auth-recoverpw-2.html" className="text-muted float-end"><small>Zapomněli jste své héslo?</small></a>
+                                <label htmlFor="password" className="form-label">Héslo</label>
                                 <div className="input-group input-group-merge">
                                     <Form.Control type="password" value={password} onChange={e => setPassword(e.target.value)} id="password" className="form-control"
                                            placeholder="Enter your password" />
@@ -54,12 +57,11 @@ const Auth = observer(() => {
                             <div className="mb-3">
                                 <div className="form-check">
                                     <input type="checkbox" className="form-check-input" id="checkbox-signin" />
-                                        <label className="form-check-label" htmlFor="checkbox-signin">Remember
-                                            me</label>
+                                        <label className="form-check-label" htmlFor="checkbox-signin">Zapamatovat mě</label>
                                 </div>
                             </div>
                             <div className="text-center d-grid">
-                                <Button onClick={click} className="btn btn-primary">Log In</Button>
+                                <Button onClick={click} className="btn btn-primary">Přihlasit</Button>
                             </div>
 
                         </Form>
@@ -70,14 +72,12 @@ const Auth = observer(() => {
 
             <div className="auth-fluid-right text-center">
                 <div className="auth-user-testimonial">
-                    <h2 className="mb-3 text-white">I love the color!</h2>
-                    <p className="lead"><i className="mdi mdi-format-quote-open"></i> I've been using your theme from
-                        the previous developer for our web app, once I knew new version is out, I immediately bought
-                        with no hesitation. Great themes, good documentation with lots of customization available and
-                        sample app that really fit our need. <i className="mdi mdi-format-quote-close"></i>
+                    <h2 className="mb-3 text-white">Vytvořme spolu největší FVE v Česku</h2>
+                    <p className="lead">
+                        a urychleme dosažení uhlíkové neutrality
                     </p>
                     <h5 className="text-white">
-                        - Fadlisaad (Ubold Admin User)
+                        Stante se členem EDR!
                     </h5>
                 </div>
             </div>
