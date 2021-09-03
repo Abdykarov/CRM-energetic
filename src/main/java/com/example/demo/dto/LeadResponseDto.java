@@ -25,6 +25,5 @@ public class LeadResponseDto {
     Long salesmanId;
     String B2B;
     boolean generatedContract;
-    boolean sendedContract;
     boolean signedContract;
 }

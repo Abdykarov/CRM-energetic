@@ -181,6 +181,31 @@ public class UserServiceImp implements UserDetailsService, UserService {
         return collection;
     }
 
+    @Override
+    @Transactional
+    public void setConnectedFve(boolean b, Long userId) {
+        final UserEntity userEntity = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User doesnt exist"));
+        userEntity.setConnectedFVE(b);
+    }
+
+    @Override
+    @Transactional
+    public void setSyselAgreement(boolean b, Long userId) {
+        final UserEntity userEntity = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User doesnt exist"));
+        userEntity.setSyselAgreement(b);
+    }
+
+    @Override
+    @Transactional
+    public void setHwSunMonitor(boolean b, Long userId) {
+        final UserEntity userEntity = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User doesnt exist"));
+        userEntity.setHWSunMonitor(b);
+
+    }
+
 
     @Override
     public UserResponseDto changeToLead(Long userId) {
@@ -241,6 +266,14 @@ public class UserServiceImp implements UserDetailsService, UserService {
         userEntity.setRoles(roleSet);
         UserEntity save = userRepository.save(userEntity);
         return userMapper.toResponse(save);
+    }
+
+    @Override
+    @Transactional
+    public void setSignContract(boolean value, Long userId) {
+        final UserEntity userEntity = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User doesnt exist"));
+        userEntity.setSignedContract(value);
     }
 
 

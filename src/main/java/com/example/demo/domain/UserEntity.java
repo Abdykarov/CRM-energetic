@@ -38,12 +38,11 @@ public class UserEntity {
 
     // POTENTIAL
     boolean generatedContract;
-    boolean sendedContract;
     boolean signedContract;
 
     // APPLIED ATRIBUTES
     boolean generatedRequestToEdr;
-    boolean paidRequestToEdr;
+    boolean signedRequestToEdr;
     boolean acceptedRequestToEdr;
 
     boolean generatedFacture;

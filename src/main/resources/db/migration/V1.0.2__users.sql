@@ -1,8 +1,8 @@
 -- CONTACTS - NEW
 INSERT INTO user_entity (b2b, hwsun_monitor, sysel_agreement, accepted_request_to_edr, city, company_name,
                          connectedfve, email, generated_contract, generated_facture, generated_request_to_edr,
-                         ico, job_position, name, paid_facture, paid_request_to_edr, password, phone,
-                         salesman_id, sended_confirmation_about_payment, sended_contract, signed_contract,
+                         ico, job_position, name, paid_facture, password, phone,
+                         salesman_id, sended_confirmation_about_payment, signed_contract, signed_request_to_edr,
                          surname, username) VALUES (null,false,false,false,'Prague','company',false,'gfgf@gmail.com',
                                                     false,false,false,'169 00','manager','Ilias',false,false,
                                             null,'31232312312',13,false,false,false,'Abdykarov',null);

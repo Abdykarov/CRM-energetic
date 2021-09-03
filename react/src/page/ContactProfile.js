@@ -28,7 +28,7 @@ const ContactProfile = observer(() => {
     const [selectedSyselAgreementFile, setSelectedSyselAgreementFile] = useState(null)
     const {id} = useParams()
     const history = useHistory()
-
+  //  sendedConfirmationAboutPayment  paidFacture generatedFacture generatedRequestToEdr
     useEffect(() => {
         fetchUserById(id).then(data => {
             setContact(data)
@@ -411,6 +411,26 @@ const ContactProfile = observer(() => {
                                                                 className="ms-2">{ contact.hwsunMonitor ? 'Ano' : 'Ne'}</span></p>
                                                             <p className="text-muted mb-1 font-13"><strong>Smlouva sysel :</strong> <span
                                                                 className="ms-2">{ contact.syselAgreement ? 'Ano' : 'Ne'}</span></p>
+                                                            <p className="text-muted mb-1 font-13"><strong>Fve dokument :</strong> <span
+                                                                className="ms-2">{ contact.connectedFVE ? 'Ano' : 'Ne'}</span></p>
+                                                        </div>
+                                                        : <div></div>
+                                                }
+                                                {
+                                                    (role === "CURRENT") ?
+                                                        <div>
+                                                            <p className="text-muted mb-1 font-13"><strong>Vygenerovaná smlouva :</strong> <span
+                                                                className="ms-2">{ contact.generatedContract ? 'Ano' : 'Ne'}</span></p>
+                                                            <p className="text-muted mb-1 font-13"><strong>Podepsaná smlouva :</strong> <span
+                                                                className="ms-2">{ contact.signedContract ? 'Ano' : 'Ne'}</span></p>
+                                                            <p className="text-muted mb-1 font-13"><strong>Hardware Sun monitor :</strong> <span
+                                                                className="ms-2">{ contact.hwsunMonitor ? 'Ano' : 'Ne'}</span></p>
+                                                            <p className="text-muted mb-1 font-13"><strong>Smlouva sysel :</strong> <span
+                                                                className="ms-2">{ contact.syselAgreement ? 'Ano' : 'Ne'}</span></p>
+                                                            <p className="text-muted mb-1 font-13"><strong>Fve dokument :</strong> <span
+                                                                className="ms-2">{ contact.connectedFVE ? 'Ano' : 'Ne'}</span></p>
+                                                            <p className="text-muted mb-1 font-13"><strong>Fve dokument :</strong> <span
+                                                                className="ms-2">{ contact.connectedFVE ? 'Ano' : 'Ne'}</span></p>
                                                             <p className="text-muted mb-1 font-13"><strong>Fve dokument :</strong> <span
                                                                 className="ms-2">{ contact.connectedFVE ? 'Ano' : 'Ne'}</span></p>
                                                         </div>
