@@ -72,3 +72,25 @@ export const updateToEdr = async (id) =>{
     const {data} = await $authHost.get('edr_api/user/to_edr/' + id)
     return data
 }
+
+export const deleteContract = async (id) =>{
+    const {data} = await $authHost.get('edr_api/supercontract/delete/' + id)
+    return data
+}
+
+
+export const deleteSysel = async (id) =>{
+    const {data} = await $authHost.get('edr_api/sysel/delete/' + id)
+    return data
+}
+
+
+export const deleteFve = async (id) =>{
+    const {data} = await $authHost.get('edr_api/fve/delete/' + id)
+    return data
+}
+
+export const deleteHwSun = async (id) =>{
+    const {data} = await $authHost.get('edr_api/hw/delete/' + id)
+    return data
+}

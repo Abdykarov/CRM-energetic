@@ -2,32 +2,285 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {Context} from "../index";
 import {
-    fetchContacts,
+    deleteContract, deleteFve, deleteSysel,
     fetchUserById,
     updateToAccepted,
     updateToCurrent, updateToEdr,
     updateToLead,
-    updateToPotential
+    updateToPotential, uploadSignedContract
 } from "../http/contactAPI";
 import {useHistory, useParams} from "react-router-dom";
 import {DASHBOARD_ROUTE} from "../utils/const";
-import {login} from "../http/userAPI";
 import {observer} from "mobx-react-lite";
+import axios from "axios";
 
 const ContactProfile = observer(() => {
     const {user} = useContext(Context)
     const [contact, setContact] = useState({info: []})
+    const [selectedContractFile, setSelectedContractFile] = useState(null)
     const [role,setRole] = useState('')
+    const [signedContract, setSignedContract] = useState('')
+    const [hwsunMonitor, setHwSunMonitor] = useState('')
+    const [connectedFVE, setConnectedFVE] = useState('')
+    const [syselAgreement, setSyselAgreement] = useState('')
+    const [selectedHWFile, setSelectedHWFile] = useState(null)
+    const [selectedConnectedFveFile, setSelectedConnectedFVE] = useState(null)
+    const [selectedSyselAgreementFile, setSelectedSyselAgreementFile] = useState(null)
     const {id} = useParams()
     const history = useHistory()
 
     useEffect(() => {
         fetchUserById(id).then(data => {
             setContact(data)
-
+            setSignedContract(data.signedContract)
+            setHwSunMonitor(data.hwsunMonitor)
+            setConnectedFVE(data.connectedFVE)
+            setSyselAgreement(data.syselAgreement)
             setRole(data.roles[0].name)
         })
     }, [])
+    console.log(contact)
+
+    // SYSEL AGREEMENT
+    const fetchSyselAgreement = async () => {
+        fetch(process.env.REACT_APP_API_URL + "edr_api/sysel/fetch/" + id, {
+            method: 'get',
+            headers: new Headers({
+                'Authorization': 'Bearer '+ localStorage.getItem('token'),
+                'Content-Type': 'application/json'
+            })
+        }) // FETCH BLOB FROM IT
+            .then((response) => response.blob())
+            .then((blob) => { // RETRIEVE THE BLOB AND CREATE LOCAL URL
+                var _url = window.URL.createObjectURL(blob);
+                window.open(_url, "_blank"); // window.open + focus
+            }).catch((err) => {
+            console.log(err);
+        });
+    }
+
+    const deleteSyselAgreement = async () => {
+        try {
+            let response
+            response = await deleteSysel(id)
+            window.location.reload();
+        } catch (e) {
+            alert(e.response.data.message)
+        }
+    }
+
+    const saveSyselAgreement = async () => {
+        if (!(selectedSyselAgreementFile == null)){
+
+            let formData = new FormData();
+            formData.append('file', selectedSyselAgreementFile);
+            // the image field name should be similar to your api endpoint field name
+            // in my case here the field name is customFile
+
+            axios.post(
+                process.env.REACT_APP_API_URL + "edr_api/sysel/save/" + id,
+                formData,
+                {
+                    headers: {
+                        "Authorization": 'Bearer '+ localStorage.getItem('token'),
+                        "Content-type": "multipart/form-data",
+                    },
+                }
+            )
+                .then(res => {
+                    window.location.reload();
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+        }
+    }
+
+    // Connected FVE
+    const fetchConnectedFve = async () => {
+        fetch(process.env.REACT_APP_API_URL + "edr_api/fve/fetch/" + id, {
+            method: 'get',
+            headers: new Headers({
+                'Authorization': 'Bearer '+ localStorage.getItem('token'),
+                'Content-Type': 'application/json'
+            })
+        }) // FETCH BLOB FROM IT
+            .then((response) => response.blob())
+            .then((blob) => { // RETRIEVE THE BLOB AND CREATE LOCAL URL
+                var _url = window.URL.createObjectURL(blob);
+                window.open(_url, "_blank"); // window.open + focus
+            }).catch((err) => {
+            console.log(err);
+        });
+    }
+
+    const deleteConnectedFve = async () => {
+        try {
+            console.log(1)
+            let response
+            response = await deleteFve(id)
+            window.location.reload();
+        } catch (e) {
+            alert(e.response.data.message)
+        }
+    }
+
+    const saveConnectedFVE = async () => {
+        if (!(selectedConnectedFveFile == null)){
+
+            let formData = new FormData();
+            formData.append('file', selectedConnectedFveFile);
+            // the image field name should be similar to your api endpoint field name
+            // in my case here the field name is customFile
+
+            axios.post(
+                process.env.REACT_APP_API_URL + "edr_api/fve/save/" + id,
+                formData,
+                {
+                    headers: {
+                        "Authorization": 'Bearer '+ localStorage.getItem('token'),
+                        "Content-type": "multipart/form-data",
+                    },
+                }
+            )
+                .then(res => {
+                    window.location.reload();
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+        }
+    }
+
+    // HW FILE
+    const fetchHwSunMonitor = async () => {
+        fetch(process.env.REACT_APP_API_URL + "edr_api/hw/fetch/" + id, {
+            method: 'get',
+            headers: new Headers({
+                'Authorization': 'Bearer '+ localStorage.getItem('token'),
+                'Content-Type': 'application/json'
+            })
+        }) // FETCH BLOB FROM IT
+            .then((response) => response.blob())
+            .then((blob) => { // RETRIEVE THE BLOB AND CREATE LOCAL URL
+                var _url = window.URL.createObjectURL(blob);
+                window.open(_url, "_blank"); // window.open + focus
+            }).catch((err) => {
+            console.log(err);
+        });
+    }
+
+    const deleteHwSunMonitor= async () => {
+        try {
+            let response
+            response = await deleteHwSun(id)
+            window.location.reload();
+        } catch (e) {
+            alert(e.response.data.message)
+        }
+    }
+
+    const saveHwFile = async () => {
+        if (!(selectedHWFile == null)){
+
+            let formData = new FormData();
+            formData.append('file', selectedHWFile);
+            // the image field name should be similar to your api endpoint field name
+            // in my case here the field name is customFile
+
+            axios.post(
+                process.env.REACT_APP_API_URL + "edr_api/hw/save/" + id,
+                formData,
+                {
+                    headers: {
+                        "Authorization": 'Bearer '+ localStorage.getItem('token'),
+                        "Content-type": "multipart/form-data",
+                    },
+                }
+            )
+                .then(res => {
+                    window.location.reload();
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+        }
+    }
+
+    // SUPER CONTRACT
+    const generateSupercontract = async () => {
+        fetch(process.env.REACT_APP_API_URL + "edr_api/supercontract/generate/" + id, {
+            method: 'get',
+            headers: new Headers({
+                'Authorization': 'Bearer '+ localStorage.getItem('token'),
+                'Content-Type': 'application/json'
+            })
+        }) // FETCH BLOB FROM IT
+            .then((response) => response.blob())
+            .then((blob) => { // RETRIEVE THE BLOB AND CREATE LOCAL URL
+                var _url = window.URL.createObjectURL(blob);
+                window.open(_url, "_blank"); // window.open + focus
+            }).catch((err) => {
+            console.log(err);
+        });
+    }
+
+    const fetchSupercontract = async () => {
+        fetch(process.env.REACT_APP_API_URL + "edr_api/supercontract/fetch/" + id, {
+            method: 'get',
+            headers: new Headers({
+                'Authorization': 'Bearer '+ localStorage.getItem('token'),
+                'Content-Type': 'application/json'
+            })
+        }) // FETCH BLOB FROM IT
+            .then((response) => response.blob())
+            .then((blob) => { // RETRIEVE THE BLOB AND CREATE LOCAL URL
+                var _url = window.URL.createObjectURL(blob);
+                window.open(_url, "_blank"); // window.open + focus
+            }).catch((err) => {
+            console.log(err);
+        });
+    }
+
+    const deleteSignedContract = async () => {
+        try {
+            let response
+            response = await deleteContract(id)
+            window.location.reload();
+        } catch (e) {
+            alert(e.response.data.message)
+        }
+    }
+
+    const saveContract = async () => {
+        if (!(selectedContractFile == null)){
+
+            let formData = new FormData();
+            formData.append('file', selectedContractFile);
+            // the image field name should be similar to your api endpoint field name
+            // in my case here the field name is customFile
+
+            axios.post(
+                process.env.REACT_APP_API_URL + "edr_api/supercontract/save/" + id,
+                formData,
+                {
+                    headers: {
+                        "Authorization": 'Bearer '+ localStorage.getItem('token'),
+                        "Content-type": "multipart/form-data",
+                    },
+                }
+            )
+                .then(res => {
+                    window.location.reload();
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+        }
+    }
+
+
+    // CONTACT ROLES
 
     const changeToLead = async () => {
         try {
@@ -78,6 +331,9 @@ const ContactProfile = observer(() => {
             alert(e.response.data.message)
         }
     }
+
+
+
     return (
         <div>
                 <div className="content-page">
@@ -134,10 +390,32 @@ const ContactProfile = observer(() => {
                                                     className="ms-2">{contact.city}</span></p>
                                                 <p className="text-muted mb-1 font-13"><strong>Psč :</strong> <span
                                                     className="ms-2">{contact.ico}</span></p>
-                                                <p className="text-muted mb-1 font-13"><strong>Odeslaná smlouva :</strong> <span
-                                                    className="ms-2">Ne</span></p>
-                                                <p className="text-muted mb-1 font-13"><strong>Podepsaná smlouva :</strong> <span
-                                                    className="ms-2">Ne</span></p>
+                                                {
+                                                    (role === "LEAD") ?
+                                                        <div>
+                                                            <p className="text-muted mb-1 font-13"><strong>Vygenerovaná smlouva :</strong> <span
+                                                                className="ms-2">{ contact.generatedContract ? 'Ano' : 'Ne'}</span></p>
+                                                            <p className="text-muted mb-1 font-13"><strong>Podepsaná smlouva :</strong> <span
+                                                                className="ms-2">{ contact.signedContract ? 'Ano' : 'Ne'}</span></p>
+                                                        </div>
+                                                        : <div></div>
+                                                }
+                                                {
+                                                    (role === "POTENTIAL") ?
+                                                        <div>
+                                                            <p className="text-muted mb-1 font-13"><strong>Vygenerovaná smlouva :</strong> <span
+                                                                className="ms-2">{ contact.generatedContract ? 'Ano' : 'Ne'}</span></p>
+                                                            <p className="text-muted mb-1 font-13"><strong>Podepsaná smlouva :</strong> <span
+                                                                className="ms-2">{ contact.signedContract ? 'Ano' : 'Ne'}</span></p>
+                                                            <p className="text-muted mb-1 font-13"><strong>Hardware Sun monitor :</strong> <span
+                                                                className="ms-2">{ contact.hwsunMonitor ? 'Ano' : 'Ne'}</span></p>
+                                                            <p className="text-muted mb-1 font-13"><strong>Smlouva sysel :</strong> <span
+                                                                className="ms-2">{ contact.syselAgreement ? 'Ano' : 'Ne'}</span></p>
+                                                            <p className="text-muted mb-1 font-13"><strong>Fve dokument :</strong> <span
+                                                                className="ms-2">{ contact.connectedFVE ? 'Ano' : 'Ne'}</span></p>
+                                                        </div>
+                                                        : <div></div>
+                                                }
                                             </div>
 
 
@@ -174,8 +452,8 @@ const ContactProfile = observer(() => {
                                                             {
                                                                 (role === "LEAD") ?
                                                                     <div className="col-md-6">
-                                                                        <h3>Supersmlouva</h3> <button type="button"
-                                                                                                      className="mb-3 mt-2 btn btn-info waves-effect waves-light"><i
+                                                                        <h3>Supersmlouva</h3>
+                                                                        <button onClick={generateSupercontract} type="button" className="mb-3 mt-2 btn btn-info waves-effect waves-light"><i
                                                                         className="mdi mdi-cloud-outline me-1"></i> Vygenerovat supersmlouvu
                                                                     </button>
                                                                         <button type="button"
@@ -184,61 +462,105 @@ const ContactProfile = observer(() => {
                                                                         </button>
                                                                         <br/><br/>
                                                                         <div className="mb-3">
-                                                                            <label htmlFor="example-fileinput" className="form-label">
-                                                                                Uložit podepsanou smlouvu</label>
-                                                                            <input type="file" id="example-fileinput"
-                                                                                   className="form-control"/>
+                                                                        { (!signedContract) ?
+                                                                            <div className="mb-3">
+                                                                                <label htmlFor="example-fileinput" className="form-label">
+                                                                                    Přidat podepsanou smlouvu</label>
+                                                                                <input type="file" onChange={e => setSelectedContractFile(e.target.files[0])} id="example-fileinput"
+                                                                                       className="form-control"/>
+                                                                                <button onClick={saveContract} type="button"
+                                                                                        className="mt-3 btn btn-primary waves-effect waves-light">Uložit podepsanou smlouvu
+                                                                                </button>
+                                                                            </div>
+                                                                            :
+                                                                            <div>
+                                                                                <button onClick={fetchSupercontract} type="button"
+                                                                                        className="btn btn-success waves-effect waves-light">Stahnout podepsanou smlouvu
+                                                                                </button>
+                                                                                <button onClick={deleteSignedContract} type="button"
+                                                                                        className="mt-3 btn btn-danger waves-effect waves-light">Odstranit podepsanou smlouvu
+                                                                                </button>
+                                                                            </div>
+                                                                        }
                                                                         </div>
-                                                                        <button type="submit"
-                                                                                className="btn btn-primary waves-effect waves-light">Stahnout podepsanou smlouvu
-                                                                        </button>
                                                                     </div>
                                                                     : <div></div>
                                                             }
-
                                                             {
                                                                 (role === "POTENTIAL") ?
-                                                                    <div>
+                                                                    <div className="col-md-6">
                                                                         <h3 className="mb-3">Hardware Sun monitor</h3>
                                                                         <div className="mb-3">
-                                                                            <label htmlFor="example-fileinput" className="form-label">
-                                                                                Uložit dokument o hw sun monitor</label>
-                                                                            <input type="file" id="example-fileinput"
-                                                                                   className="form-control"/>
+                                                                            { (!hwsunMonitor) ?
+                                                                                <div className="mb-3">
+                                                                                    <label htmlFor="example-fileinput" className="form-label">
+                                                                                        Uložit dokument o hw sun monitor</label>
+                                                                                    <input type="file" onChange={e => setSelectedHWFile(e.target.files[0])} id="example-fileinput"
+                                                                                           className="form-control"/>
+                                                                                    <button onClick={saveHwFile} type="button"
+                                                                                            className="mt-3 btn btn-primary waves-effect waves-light">Uložit dokument o hw sun monitor
+                                                                                    </button>
+                                                                                </div>
+                                                                                :
+                                                                                <div>
+                                                                                    <button onClick={fetchHwSunMonitor} type="button"
+                                                                                            className="btn btn-success waves-effect waves-light">Stahnout dokument o hw sun monitor
+                                                                                    </button>
+                                                                                    <button onClick={deleteHwSunMonitor} type="button"
+                                                                                            className="mt-3 btn btn-danger waves-effect waves-light">Odstranit dokument o hw sun monitor
+                                                                                    </button>
+                                                                                </div>
+                                                                            }
                                                                         </div>
-                                                                        <button type="submit"
-                                                                                className="mb-6 btn btn-primary waves-effect waves-light">Stahnout dokument o hw sun monitor
-                                                                        </button>
 
 
                                                                         <h3 className="mt-3 mb-3">Smlouva sysel</h3>
-                                                                        <p>Platnost od: </p>
-                                                                        <p>Platnost do: </p>
                                                                         <div className="mb-3">
-                                                                            <label htmlFor="example-fileinput" className="form-label">
-                                                                                Uložit smlouvu sysel</label>
-                                                                            <input type="file" id="example-fileinput"
-                                                                                   className="form-control"/>
+                                                                            { (!syselAgreement) ?
+                                                                                <div className="mb-3">
+                                                                                    <label htmlFor="example-fileinput" className="form-label">
+                                                                                        Uložit smlouvu sysel</label>
+                                                                                    <input type="file" onChange={e => setSelectedSyselAgreementFile(e.target.files[0])} id="example-fileinput"
+                                                                                           className="form-control"/>
+                                                                                    <button onClick={saveSyselAgreement} type="button"
+                                                                                            className="mt-3 btn btn-primary waves-effect waves-light">Uložit sysel dokument
+                                                                                    </button>
+                                                                                </div>
+                                                                                :
+                                                                                <div>
+                                                                                    <button onClick={fetchSyselAgreement} type="button"
+                                                                                            className="btn btn-success waves-effect waves-light">Stahnout sysel dokument
+                                                                                    </button>
+                                                                                    <button onClick={deleteSyselAgreement} type="button"
+                                                                                            className="mt-3 btn btn-danger waves-effect waves-light">Odstranit sysel dokument
+                                                                                    </button>
+                                                                                </div>
+                                                                            }
                                                                         </div>
-                                                                        <button type="submit"
-                                                                                className="mb-3 mr-3 btn btn-primary waves-effect waves-light">Stahnout smlouvu sysel
-                                                                        </button>
-
-                                                                        <button type="submit"
-                                                                                className="mb-3 btn btn-primary waves-effect waves-light">Zkontrolovat platnost smlouvy sysel
-                                                                        </button>
-
 
                                                                         <h3>Zapojení FVE Solid Sun</h3>
                                                                         <div className="mb-3">
-                                                                            <label htmlFor="example-fileinput" className="form-label">
-                                                                                Uložit dokument o zapojení FVE Solid Sun</label>
-                                                                            <input type="file" id="example-fileinput"
-                                                                                   className="form-control"/>
+                                                                            { (!connectedFVE) ?
+                                                                                <div className="mb-3">
+                                                                                    <label htmlFor="example-fileinput" className="form-label">
+                                                                                        Uložit dokument o zapojení FVE Solid Sun</label>
+                                                                                    <input type="file" onChange={e => setSelectedConnectedFVE(e.target.files[0])} id="example-fileinput"
+                                                                                           className="form-control"/>
+                                                                                    <button onClick={saveConnectedFVE} type="button"
+                                                                                            className="mt-3 btn btn-primary waves-effect waves-light">Uložit dokument o zapojení FVE Solid Sun
+                                                                                    </button>
+                                                                                </div>
+                                                                                :
+                                                                                <div>
+                                                                                    <button onClick={fetchConnectedFve} type="button"
+                                                                                            className="btn btn-success waves-effect waves-light">Stahnout dokument o zapojení FVE Solid Sun
+                                                                                    </button>
+                                                                                    <button onClick={deleteConnectedFve} type="button"
+                                                                                            className="mt-3 btn btn-danger waves-effect waves-light">Odstranit dokument o zapojení FVE Solid Sun
+                                                                                    </button>
+                                                                                </div>
+                                                                            }
                                                                         </div>
-                                                                        <button type="submit"
-                                                                                className="mb-3 btn btn-primary waves-effect waves-light">Stahnout dokument o zapojení FVE Solid Sun
-                                                                        </button>
 
                                                                     </div>
                                                                     : <div></div>

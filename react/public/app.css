@@ -6,6 +6,12 @@
 .auth-user-testimonial{
     bottom: 8rem;
 }
+.font-13 {
+    font-size: 14px !important;
+}
+.text-muted {
+    color: #0e0e0e !important;
+}
 .auth-fluid{
     background-image: url("https://www.energetickedruzstvo.cz/templates/default/assets/media/img/home-slides/1.jpg");
 }
@@ -30,6 +36,13 @@ body{
     background-color: #fff;
     border-bottom: 2px #41c0bd;
     width: 100%;
+}
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+    color: #fff;
+    background-color: #41c0bd;
+}
+.nav-link:focus, .nav-link:hover {
+    color: #41c0bd;
 }
 #sidebar-menu > ul > li > a,#sidebar-menu .menu-title{
     color: #505050;
