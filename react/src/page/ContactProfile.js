@@ -28,7 +28,7 @@ const ContactProfile = observer(() => {
     const [selectedSyselAgreementFile, setSelectedSyselAgreementFile] = useState(null)
     const {id} = useParams()
     const history = useHistory()
-  //  sendedConfirmationAboutPayment  paidFacture generatedFacture generatedRequestToEdr
+
     useEffect(() => {
         fetchUserById(id).then(data => {
             setContact(data)
@@ -40,6 +40,61 @@ const ContactProfile = observer(() => {
         })
     }, [])
     console.log(contact)
+
+    // REQEUST TO EDR
+    const fetchEdrRequest = async () => {
+        fetch(process.env.REACT_APP_API_URL + "edr_api/sysel/fetch/" + id, {
+            method: 'get',
+            headers: new Headers({
+                'Authorization': 'Bearer '+ localStorage.getItem('token'),
+                'Content-Type': 'application/json'
+            })
+        }) // FETCH BLOB FROM IT
+            .then((response) => response.blob())
+            .then((blob) => { // RETRIEVE THE BLOB AND CREATE LOCAL URL
+                var _url = window.URL.createObjectURL(blob);
+                window.open(_url, "_blank"); // window.open + focus
+            }).catch((err) => {
+            console.log(err);
+        });
+    }
+
+    const deleteSyselAgreement = async () => {
+        try {
+            let response
+            response = await deleteSysel(id)
+            window.location.reload();
+        } catch (e) {
+            alert(e.response.data.message)
+        }
+    }
+
+    const saveSyselAgreement = async () => {
+        if (!(selectedSyselAgreementFile == null)){
+
+            let formData = new FormData();
+            formData.append('file', selectedSyselAgreementFile);
+            // the image field name should be similar to your api endpoint field name
+            // in my case here the field name is customFile
+
+            axios.post(
+                process.env.REACT_APP_API_URL + "edr_api/sysel/save/" + id,
+                formData,
+                {
+                    headers: {
+                        "Authorization": 'Bearer '+ localStorage.getItem('token'),
+                        "Content-type": "multipart/form-data",
+                    },
+                }
+            )
+                .then(res => {
+                    window.location.reload();
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+        }
+    }
 
     // SYSEL AGREEMENT
     const fetchSyselAgreement = async () => {

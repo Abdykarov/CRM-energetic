@@ -1,6 +1,0 @@
-DNESKA
-
-
-1) React auth
-2) Admin page
-3)

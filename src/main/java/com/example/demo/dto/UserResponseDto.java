@@ -27,15 +27,18 @@ public class UserResponseDto {
     Long salesmanId;
     Set<RoleEntity> roles;
     String B2B;
+
     boolean generatedContract;
-    boolean sendedContract;
     boolean signedContract;
+
     boolean generatedRequestToEdr;
-    boolean paidRequestToEdr;
+    boolean signedRequestToEdr;
     boolean acceptedRequestToEdr;
+
     boolean generatedFacture;
     boolean paidFacture;
     boolean sendedConfirmationAboutPayment;
+
     boolean HWSunMonitor;
     boolean SyselAgreement;
     boolean connectedFVE;
