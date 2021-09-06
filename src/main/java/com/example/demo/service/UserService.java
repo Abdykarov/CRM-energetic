@@ -51,4 +51,7 @@ public interface UserService {
     void setSyselAgreement(boolean b, Long userId);
 
     void setHwSunMonitor(boolean b, Long userId);
+
+    void setSignedRequest(boolean b, Long userId);
+
 }

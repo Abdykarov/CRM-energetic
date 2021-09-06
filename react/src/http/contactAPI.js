@@ -94,3 +94,9 @@ export const deleteHwSun = async (id) =>{
     const {data} = await $authHost.get('edr_api/hw/delete/' + id)
     return data
 }
+
+
+export const deleteEdrRequest = async (id) =>{
+    const {data} = await $authHost.get('edr_api/edr_request/delete/' + id)
+    return data
+}

@@ -206,6 +206,14 @@ public class UserServiceImp implements UserDetailsService, UserService {
 
     }
 
+    @Override
+    @Transactional
+    public void setSignedRequest(boolean b, Long userId) {
+        final UserEntity userEntity = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User doesnt exist"));
+        userEntity.setSignedRequestToEdr(b);
+    }
+
 
     @Override
     public UserResponseDto changeToLead(Long userId) {

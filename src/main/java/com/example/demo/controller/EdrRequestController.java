@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 
+import com.example.demo.service.imp.EdrRequestServiceImp;
 import com.example.demo.service.imp.FveServiceImp;
 import com.example.demo.service.imp.SuperContractServiceImpl;
 import lombok.AccessLevel;
@@ -28,19 +29,40 @@ public class EdrRequestController {
 
     EdrRequestServiceImp edrRequestService;
     private static String UPLOADED_FOLDER = "/home/abdykili/workflow/CRM-energetic/src/main/resources/edr_request/";
+    private static String APP_FOLDER = "/home/abdykili/workflow/CRM-energetic/src/main/java/com/example/demo/documents/";
 
     @RequestMapping(value = "/save/{userId}", method = RequestMethod.POST)
-    public String uploadEdrRequest(@RequestParam("file") MultipartFile file, @PathVariable Long userId) {
-        return fveService.edrRequestService(file, userId);
+    public String uploadRequest(@RequestParam("file") MultipartFile file, @PathVariable Long userId) {
+        return edrRequestService.uploadRequest(file, userId);
     }
 
     @RequestMapping(value = "/delete/{userId}", method = RequestMethod.GET)
-    public String deleteEdrRequest(@PathVariable Long userId) {
-        return edrRequestService.deleteFve(userId);
+    public String deleteRequest(@PathVariable Long userId) {
+        return edrRequestService.deleteRequest(userId);
+    }
+
+    @GetMapping("/generate/{userId}")
+    public ResponseEntity<ByteArrayResource> generateRequest(@PathVariable String userId)throws Exception
+    {
+        File file = new File(APP_FOLDER + "request.pdf");
+        log.info("File path - {}", file);
+
+        HttpHeaders header = new HttpHeaders();
+        header.add(HttpHeaders.CONTENT_DISPOSITION, "inline;filename=request.pdf");
+
+        Path path = Paths.get(file.getAbsolutePath());
+
+        ByteArrayResource resource = new ByteArrayResource(Files.readAllBytes(path));
+
+        return ResponseEntity.ok()
+                .headers(header)
+                .contentLength(file.length())
+                .contentType(MediaType.parseMediaType("application/pdf"))
+                .body(resource);
     }
 
     @GetMapping("/fetch/{userId}")
-    public ResponseEntity<ByteArrayResource> getEdrRequest(@PathVariable String userId)throws Exception
+    public ResponseEntity<ByteArrayResource> getRequest(@PathVariable String userId)throws Exception
     {
         File file = new File(UPLOADED_FOLDER + String.format("request_%s",userId));
         log.info("File path - {}", file);
@@ -58,5 +80,6 @@ public class EdrRequestController {
                 .contentType(MediaType.parseMediaType("application/pdf"))
                 .body(resource);
     }
+
 
 }

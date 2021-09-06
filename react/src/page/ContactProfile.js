@@ -2,7 +2,7 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {Context} from "../index";
 import {
-    deleteContract, deleteFve, deleteSysel,
+    deleteContract, deleteEdrRequest, deleteFve, deleteSysel,
     fetchUserById,
     updateToAccepted,
     updateToCurrent, updateToEdr,
@@ -23,9 +23,11 @@ const ContactProfile = observer(() => {
     const [hwsunMonitor, setHwSunMonitor] = useState('')
     const [connectedFVE, setConnectedFVE] = useState('')
     const [syselAgreement, setSyselAgreement] = useState('')
+    const [edrRequest, setEdrRequest] = useState('')
     const [selectedHWFile, setSelectedHWFile] = useState(null)
     const [selectedConnectedFveFile, setSelectedConnectedFVE] = useState(null)
     const [selectedSyselAgreementFile, setSelectedSyselAgreementFile] = useState(null)
+    const [selectedEdrRequest, setSelectedEdrRequest] = useState(null)
     const {id} = useParams()
     const history = useHistory()
 
@@ -36,14 +38,16 @@ const ContactProfile = observer(() => {
             setHwSunMonitor(data.hwsunMonitor)
             setConnectedFVE(data.connectedFVE)
             setSyselAgreement(data.syselAgreement)
+            setEdrRequest(data.signedRequestToEdr)
             setRole(data.roles[0].name)
         })
     }, [])
     console.log(contact)
 
     // REQEUST TO EDR
-    const fetchEdrRequest = async () => {
-        fetch(process.env.REACT_APP_API_URL + "edr_api/sysel/fetch/" + id, {
+
+    const generateEdrRequest= async () => {
+        fetch(process.env.REACT_APP_API_URL + "edr_api/edr_request/generate/" + id, {
             method: 'get',
             headers: new Headers({
                 'Authorization': 'Bearer '+ localStorage.getItem('token'),
@@ -59,26 +63,43 @@ const ContactProfile = observer(() => {
         });
     }
 
-    const deleteSyselAgreement = async () => {
+    const fetchEdrRequest = async () => {
+        fetch(process.env.REACT_APP_API_URL + "edr_api/edr_request/fetch/" + id, {
+            method: 'get',
+            headers: new Headers({
+                'Authorization': 'Bearer '+ localStorage.getItem('token'),
+                'Content-Type': 'application/json'
+            })
+        }) // FETCH BLOB FROM IT
+            .then((response) => response.blob())
+            .then((blob) => { // RETRIEVE THE BLOB AND CREATE LOCAL URL
+                var _url = window.URL.createObjectURL(blob);
+                window.open(_url, "_blank"); // window.open + focus
+            }).catch((err) => {
+            console.log(err);
+        });
+    }
+
+    const deleteRequest = async () => {
         try {
             let response
-            response = await deleteSysel(id)
+            response = await deleteEdrRequest(id)
             window.location.reload();
         } catch (e) {
             alert(e.response.data.message)
         }
     }
 
-    const saveSyselAgreement = async () => {
-        if (!(selectedSyselAgreementFile == null)){
+    const saveRequest = async () => {
+        if (!(selectedEdrRequest == null)){
 
             let formData = new FormData();
-            formData.append('file', selectedSyselAgreementFile);
+            formData.append('file', selectedEdrRequest);
             // the image field name should be similar to your api endpoint field name
             // in my case here the field name is customFile
 
             axios.post(
-                process.env.REACT_APP_API_URL + "edr_api/sysel/save/" + id,
+                process.env.REACT_APP_API_URL + "edr_api/edr_request/save/" + id,
                 formData,
                 {
                     headers: {
@@ -484,10 +505,8 @@ const ContactProfile = observer(() => {
                                                                 className="ms-2">{ contact.syselAgreement ? 'Ano' : 'Ne'}</span></p>
                                                             <p className="text-muted mb-1 font-13"><strong>Fve dokument :</strong> <span
                                                                 className="ms-2">{ contact.connectedFVE ? 'Ano' : 'Ne'}</span></p>
-                                                            <p className="text-muted mb-1 font-13"><strong>Fve dokument :</strong> <span
-                                                                className="ms-2">{ contact.connectedFVE ? 'Ano' : 'Ne'}</span></p>
-                                                            <p className="text-muted mb-1 font-13"><strong>Fve dokument :</strong> <span
-                                                                className="ms-2">{ contact.connectedFVE ? 'Ano' : 'Ne'}</span></p>
+                                                            <p className="text-muted mb-1 font-13"><strong>Podepsaná přihláška :</strong> <span
+                                                                className="ms-2">{ contact.signedRequestToEdr ? 'Ano' : 'Ne'}</span></p>
                                                         </div>
                                                         : <div></div>
                                                 }
@@ -644,7 +663,7 @@ const ContactProfile = observer(() => {
                                                             {
                                                                 (role === "CURRENT") ?
                                                                     <div className="col-md-6">
-                                                                        <h3>Přihláška</h3> <button type="button"
+                                                                        <h3>Přihláška</h3> <button onClick={generateEdrRequest} type="button"
                                                                                                       className="mb-3 mt-2 btn btn-info waves-effect waves-light"><i
                                                                         className="mdi mdi-cloud-outline me-1"></i> Vygenerovat přihlášku
                                                                     </button>
@@ -654,14 +673,27 @@ const ContactProfile = observer(() => {
                                                                         </button>
                                                                         <br/><br/>
                                                                         <div className="mb-3">
-                                                                            <label htmlFor="example-fileinput" className="form-label">
-                                                                                Uložit podepsanou přihlášku</label>
-                                                                            <input type="file" id="example-fileinput"
-                                                                                   className="form-control"/>
+                                                                            { (!edrRequest) ?
+                                                                                <div className="mb-3">
+                                                                                    <label htmlFor="example-fileinput" className="form-label">
+                                                                                        Uložit podepsanou přihlášku</label>
+                                                                                    <input type="file" onChange={e => setSelectedEdrRequest(e.target.files[0])} id="example-fileinput"
+                                                                                           className="form-control"/>
+                                                                                    <button onClick={saveRequest} type="button"
+                                                                                            className="mt-3 btn btn-primary waves-effect waves-light">Uložit podepsanou přihlášku
+                                                                                    </button>
+                                                                                </div>
+                                                                                :
+                                                                                <div>
+                                                                                    <button onClick={fetchEdrRequest} type="button"
+                                                                                            className="btn btn-success waves-effect waves-light">Stahnout podepsanou přihlášku
+                                                                                    </button>
+                                                                                    <button onClick={deleteRequest} type="button"
+                                                                                            className="mt-3 btn btn-danger waves-effect waves-light">Odstranit podepsanou přihlášku
+                                                                                    </button>
+                                                                                </div>
+                                                                            }
                                                                         </div>
-                                                                        <button type="submit"
-                                                                                className="mb-3 btn btn-primary waves-effect waves-light">Stahnout podepsanou přihlášku
-                                                                        </button>
                                                                         <h3>Faktura</h3> <button type="button"
                                                                                                    className="mb-3 mt-2 btn btn-info waves-effect waves-light"><i
                                                                         className="mdi mdi-cloud-outline me-1"></i> Vygenerovat fakturu
