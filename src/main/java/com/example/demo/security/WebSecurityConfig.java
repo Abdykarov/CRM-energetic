@@ -44,8 +44,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/edr_api/user/refresh",
                         "/edr_api/user/login/",
                         "/edr_api/user/login",
-                        "/edr_api/edr/registrate/",
-                        "/edr_api/edr/registrate",
                         "/edr_api/user/admin",
                         "/edr_api/user/admin/",
                         "/swagger-ui.html/**",
