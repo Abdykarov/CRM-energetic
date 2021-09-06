@@ -36,8 +36,6 @@ public interface UserService {
 
     UserResponseDto changeToEdr(Long id);
 
-    void setSignContract(boolean value, Long userId);
-
     List<PotentialResponseDto> getPotentials();
 
     List<CurrentResponseDto> getCurrents();
@@ -45,13 +43,5 @@ public interface UserService {
     List<AcceptedResponseDto> getAccepted();
 
     List<EdrResponseDto> getEdr();
-
-    void setConnectedFve(boolean b, Long userId);
-
-    void setSyselAgreement(boolean b, Long userId);
-
-    void setHwSunMonitor(boolean b, Long userId);
-
-    void setSignedRequest(boolean b, Long userId);
 
 }

@@ -1,5 +1,7 @@
 package com.example.demo.service.imp;
 
+import com.example.demo.domain.UserEntity;
+import com.example.demo.repository.UserRepository;
 import com.example.demo.service.EdrRequestService;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -7,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -18,9 +22,10 @@ import java.nio.file.Paths;
 public class EdrRequestServiceImp implements EdrRequestService {
 
     private static String UPLOADED_FOLDER = "/home/abdykili/workflow/CRM-energetic/src/main/resources/edr_request/";
-    private final UserServiceImp userService;
+    private UserRepository userRepository;
 
     @Override
+    @Transactional
     public String deleteRequest(Long userId) {
         try {
             Path path = Paths.get(UPLOADED_FOLDER + String.format("request_%s",userId));
@@ -28,7 +33,9 @@ public class EdrRequestServiceImp implements EdrRequestService {
             Files.delete(path);
 
             log.info("Deleting request - Updating userId {} signedContract attribute", userId);
-            userService.setSignedRequest(false, userId);
+            final UserEntity userEntity = userRepository.findById(userId)
+                    .orElseThrow(() -> new EntityNotFoundException("User doesnt exist"));
+            userEntity.setSignedRequestToEdr(false);
             return "success";
 
         } catch (IOException e) {
@@ -39,6 +46,7 @@ public class EdrRequestServiceImp implements EdrRequestService {
     }
 
     @Override
+    @Transactional
     public String uploadRequest(MultipartFile file, Long userId) {
         if (file.isEmpty()) {
             return "Please select a file to upload";
@@ -52,7 +60,9 @@ public class EdrRequestServiceImp implements EdrRequestService {
             Files.write(path, bytes);
 
             log.info("Uploading request - Updating userId {} signedContract attribute", userId);
-            userService.setSignedRequest(true, userId);
+            final UserEntity userEntity = userRepository.findById(userId)
+                    .orElseThrow(() -> new EntityNotFoundException("User doesnt exist"));
+            userEntity.setSignedRequestToEdr(true);
             return "success";
 
         } catch (IOException e) {

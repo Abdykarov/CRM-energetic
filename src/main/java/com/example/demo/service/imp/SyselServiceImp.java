@@ -1,6 +1,8 @@
 package com.example.demo.service.imp;
 
 
+import com.example.demo.domain.UserEntity;
+import com.example.demo.repository.UserRepository;
 import com.example.demo.service.FveService;
 import com.example.demo.service.SyselService;
 import lombok.AllArgsConstructor;
@@ -8,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -18,9 +22,10 @@ import java.nio.file.Paths;
 @AllArgsConstructor
 public class SyselServiceImp implements SyselService {
     private static String UPLOADED_FOLDER = "/home/abdykili/workflow/CRM-energetic/src/main/resources/sysel/";
-    private final UserServiceImp userService;
+    private UserRepository userRepository;
 
     @Override
+    @Transactional
     public String deleteSysel(Long userId) {
         try {
             Path path = Paths.get(UPLOADED_FOLDER + String.format("sysel_%s",userId));
@@ -28,7 +33,9 @@ public class SyselServiceImp implements SyselService {
             Files.delete(path);
 
             log.info("Deleting sysel document - Updating userId {} signedContract attribute", userId);
-            userService.setSyselAgreement(false, userId);
+            final UserEntity userEntity = userRepository.findById(userId)
+                    .orElseThrow(() -> new EntityNotFoundException("User doesnt exist"));
+            userEntity.setSyselAgreement(false);
             return "success";
 
         } catch (IOException e) {
@@ -39,6 +46,7 @@ public class SyselServiceImp implements SyselService {
     }
 
     @Override
+    @Transactional
     public String uploadSysel(MultipartFile file, Long userId) {
         if (file.isEmpty()) {
             return "Please select a file to upload";
@@ -52,7 +60,9 @@ public class SyselServiceImp implements SyselService {
             Files.write(path, bytes);
 
             log.info("Uploading sysel document - Updating userId {} signedContract attribute", userId);
-            userService.setSyselAgreement(true, userId);
+            final UserEntity userEntity = userRepository.findById(userId)
+                    .orElseThrow(() -> new EntityNotFoundException("User doesnt exist"));
+            userEntity.setSyselAgreement(true);
             return "success";
 
         } catch (IOException e) {

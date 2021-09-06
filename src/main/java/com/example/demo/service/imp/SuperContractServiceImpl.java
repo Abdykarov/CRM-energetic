@@ -1,5 +1,7 @@
 package com.example.demo.service.imp;
 
+import com.example.demo.domain.UserEntity;
+import com.example.demo.repository.UserRepository;
 import com.example.demo.service.SuperContractService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -7,6 +9,8 @@ import org.springframework.stereotype.Service;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -18,9 +22,10 @@ import java.nio.file.Paths;
 public class SuperContractServiceImpl implements SuperContractService {
 
     private static String UPLOADED_FOLDER = "/home/abdykili/workflow/CRM-energetic/src/main/resources/supercontracts/";
-    private final UserServiceImp userService;
+    private UserRepository userRepository;
 
     @Override
+    @Transactional
     public String deleteContract(Long userId) {
         try {
             Path path = Paths.get(UPLOADED_FOLDER + String.format("supercontract_%s",userId));
@@ -28,7 +33,9 @@ public class SuperContractServiceImpl implements SuperContractService {
             Files.delete(path);
 
             log.info("Deleting supercontract - Updating userId {} signedContract attribute", userId);
-            userService.setSignContract(false, userId);
+            final UserEntity userEntity = userRepository.findById(userId)
+                    .orElseThrow(() -> new EntityNotFoundException("User doesnt exist"));
+            userEntity.setSignedContract(false);
             return "success";
 
         } catch (IOException e) {
@@ -39,6 +46,7 @@ public class SuperContractServiceImpl implements SuperContractService {
     }
 
     @Override
+    @Transactional
     public String uploadContract(MultipartFile file, Long userId) {
         if (file.isEmpty()) {
             return "Please select a file to upload";
@@ -52,7 +60,9 @@ public class SuperContractServiceImpl implements SuperContractService {
             Files.write(path, bytes);
 
             log.info("Uploading supercontract - Updating userId {} signedContract attribute", userId);
-            userService.setSignContract(true, userId);
+            final UserEntity userEntity = userRepository.findById(userId)
+                    .orElseThrow(() -> new EntityNotFoundException("User doesnt exist"));
+            userEntity.setSignedContract(true);
             return "success";
 
         } catch (IOException e) {

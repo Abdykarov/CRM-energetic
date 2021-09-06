@@ -25,8 +25,8 @@ import java.util.List;
 @AllArgsConstructor
 @RestController
 @Slf4j
-@RequestMapping("/edr_api/user")
 @CrossOrigin(origins = "*", maxAge = 3600)
+@RequestMapping("/edr_api/user")
 public class UserController {
 
     private final String HEADER_STRING = "Authorization";

@@ -19,14 +19,14 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-@Slf4j
-@FieldDefaults(level = AccessLevel.PRIVATE)
-@RestController
 @AllArgsConstructor
+@RestController
+@Slf4j
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping("/edr_api/fve")
 public class FveController {
 
-    FveServiceImp fveService;
+    private FveServiceImp fveService;
     private static String UPLOADED_FOLDER = "/home/abdykili/workflow/CRM-energetic/src/main/resources/fve/";
 
     @RequestMapping(value = "/save/{userId}", method = RequestMethod.POST)
