@@ -13,3 +13,8 @@ export const auth = async () => {
     return jwt_decode(data.token)
 }
 
+
+export const edr_registrate = async () => {
+    const {data} = await $host.post('edr_api/user/edr_registrate')
+    return data
+}

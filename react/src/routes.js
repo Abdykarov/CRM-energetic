@@ -2,7 +2,7 @@ import Admin from "./page/Admin";
 import {
     ACCEPTED_ROUTE,
     ADMIN_ROUTE, CONTACT_PROFILE_ROUTE,
-    CONTACTS_ROUTE, CREATE_CONTACT_ROUTE, CURRENT_ROUTE, DASHBOARD_ROUTE,
+    CONTACTS_ROUTE, CREATE_CONTACT_ROUTE, CREATE_EDR_ROUTE, CURRENT_ROUTE, DASHBOARD_ROUTE,
     EDR_ROUTE, FACTURE_ROUTE, INBOX_ROUTE,
     LEAD_ROUTE,
     LOGIN_ROUTE, MANAGER_ROUTE, POTENTIAL_ROUTE,
@@ -25,6 +25,7 @@ import ContactProfile from "./page/ContactProfile";
 import Inbox from "./page/Inbox";
 import Facture from "./page/Facture";
 import CreationForm from "./page/CreationForm";
+import Edr_Registration from "./page/Edr_Registration";
 
 export const authRoutes = [
     {
@@ -90,6 +91,10 @@ export const authRoutes = [
 ]
 
 export const publicRoutes = [
+    {
+        path: CREATE_EDR_ROUTE + '/:id/' + 'gfdgdfkoJ454T',
+        Component: Edr_Registration
+    },
     {
         path: LOGIN_ROUTE,
         Component: Auth
