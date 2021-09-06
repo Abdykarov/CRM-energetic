@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {CONTACT_PROFILE_ROUTE, DASHBOARD_ROUTE, LOGIN_ROUTE} from "../utils/const";
 import {useHistory, useParams} from "react-router-dom";
-import {login} from "../http/userAPI";
+import {edrRegistrate, login} from "../http/userAPI";
 
 const EdrRegistration = () => {
     const history = useHistory()
