@@ -28,6 +28,11 @@ public class UserEntity {
     String ico;
     String companyName;
     Long salesmanId;
+    @Column(name = "referal_id")
+    Long referalId;
+
+    @Column(name = "wallet_points")
+    Integer walletPoints;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "roleId")

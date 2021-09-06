@@ -27,6 +27,8 @@ public class UserResponseDto {
     Long salesmanId;
     Set<RoleEntity> roles;
     String B2B;
+    Long referalId;
+    Integer walletPoints;
 
     boolean generatedContract;
     boolean signedContract;

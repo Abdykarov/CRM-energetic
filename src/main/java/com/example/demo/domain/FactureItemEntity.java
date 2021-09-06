@@ -1,5 +1,6 @@
 package com.example.demo.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -17,5 +18,6 @@ public class FactureItemEntity {
 
     @ManyToOne
     @JoinColumn(name = "facture_id")
+    @JsonBackReference
     private FactureEntity facture;
 }

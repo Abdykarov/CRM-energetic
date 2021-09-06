@@ -1,5 +1,6 @@
 package com.example.demo.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 
@@ -23,6 +24,7 @@ public class FactureEntity {
     @OneToMany(mappedBy = "facture",
             fetch = FetchType.EAGER,
             cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<FactureItemEntity> items;
 
     private BigDecimal totalPrice;
