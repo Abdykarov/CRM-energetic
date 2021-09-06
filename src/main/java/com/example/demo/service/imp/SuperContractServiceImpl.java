@@ -1,31 +1,16 @@
 package com.example.demo.service.imp;
 
-import com.example.demo.domain.UserEntity;
-import com.example.demo.dto.SuperContractResponseDto;
-import com.example.demo.repository.UserRepository;
 import com.example.demo.service.SuperContractService;
-import com.lowagie.text.DocumentException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import org.springframework.web.multipart.MultipartFile;
-import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.Context;
-import org.thymeleaf.templatemode.TemplateMode;
-import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
-import org.xhtmlrenderer.pdf.ITextRenderer;
 
-import javax.persistence.EntityNotFoundException;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
-import java.util.Optional;
 
 @Service
 @Slf4j
