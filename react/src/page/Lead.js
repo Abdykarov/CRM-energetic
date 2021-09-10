@@ -7,7 +7,10 @@ import LeadTable from "../component/LeadTable";
 const Lead = () => {
     const {lead} = useContext(Context)
     useEffect(() => {
-        fetchLeads().then(data => lead.setContacts(data))
+        fetchLeads().then(data => {
+            lead.setContacts(data)
+            console.log(data)
+        })
     }, [])
     return (
         <div>

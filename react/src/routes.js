@@ -1,12 +1,24 @@
 import Admin from "./page/Admin";
 import {
     ACCEPTED_ROUTE,
-    ADMIN_ROUTE, CONTACT_PROFILE_ROUTE,
-    CONTACTS_ROUTE, CREATE_CONTACT_ROUTE, CREATE_EDR_ROUTE, CURRENT_ROUTE, DASHBOARD_ROUTE,
-    EDR_ROUTE, FACTURE_ROUTE, INBOX_ROUTE,
+    ADMIN_ROUTE,
+    CONTACT_PROFILE_ROUTE,
+    CONTACTS_ROUTE,
+    CREATE_CONTACT_ROUTE,
+    CREATE_EDR_ROUTE,
+    CURRENT_ROUTE,
+    DASHBOARD_ROUTE,
+    EDR_ROUTE,
+    FACTURE_ROUTE,
+    INBOX_ROUTE,
     LEAD_ROUTE,
-    LOGIN_ROUTE, MANAGER_ROUTE, POTENTIAL_ROUTE,
-    REGISTRATION_ROUTE, SALESMAN_ROUTE,
+    LOGIN_ROUTE,
+    MANAGER_ROUTE,
+    POTENTIAL_ROUTE, REGISTRATION_ADMIN_ROUTE,
+    REGISTRATION_CONTACT_ROUTE,
+    REGISTRATION_MANAGER_ROUTE, REGISTRATION_REFERAL_ROUTE,
+    REGISTRATION_SALESMAN_ROUTE,
+    SALESMAN_ROUTE,
     WATT_ROUTE
 } from "./utils/const";
 import Lead from "./page/Lead";
@@ -14,7 +26,6 @@ import Contacts from "./page/Contacts";
 import Edr from "./page/Edr";
 import Watt from "./page/Watt";
 import Auth from "./page/Auth";
-import Registration from "./page/Registration";
 import Dashboard from "./page/Dashboard";
 import Manager from "./page/Manager";
 import Salesman from "./page/Salesman";
@@ -24,8 +35,9 @@ import Accepted from "./page/Accepted";
 import ContactProfile from "./page/ContactProfile";
 import Inbox from "./page/Inbox";
 import Facture from "./page/Facture";
-import CreationForm from "./page/CreationForm";
+import Registration from "./page/Registration";
 import Edr_Registration from "./page/Edr_Registration";
+import RegestrationReferal from "./page/RegestrationReferal";
 
 export const authRoutes = [
     {
@@ -82,11 +94,27 @@ export const authRoutes = [
     },
     {
         path: CREATE_CONTACT_ROUTE,
-        Component: CreationForm
+        Component: Registration
     },
     {
         path: DASHBOARD_ROUTE,
         Component: Dashboard
+    },
+    {
+        path: REGISTRATION_CONTACT_ROUTE,
+        Component: Registration
+    },
+    {
+        path: REGISTRATION_SALESMAN_ROUTE,
+        Component: Registration
+    },
+    {
+        path: REGISTRATION_MANAGER_ROUTE,
+        Component: Registration
+    },
+    {
+        path: REGISTRATION_ADMIN_ROUTE,
+        Component: Registration
     }
 ]
 
@@ -100,7 +128,7 @@ export const publicRoutes = [
         Component: Auth
     },
     {
-        path: REGISTRATION_ROUTE,
-        Component: Registration
+        path: REGISTRATION_REFERAL_ROUTE,
+        Component:RegestrationReferal
     }
 ]

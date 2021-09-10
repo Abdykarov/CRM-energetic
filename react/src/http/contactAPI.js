@@ -1,5 +1,15 @@
 import {$authHost} from "./index";
 
+export const fetchAdmins = async () =>{
+    const {data} = await $authHost.get('edr_api/user/contact/admins/')
+    return data
+}
+
+export const fetchSalesmans = async () =>{
+    const {data} = await $authHost.get('edr_api/user/contact/salesmans/')
+    return data
+}
+
 export const fetchContacts = async () =>{
     const {data} = await $authHost.get('edr_api/user/contact/contacts/')
     return data
@@ -99,4 +109,13 @@ export const deleteHwSun = async (id) =>{
 export const deleteEdrRequest = async (id) =>{
     const {data} = await $authHost.get('edr_api/edr_request/delete/' + id)
     return data
+}
+
+export const fetchAdminCoint = async () => {
+    const {data} = await $authHost.get('edr_api/user/count/admin')
+    return data
+}
+
+export const createAdmin = async (name, phone, surname, email, username, password) => {
+    const {data} = await $authHost.post('edr_api/user/admin',{name, phone, surname, email, username, password})
 }

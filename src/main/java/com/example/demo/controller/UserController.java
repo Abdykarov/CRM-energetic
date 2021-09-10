@@ -89,8 +89,8 @@ public class UserController {
     }
 
     @PostMapping("/admin/")
-    public AccountResponseDto createAdmin(@RequestBody AuthRequestDto authRequestDto) {
-        return userService.saveAdmin(authRequestDto);
+    public AdminResponseDto createAdmin(@RequestBody AdminRequestDto adminRequestDto) {
+        return userService.saveAdmin(adminRequestDto);
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -109,6 +109,25 @@ public class UserController {
     @PostMapping("/contact/")
     public ContactResponseDto createContact(@RequestBody ContactRequestDto contactRequestDto) {
         return userService.saveContact(contactRequestDto);
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')")
+    @GetMapping("/count/admin")
+    public Integer getAdminCount() {
+        return userService.getAdminCount();
+    }
+
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @GetMapping("/contact/admins")
+    public List<AdminResponseDto> getAdmins() {
+        return userService.getAdmins();
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')")
+    @GetMapping("/contact/salesmans")
+    public List<SalesmanResponseDto> getSalesmans() {
+        return userService.getSalesmans();
     }
 
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')")
@@ -201,6 +220,11 @@ public class UserController {
     @GetMapping("/to_edr/{id}")
     public UserResponseDto changeToEdr(@PathVariable Long id) {
         return userService.changeToEdr(id);
+    }
+
+    @PostMapping("/edr/registrate")
+    public EdrResponseDto registrateEdr(@RequestBody EdrRequestDto edrRequestDto){
+        return userService.registrateEdr(edrRequestDto);
     }
 
 }

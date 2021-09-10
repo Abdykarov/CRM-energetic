@@ -37,6 +37,7 @@ public class UserServiceImp implements UserDetailsService, UserService {
     private final CurrentMapper currentMapper;
     private final AcceptedMapper acceptedMapper;
     private final EdrMapper edrMapper;
+    private final AdminMapper adminMapper;
     private final RoleServiceImp roleService;
     private final RoleRepository roleRepository;
     private final BCryptPasswordEncoder passwordEncoder;
@@ -61,19 +62,19 @@ public class UserServiceImp implements UserDetailsService, UserService {
 
     @Override
     @Transactional
-    public AccountResponseDto saveAdmin(AuthRequestDto user) {
-        UserEntity userEntity = new UserEntity()
-                .setUsername(user.getUsername());
+    public AdminResponseDto saveAdmin(AdminRequestDto adminRequestDto) {
 
-        userEntity.setPassword(passwordEncoder.encode(user.getPassword()));
+        UserEntity user = adminMapper.toEntity(adminRequestDto);
+
+        user.setPassword(passwordEncoder.encode(adminRequestDto.getPassword()));
 
         RoleEntity role = roleService.findByName("ADMIN");
         Set<RoleEntity> roleSet = new HashSet<>();
         roleSet.add(role);
-        userEntity.setRoles(roleSet);
-        UserEntity save = userRepository.save(userEntity);
+        user.setRoles(roleSet);
+        UserEntity save = userRepository.save(user);
 
-        return accountMapper.toResponse(save);
+        return adminMapper.toResponse(save);
     }
 
     @Override
@@ -134,6 +135,30 @@ public class UserServiceImp implements UserDetailsService, UserService {
         List<ContactResponseDto> collect = Stream.concat(collectNew.stream(), collectOld.stream())
                 .collect(Collectors.toList());
         return collect;
+    }
+
+    @Override
+    public Integer getAdminCount() {
+        List<UserEntity> adminEntities = userRepository.findByRoles_Name("ADMIN");
+        return adminEntities.size();
+    }
+
+    @Override
+    public List<AdminResponseDto> getAdmins() {
+        List<UserEntity> adminEntities = userRepository.findByRoles_Name("ADMIN");
+        List<AdminResponseDto> collection = adminEntities.stream()
+                .map(user -> adminMapper.toResponse(user))
+                .collect(Collectors.toList());
+        return collection;
+    }
+
+    @Override
+    public List<SalesmanResponseDto> getSalesmans() {
+        List<UserEntity> salesmanEntities = userRepository.findByRoles_Name("SALESMAN");
+        List<SalesmanResponseDto> collection = salesmanEntities.stream()
+                .map(user -> salesmanMapper.toResponse(user))
+                .collect(Collectors.toList());
+        return collection;
     }
 
     @Override
@@ -268,5 +293,30 @@ public class UserServiceImp implements UserDetailsService, UserService {
                 .orElseThrow(() -> new EntityNotFoundException("Not found"));
         return userMapper.toResponse(userEntity);
     }
+
+
+    @Override
+    public EdrResponseDto registrateEdr(EdrRequestDto edrRequestDto) {
+
+        final UserEntity user = userRepository.findById(edrRequestDto.getId())
+                .orElseThrow(() -> new EntityNotFoundException("User doesnt exist"));
+
+        if(userRepository.existsByUsername(edrRequestDto.getUsername())){
+            throw new RuntimeException("User with such username exists");
+        }
+
+        user
+                .setUsername(edrRequestDto.getUsername())
+                .setPassword(passwordEncoder.encode(edrRequestDto.getPassword()));
+
+        RoleEntity role = roleService.findByName("EDR");
+        Set<RoleEntity> roleSet = new HashSet<>();
+        roleSet.add(role);
+        user.setRoles(roleSet);
+        UserEntity save = userRepository.save(user);
+
+        return edrMapper.toResponse(save);
+    }
+
 
 }

@@ -6,7 +6,7 @@ import com.example.demo.dto.*;
 import java.util.List;
 
 public interface UserService {
-    AccountResponseDto saveAdmin(AuthRequestDto user);
+    AdminResponseDto saveAdmin(AdminRequestDto adminRequestDto);
 
     AccountResponseDto saveManager(AuthRequestDto user);
 
@@ -44,4 +44,11 @@ public interface UserService {
 
     List<EdrResponseDto> getEdr();
 
+    EdrResponseDto registrateEdr(EdrRequestDto edrRequestDto);
+
+    List<AdminResponseDto> getAdmins();
+
+    Integer getAdminCount();
+
+    List<SalesmanResponseDto> getSalesmans();
 }

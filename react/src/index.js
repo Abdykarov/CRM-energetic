@@ -8,6 +8,9 @@ import PotentialStore from "./store/PotentialStore";
 import CurrentStore from "./store/CurrentStore";
 import AcceptedStore from "./store/AcceptedStore";
 import EdrStore from "./store/EdrStore";
+import SalesmanStore from "./store/SalesmanStore";
+import AdminStore from "./store/AdminStore";
+import ManagerStore from "./store/ManagerStore";
 
 export const Context = createContext(null)
 ReactDOM.render(
@@ -18,6 +21,9 @@ ReactDOM.render(
         potential: new PotentialStore(),
         current: new CurrentStore(),
         accepted: new AcceptedStore(),
+        admin: new AdminStore(),
+        salesman: new SalesmanStore(),
+        manager: new ManagerStore(),
         edr: new EdrStore()
     }}>
         <App />

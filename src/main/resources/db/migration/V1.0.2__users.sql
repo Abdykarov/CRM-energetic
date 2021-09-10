@@ -25,6 +25,8 @@ INSERT INTO user_entity (b2b, hwsun_monitor, sysel_agreement, accepted_request_t
 
 
 
+
+
 -- ROLES_USER
 INSERT INTO user_entity_roles (user_entity_id, roles_id)
 VALUES (1, 4);

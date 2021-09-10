@@ -5,6 +5,7 @@ import ContactItem from "../component/ContactItem";
 import {observer} from "mobx-react-lite";
 import {Context} from "../index";
 import ContactTable from "../component/ContactTable";
+import Footer from "../component/Footer";
 
 const Contacts = observer(() => {
     const {contact} = useContext(Context)
@@ -40,10 +41,9 @@ const Contacts = observer(() => {
                                     <div className="card-body">
                                         <div className="row mb-2">
                                             <div className="col-sm-4">
-                                                <button type="button" className="btn btn-danger waves-effect waves-light"
-                                                        data-bs-toggle="modal" data-bs-target="#custom-modal"><i
-                                                    className="mdi mdi-plus-circle me-1"></i> Add Customers
-                                                </button>
+                                                <a href="/registration/contact" className="btn btn-danger waves-effect waves-light"><i
+                                                    className="mdi mdi-plus-circle me-1"></i> Vytvořit kontakt
+                                                </a>
                                             </div>
                                             <div className="col-sm-8">
                                                 <div className="text-sm-end mt-2 mt-sm-0">
@@ -122,15 +122,7 @@ const Contacts = observer(() => {
 
                 </div>
 
-                <footer className="footer">
-                    <div className="container-fluid">
-                        <div className="row">
-                            <div className="col-md-6">
-                                &copy; Design by <a href="">Karlin It Group</a>
-                            </div>
-                        </div>
-                    </div>
-                </footer>
+                <Footer></Footer>
             </div>
         </div>
     );

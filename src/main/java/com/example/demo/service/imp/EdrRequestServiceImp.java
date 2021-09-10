@@ -18,7 +18,7 @@ import java.nio.file.Paths;
 
 @Service
 @Slf4j
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class EdrRequestServiceImp implements EdrRequestService {
 
     private static String UPLOADED_FOLDER = "/home/abdykili/workflow/CRM-energetic/src/main/resources/edr_request/";

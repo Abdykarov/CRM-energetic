@@ -1,6 +1,6 @@
-import React, {useContext} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
-    ACCEPTED_ROUTE,
+    ACCEPTED_ROUTE, ADMIN_ROUTE,
     CONTACTS_ROUTE,
     CURRENT_ROUTE,
     DASHBOARD_ROUTE, EDR_ROUTE, FACTURE_ROUTE, INBOX_ROUTE, LEAD_ROUTE,
@@ -9,9 +9,19 @@ import {
 } from "../utils/const";
 import {Context} from "../index";
 import {observer} from "mobx-react-lite";
+import {fetchAdminCoint, fetchUserByUsername} from "../http/contactAPI";
 
 const LeftSidebar = observer(() => {
     const {user} = useContext(Context)
+    const [adminCount, setAdminCount] = useState(0)
+
+    useEffect(() => {
+
+        fetchAdminCoint().then(data => {
+            setAdminCount(data)
+        })
+
+    }, [])
     return (
                 <div className="left-side-menu">
                     {user.isAuth ?
@@ -65,7 +75,11 @@ const LeftSidebar = observer(() => {
                                     </a>
                                 </li>
                                 <li>
-
+                                    <a href={ADMIN_ROUTE}>
+                                        <i className="fe-user-check"></i>
+                                        <span className="badge bg-success rounded-pill float-end">{adminCount}</span>
+                                        <span> Adminy </span>
+                                    </a>
                                 </li>
                                 <li>
                                     <a href={SALESMAN_ROUTE}>

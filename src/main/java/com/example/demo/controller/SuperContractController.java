@@ -48,7 +48,6 @@ public class SuperContractController {
         Path path = Paths.get(file.getAbsolutePath());
 
         ByteArrayResource resource = new ByteArrayResource(Files.readAllBytes(path));
-
         return ResponseEntity.ok()
                 .headers(header)
                 .contentLength(file.length())

@@ -1,13 +1,13 @@
 /* eslint-disable */
 
-import React, {useContext, useEffect} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {Navbar} from "react-bootstrap";
 import {Context} from "../index";
 import {CONTACT_PROFILE_ROUTE, DASHBOARD_ROUTE, LOGIN_ROUTE, PROFILE_ROUTE} from "../utils/const";
 import {observer} from "mobx-react-lite";
 import {login} from "../http/userAPI";
 import {useHistory} from "react-router-dom";
-import {fetchContacts, fetchUserByUsername} from "../http/contactAPI";
+import {fetchAdminCoint, fetchContacts, fetchUserByUsername} from "../http/contactAPI";
 
 const NavBar = observer(() => {
     const {user} = useContext(Context)

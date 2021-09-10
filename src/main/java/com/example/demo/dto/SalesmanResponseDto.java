@@ -11,9 +11,8 @@ import java.util.Set;
 public class SalesmanResponseDto {
 
     private Long id;
-    private Set<RoleEntity> roles;
     private String name;
     private String surname;
-    private String B2B;
-
+    private String email;
+    private String phone;
 }
