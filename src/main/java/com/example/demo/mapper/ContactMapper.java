@@ -1,10 +1,8 @@
 package com.example.demo.mapper;
 
 import com.example.demo.domain.UserEntity;
-import com.example.demo.dto.ContactRequestDto;
-import com.example.demo.dto.ContactResponseDto;
-import com.example.demo.dto.SalesmanRequestDto;
-import com.example.demo.dto.SalesmanResponseDto;
+import com.example.demo.dto.request.ContactRequestDto;
+import com.example.demo.dto.response.ContactResponseDto;
 import org.mapstruct.Mapper;
 
 @Mapper

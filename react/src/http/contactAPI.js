@@ -117,5 +117,11 @@ export const fetchAdminCoint = async () => {
 }
 
 export const createAdmin = async (name, phone, surname, email, username, password) => {
-    const {data} = await $authHost.post('edr_api/user/admin',{name, phone, surname, email, username, password})
+    const {data} = await $authHost.post('edr_api/user/create/admin/',{name, phone, surname, email, username, password})
+    return data
+}
+
+export const createSalesman = async (name, phone, surname, email, username, password) => {
+    const {data} = await $authHost.post('edr_api/user/create/salesman/',{name, phone, surname, email, username, password})
+    return data
 }

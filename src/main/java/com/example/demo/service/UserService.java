@@ -1,14 +1,14 @@
 package com.example.demo.service;
 
-import com.example.demo.domain.UserEntity;
-import com.example.demo.dto.*;
+import com.example.demo.dto.request.*;
+import com.example.demo.dto.response.*;
 
 import java.util.List;
 
 public interface UserService {
     AdminResponseDto saveAdmin(AdminRequestDto adminRequestDto);
 
-    AccountResponseDto saveManager(AuthRequestDto user);
+    ManagerResponseDto saveManager(ManagerRequestDto user);
 
     SalesmanResponseDto saveSalesman(SalesmanRequestDto user);
 

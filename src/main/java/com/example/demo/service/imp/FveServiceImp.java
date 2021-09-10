@@ -27,7 +27,7 @@ public class FveServiceImp implements FveService {
     @Transactional
     public String deleteFve(Long userId) {
         try {
-            Path path = Paths.get(UPLOADED_FOLDER + String.format("fve_%s",userId));
+            Path path = Paths.get(UPLOADED_FOLDER + String.format("fve_%s", userId));
             log.info("Deleting fve - Deleting file with path {}", path.toString());
             Files.delete(path);
 
@@ -54,7 +54,7 @@ public class FveServiceImp implements FveService {
         try {
             // Get the file and save it
             byte[] bytes = file.getBytes();
-            Path path = Paths.get(UPLOADED_FOLDER + String.format("fve_%s",userId));
+            Path path = Paths.get(UPLOADED_FOLDER + String.format("fve_%s", userId));
             log.info("Uploading fve - Creating file with path {}", path.toString());
             Files.write(path, bytes);
 

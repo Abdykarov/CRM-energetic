@@ -27,6 +27,7 @@ public class UserEntity {
     String jobPosition;
     String ico;
     String companyName;
+    String area;
     Long salesmanId;
     @Column(name = "referal_id")
     Long referalId;

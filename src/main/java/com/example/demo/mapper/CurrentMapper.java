@@ -1,7 +1,7 @@
 package com.example.demo.mapper;
 
 import com.example.demo.domain.UserEntity;
-import com.example.demo.dto.CurrentResponseDto;
+import com.example.demo.dto.response.CurrentResponseDto;
 import org.mapstruct.Mapper;
 
 @Mapper

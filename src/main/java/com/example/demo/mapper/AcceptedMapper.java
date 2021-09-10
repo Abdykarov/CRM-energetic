@@ -1,8 +1,7 @@
 package com.example.demo.mapper;
 
 import com.example.demo.domain.UserEntity;
-import com.example.demo.dto.AcceptedResponseDto;
-import com.example.demo.dto.EdrResponseDto;
+import com.example.demo.dto.response.AcceptedResponseDto;
 import org.mapstruct.Mapper;
 
 @Mapper

@@ -3,7 +3,6 @@ package com.example.demo.service.imp;
 
 import com.example.demo.domain.UserEntity;
 import com.example.demo.repository.UserRepository;
-import com.example.demo.service.FveService;
 import com.example.demo.service.SyselService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +27,7 @@ public class SyselServiceImp implements SyselService {
     @Transactional
     public String deleteSysel(Long userId) {
         try {
-            Path path = Paths.get(UPLOADED_FOLDER + String.format("sysel_%s",userId));
+            Path path = Paths.get(UPLOADED_FOLDER + String.format("sysel_%s", userId));
             log.info("Deleting sysel document - Deleting file with path {}", path.toString());
             Files.delete(path);
 
@@ -55,7 +54,7 @@ public class SyselServiceImp implements SyselService {
         try {
             // Get the file and save it
             byte[] bytes = file.getBytes();
-            Path path = Paths.get(UPLOADED_FOLDER + String.format("sysel_%s",userId));
+            Path path = Paths.get(UPLOADED_FOLDER + String.format("sysel_%s", userId));
             log.info("Uploading sysel document - Creating file with path {}", path.toString());
             Files.write(path, bytes);
 

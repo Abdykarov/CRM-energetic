@@ -27,7 +27,7 @@ public class HwServiceImp implements HwService {
     @Transactional
     public String deleteHw(Long userId) {
         try {
-            Path path = Paths.get(UPLOADED_FOLDER + String.format("hw_%s",userId));
+            Path path = Paths.get(UPLOADED_FOLDER + String.format("hw_%s", userId));
             log.info("Deleting supercontract - Deleting file with path {}", path.toString());
             Files.delete(path);
 
@@ -54,7 +54,7 @@ public class HwServiceImp implements HwService {
         try {
             // Get the file and save it
             byte[] bytes = file.getBytes();
-            Path path = Paths.get(UPLOADED_FOLDER + String.format("hw_%s",userId));
+            Path path = Paths.get(UPLOADED_FOLDER + String.format("hw_%s", userId));
             log.info("Uploading supercontract - Creating file with path {}", path.toString());
             Files.write(path, bytes);
 
