@@ -287,7 +287,7 @@ public class UserServiceImp implements UserDetailsService, UserService {
         return userMapper.toResponse(save);
     }
 
-
+    //TODO find all contacts where salesman id == id
     @Override
     public List<ContactResponseDto> getSalesmanContacts(Long salesmanId) {
         return null;

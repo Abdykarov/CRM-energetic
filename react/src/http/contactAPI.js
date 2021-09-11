@@ -121,7 +121,21 @@ export const createAdmin = async (name, phone, surname, email, username, passwor
     return data
 }
 
-export const createSalesman = async (name, phone, surname, email, username, password) => {
-    const {data} = await $authHost.post('edr_api/user/create/salesman/',{name, phone, surname, email, username, password})
+
+export const createManager = async (name, phone, surname, email, username, password) => {
+    const {data} = await $authHost.post('edr_api/user/create/manager/',{name, phone, surname, email, username, password})
+    return data
+}
+
+export const createSalesman= async (name, phone, surname, email, username, password, ico, b2b,area) => {
+    const {data} = await $authHost.post('edr_api/user/create/salesman/',
+        {name, phone, surname, email, username, password, ico, b2b,area})
+    return data
+}
+
+export const createContact = async (name, phone, surname, email, username, password, ico, b2b,
+                                     salesmanId, company, city, position) => {
+    const {data} = await $authHost.post('edr_api/user/create/contact/',
+        {name, phone, surname, email, username, password, ico, b2b, salesmanId, company, city, position})
     return data
 }
