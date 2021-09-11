@@ -19,9 +19,8 @@ public class ContactRequestDto {
     @NotBlank
     String email;
     Long salesmanId;
-    String company;
-    String position;
-    String city;
+    String jobPosition;
     String ico;
-
+    String companyName;
+    String city;
 }

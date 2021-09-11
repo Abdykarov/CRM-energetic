@@ -51,4 +51,10 @@ public interface UserService {
     Integer getAdminCount();
 
     List<SalesmanResponseDto> getSalesmans();
+
+    Integer getManagerCount();
+
+    Integer getSalesmanCount();
+
+    List<ManagerResponseDto> getManagers();
 }

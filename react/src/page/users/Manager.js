@@ -1,7 +1,18 @@
 /* eslint-disable */
-import React from 'react';
+import React, {useContext, useEffect} from 'react';
+import {Context} from "../../index";
+import {fetchAdmins, fetchManagers} from "../../http/contactAPI";
+import AdminTable from "../../component/tables/AdminTable";
+import ManagerTable from "../../component/tables/ManagerTable";
 
 const Manager = () => {
+    const {manager} = useContext(Context)
+    useEffect(() => {
+        fetchManagers().then(data => {
+            manager.setContacts(data)
+            console.log(data)
+        })
+    }, [])
     return (
         <div className="content-page">
             <div className="content">
@@ -53,10 +64,10 @@ const Manager = () => {
                                                 <button type="button"
                                                         className="btn btn-success waves-effect waves-light me-1"><i
                                                     className="mdi mdi-cog"></i></button>
-                                                <a href="/registrate" type="button"
+                                                <a href="/registration/manager" type="button"
                                                    className="btn btn-danger waves-effect waves-light">
                                                     <i
-                                                        className="mdi mdi-plus-circle me-1"></i> Add New
+                                                        className="mdi mdi-plus-circle me-1"></i> Založit nového manažera
                                                 </a>
                                             </div>
                                         </div>
@@ -67,162 +78,7 @@ const Manager = () => {
                         </div>
                     </div>
 
-
-                    <div className="row">
-                        <div className="col-lg-4">
-                            <div className="text-center card">
-                                <div className="card-body">
-                                    <div className="pt-2 pb-2">
-                                        <img src="images/users/user-3.jpg"
-                                             className="rounded-circle img-thumbnail avatar-xl" alt="profile-image" />
-
-                                        <h4 className="mt-3"><a href="extras-profile.html" className="text-dark">Matěj Pošta</a></h4>
-                                        <p className="text-muted">@Manager <span> | </span> <span> <a href="#"
-                                                                                                                className="text-pink">email@energodruzstvo.cz</a> </span>
-                                        </p>
-
-                                        <button type="button"
-                                                className="btn btn-primary btn-sm waves-effect waves-light">Zpráva
-                                        </button>
-                                        <button type="button" className="btn btn-light btn-sm waves-effect">Profil
-                                        </button>
-
-                                    </div>
-
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <div className="col-lg-4">
-                            <div className="text-center card">
-                                <div className="card-body">
-                                    <div className="pt-2 pb-2">
-                                        <img src="images/users/user-3.jpg"
-                                             className="rounded-circle img-thumbnail avatar-xl" alt="profile-image" />
-
-                                        <h4 className="mt-3"><a href="extras-profile.html" className="text-dark">Matěj Pošta</a></h4>
-                                        <p className="text-muted">@Manager <span> | </span> <span> <a href="#"
-                                                                                                      className="text-pink">email@energodruzstvo.cz</a> </span>
-                                        </p>
-
-                                        <button type="button"
-                                                className="btn btn-primary btn-sm waves-effect waves-light">Zpráva
-                                        </button>
-                                        <button type="button" className="btn btn-light btn-sm waves-effect">Profil
-                                        </button>
-
-                                    </div>
-
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <div className="col-lg-4">
-                            <div className="text-center card">
-                                <div className="card-body">
-                                    <div className="pt-2 pb-2">
-                                        <img src="images/users/user-3.jpg"
-                                             className="rounded-circle img-thumbnail avatar-xl" alt="profile-image" />
-
-                                        <h4 className="mt-3"><a href="extras-profile.html" className="text-dark">Matěj Pošta</a></h4>
-                                        <p className="text-muted">@Manager <span> | </span> <span> <a href="#"
-                                                                                                      className="text-pink">email@energodruzstvo.cz</a> </span>
-                                        </p>
-
-                                        <button type="button"
-                                                className="btn btn-primary btn-sm waves-effect waves-light">Zpráva
-                                        </button>
-                                        <button type="button" className="btn btn-light btn-sm waves-effect">Profil
-                                        </button>
-
-                                    </div>
-
-                                </div>
-                            </div>
-
-                        </div>
-
-
-                        <div className="col-lg-4">
-                            <div className="text-center card">
-                                <div className="card-body">
-                                    <div className="pt-2 pb-2">
-                                        <img src="images/users/user-3.jpg"
-                                             className="rounded-circle img-thumbnail avatar-xl" alt="profile-image" />
-
-                                        <h4 className="mt-3"><a href="extras-profile.html" className="text-dark">Matěj Pošta</a></h4>
-                                        <p className="text-muted">@Manager <span> | </span> <span> <a href="#"
-                                                                                                      className="text-pink">email@energodruzstvo.cz</a> </span>
-                                        </p>
-
-                                        <button type="button"
-                                                className="btn btn-primary btn-sm waves-effect waves-light">Zpráva
-                                        </button>
-                                        <button type="button" className="btn btn-light btn-sm waves-effect">Profil
-                                        </button>
-
-                                    </div>
-
-                                </div>
-                            </div>
-
-                        </div>
-
-
-                        <div className="col-lg-4">
-                            <div className="text-center card">
-                                <div className="card-body">
-                                    <div className="pt-2 pb-2">
-                                        <img src="images/users/user-3.jpg"
-                                             className="rounded-circle img-thumbnail avatar-xl" alt="profile-image" />
-
-                                        <h4 className="mt-3"><a href="extras-profile.html" className="text-dark">Matěj Pošta</a></h4>
-                                        <p className="text-muted">@Manager <span> | </span> <span> <a href="#"
-                                                                                                      className="text-pink">email@energodruzstvo.cz</a> </span>
-                                        </p>
-
-                                        <button type="button"
-                                                className="btn btn-primary btn-sm waves-effect waves-light">Zpráva
-                                        </button>
-                                        <button type="button" className="btn btn-light btn-sm waves-effect">Profil
-                                        </button>
-
-                                    </div>
-
-                                </div>
-                            </div>
-
-                        </div>
-
-
-                        <div className="col-lg-4">
-                            <div className="text-center card">
-                                <div className="card-body">
-                                    <div className="pt-2 pb-2">
-                                        <img src="images/users/user-3.jpg"
-                                             className="rounded-circle img-thumbnail avatar-xl" alt="profile-image" />
-
-                                        <h4 className="mt-3"><a href="extras-profile.html" className="text-dark">Matěj Pošta</a></h4>
-                                        <p className="text-muted">@Manager <span> | </span> <span> <a href="#"
-                                                                                                      className="text-pink">email@energodruzstvo.cz</a> </span>
-                                        </p>
-
-                                        <button type="button"
-                                                className="btn btn-primary btn-sm waves-effect waves-light">Zpráva
-                                        </button>
-                                        <button type="button" className="btn btn-light btn-sm waves-effect">Profil
-                                        </button>
-
-                                    </div>
-
-                                </div>
-                            </div>
-
-                        </div>
-
-                    </div>
+                    <ManagerTable></ManagerTable>
 
 
                     <div className="row">

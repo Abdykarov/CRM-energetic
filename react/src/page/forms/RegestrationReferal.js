@@ -1,6 +1,10 @@
 import React from 'react';
+import {useParams} from "react-router-dom";
+import {observer} from "mobx-react-lite";
 
-const RegestrationReferal = () => {
+const RegestrationReferal = observer(() => {
+    const {referenceLink} = useParams()
+
     return (
         <div className="referal_registration">
             <header>
@@ -144,6 +148,6 @@ const RegestrationReferal = () => {
             </div>
         </div>
     );
-};
+});
 
 export default RegestrationReferal;

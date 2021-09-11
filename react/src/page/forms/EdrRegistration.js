@@ -2,15 +2,17 @@ import React, {useState} from 'react';
 import {CONTACT_PROFILE_ROUTE, DASHBOARD_ROUTE, LOGIN_ROUTE} from "../../utils/const";
 import {useHistory, useParams} from "react-router-dom";
 import {edrRegistrate, login} from "../../http/userAPI";
+import {observer} from "mobx-react-lite";
 
-const EdrRegistration = () => {
+const EdrRegistration = observer(() => {
     const history = useHistory()
-    const {id} = useParams()
+    const {edrLink} = useParams()
     const [username,setUsername] = useState('')
     const [password,setPassword] = useState('')
+
     const edr_registrate = async () => {
         let data;
-        data = await edrRegistrate(id,username, password);
+        data = await edrRegistrate(edrLink,username, password);
         history.push(LOGIN_ROUTE)
     }
 
@@ -81,6 +83,6 @@ const EdrRegistration = () => {
             </div>
         </div>
     );
-};
+});
 
 export default EdrRegistration;

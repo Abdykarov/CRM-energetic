@@ -63,7 +63,7 @@ const Admin = () => {
                                                 <a href="/registration/admin"
                                                    className="btn btn-danger waves-effect waves-light">
                                                     <i
-                                                        className="mdi mdi-plus-circle me-1"></i> Založit nového
+                                                        className="mdi mdi-plus-circle me-1"></i> Založit nového admina
                                                 </a>
                                             </div>
                                         </div>

@@ -4,7 +4,6 @@ import {
     ADMIN_ROUTE,
     CONTACT_PROFILE_ROUTE,
     CONTACTS_ROUTE,
-    CREATE_CONTACT_ROUTE,
     CREATE_EDR_ROUTE,
     CURRENT_ROUTE,
     DASHBOARD_ROUTE,
@@ -36,8 +35,9 @@ import ContactProfile from "./page/users/ContactProfile";
 import Inbox from "./page/Inbox";
 import Facture from "./page/Facture";
 import Registration from "./page/forms/Registration";
-import Edr_Registration from "./page/forms/Edr_Registration";
+import Edr_Registration from "./page/forms/EdrRegistration";
 import RegestrationReferal from "./page/forms/RegestrationReferal";
+import EdrRegistration from "./page/forms/EdrRegistration";
 
 export const authRoutes = [
     {
@@ -93,10 +93,6 @@ export const authRoutes = [
         Component: Facture
     },
     {
-        path: CREATE_CONTACT_ROUTE,
-        Component: Registration
-    },
-    {
         path: DASHBOARD_ROUTE,
         Component: Dashboard
     },
@@ -120,15 +116,15 @@ export const authRoutes = [
 
 export const publicRoutes = [
     {
-        path: CREATE_EDR_ROUTE + '/:id/' + 'gfdgdfkoJ454T',
-        Component: Edr_Registration
-    },
-    {
         path: LOGIN_ROUTE,
         Component: Auth
     },
     {
-        path: REGISTRATION_REFERAL_ROUTE,
+        path: CREATE_EDR_ROUTE + '/:edrLink',
+        Component: EdrRegistration
+    },
+    {
+        path: REGISTRATION_REFERAL_ROUTE + '/:referenceLink',
         Component:RegestrationReferal
     }
 ]

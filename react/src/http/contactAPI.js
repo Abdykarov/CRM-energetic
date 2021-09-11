@@ -5,6 +5,11 @@ export const fetchAdmins = async () =>{
     return data
 }
 
+export const fetchManagers = async () =>{
+    const {data} = await $authHost.get('edr_api/user/contact/managers/')
+    return data
+}
+
 export const fetchSalesmans = async () =>{
     const {data} = await $authHost.get('edr_api/user/contact/salesmans/')
     return data
@@ -83,6 +88,12 @@ export const updateToEdr = async (id) =>{
     return data
 }
 
+
+export const sendEdrRegistrationLink = async (id) =>{
+    const {data} = await $authHost.get('edr_api/user/edr/reg-link/' + id)
+    return data
+}
+
 export const deleteContract = async (id) =>{
     const {data} = await $authHost.get('edr_api/supercontract/delete/' + id)
     return data
@@ -116,6 +127,18 @@ export const fetchAdminCoint = async () => {
     return data
 }
 
+
+export const fetchManagerCount = async () => {
+    const {data} = await $authHost.get('edr_api/user/count/manager')
+    return data
+}
+
+
+export const fetchSalesmanCount = async () => {
+    const {data} = await $authHost.get('edr_api/user/count/salesman')
+    return data
+}
+
 export const createAdmin = async (name, phone, surname, email, username, password) => {
     const {data} = await $authHost.post('edr_api/user/create/admin/',{name, phone, surname, email, username, password})
     return data
@@ -133,9 +156,14 @@ export const createSalesman= async (name, phone, surname, email, username, passw
     return data
 }
 
-export const createContact = async (name, phone, surname, email, username, password, ico, b2b,
-                                     salesmanId, company, city, position) => {
+export const createContact = async (name, phone, surname, email, ico,
+                                     salesmanId, companyName, city, jobPosition) => {
     const {data} = await $authHost.post('edr_api/user/create/contact/',
-        {name, phone, surname, email, username, password, ico, b2b, salesmanId, company, city, position})
+        {name, phone, surname, email, ico, salesmanId, companyName, city, jobPosition})
+    return data
+}
+
+export const createReferalLink = async (id) => {
+    const {data} = await $authHost.get('edr_api/user/edr/generate-referal-link', {id})
     return data
 }

@@ -63,10 +63,10 @@ const Salesman = () => {
                                                 <button type="button"
                                                         className="btn btn-success waves-effect waves-light me-1"><i
                                                     className="mdi mdi-cog"></i></button>
-                                                <a href="/registrate" type="button"
+                                                <a href="/registration/salesman" type="button"
                                                         className="btn btn-danger waves-effect waves-light">
                                                     <i
-                                                    className="mdi mdi-plus-circle me-1"></i> Add New
+                                                    className="mdi mdi-plus-circle me-1"></i> Založit nového obchodního zástupce
                                                 </a>
                                             </div>
                                         </div>

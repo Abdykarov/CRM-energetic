@@ -1,10 +1,9 @@
 import React, {useContext} from 'react';
 import {Context} from "../../index";
-import AdminItem from "../items/AdminItem";
-import Salesman from "../../page/users/Salesman";
 import SalesmanItem from "../items/SalesmanItem";
+import {observer} from "mobx-react-lite";
 
-const SalesmanTable = () => {
+const SalesmanTable = observer(() => {
     const {salesman} = useContext(Context)
     return (
         <div className="row">
@@ -13,6 +12,6 @@ const SalesmanTable = () => {
             )}
         </div>
     );
-};
+});
 
 export default SalesmanTable;

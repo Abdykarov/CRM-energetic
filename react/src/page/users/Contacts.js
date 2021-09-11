@@ -84,7 +84,7 @@ const Contacts = observer(() => {
                                                     <th style={{width: '85px'}}>Action</th>
                                                 </tr>
                                                 </thead>
-                                                <ContactTable/>
+                                                <ContactTable></ContactTable>
                                             </table>
                                         </div>
 

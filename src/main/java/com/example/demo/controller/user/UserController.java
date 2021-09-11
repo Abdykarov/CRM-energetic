@@ -118,10 +118,22 @@ public class UserController {
         return userService.saveContact(contactRequestDto);
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/count/admin")
     public Integer getAdminCount() {
         return userService.getAdminCount();
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')")
+    @GetMapping("/count/manager")
+    public Integer getManagerCount() {
+        return userService.getManagerCount();
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER', 'ROLE_SALESMAN')")
+    @GetMapping("/count/salesman")
+    public Integer getSalesmanCount() {
+        return userService.getSalesmanCount();
     }
 
 
@@ -129,6 +141,12 @@ public class UserController {
     @GetMapping("/contact/admins")
     public List<AdminResponseDto> getAdmins() {
         return userService.getAdmins();
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')")
+    @GetMapping("/contact/managers")
+    public List<ManagerResponseDto> getManagers() {
+        return userService.getManagers();
     }
 
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')")

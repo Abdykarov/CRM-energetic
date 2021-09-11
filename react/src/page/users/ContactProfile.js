@@ -408,6 +408,16 @@ const ContactProfile = observer(() => {
         }
     }
 
+    const sendEdrRegistration = async () => {
+        try {
+            let response
+            response = await sendEdrRegistrationLink(id)
+            window.location.reload();
+        } catch (e) {
+            alert(e.response.data.message)
+        }
+    }
+
 
 
     return (
@@ -839,7 +849,7 @@ const ContactProfile = observer(() => {
                                                                 (role === "ACCEPTED")?
                                                                     <div className="row">
                                                                         <div className="col-md-6">
-                                                                            <button onClick={changeToEdr} type="button"
+                                                                            <button onClick={sendEdrRegistration} type="button"
                                                                                     className="mb-3 btn btn-primary waves-effect waves-light">Změnit stav na EDR a odeslat odkaz na registraci v sýstemu
 
                                                                             </button>

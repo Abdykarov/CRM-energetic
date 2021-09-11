@@ -1,36 +1,46 @@
-import React, {useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import AcceptedTable from "../../component/tables/AcceptedTable";
 import {useHistory, useLocation} from "react-router-dom";
 import {
-    ADMIN_ROUTE, DASHBOARD_ROUTE, MANAGER_ROUTE,
+    ADMIN_ROUTE, CONTACTS_ROUTE, DASHBOARD_ROUTE, MANAGER_ROUTE,
     REGISTRATION_ADMIN_ROUTE,
     REGISTRATION_CONTACT_ROUTE, REGISTRATION_MANAGER_ROUTE,
     REGISTRATION_REFERAL_ROUTE,
     REGISTRATION_SALESMAN_ROUTE, SALESMAN_ROUTE
 } from "../../utils/const";
-import {login} from "../../http/userAPI";
-import {createAdmin, createContact, createManager, createSalesman} from "../../http/contactAPI";
-import {area} from "../../../public/libs/d3/d3.min";
+import {createAdmin, createContact, createManager, createSalesman, fetchSalesmans} from "../../http/contactAPI";
+import {Context} from "../../index";
+import ManagerItem from "../../component/items/ManagerItem";
+import {observer} from "mobx-react-lite";
 
-const Registration = () => {
+const Registration = observer(() => {
     const history = useHistory()
     const location = useLocation()
     const [name,setName] = useState('')
     const [surname,setSurname] = useState('')
     const [email,setEmail] = useState('')
     const [phone,setPhone] = useState('')
-    const [username,setUsername] = useState('')
-    const [password,setPassword] = useState('')
+    const [username,setUsername] = useState(null)
+    const [password,setPassword] = useState(null)
     const [ico, setIco] = useState('')
     const [area, setArea] = useState(null)
     const [b2b, setB2b] = useState('Fyzická osoba')
-    const [company, setCompany] = useState(null)
+    const [companyName, setCompanyName] = useState(null)
     const [city, setCity] = useState(null)
-    const [position, setPosition] = useState(null)
+    const [jobPosition, setJobPosition] = useState(null)
     const [salesmanId, setSalesmanId] = useState(null)
 
     const path = location.pathname
+    const {salesman} = useContext(Context)
 
+    if(path === REGISTRATION_CONTACT_ROUTE){
+        useEffect(() => {
+            fetchSalesmans().then(data => {
+                salesman.setContacts(data)
+                console.log(data)
+            })
+        }, [])
+    }
     const registrateAdmin = async () => {
         try {
             let response
@@ -63,8 +73,9 @@ const Registration = () => {
     const registrateContact = async () => {
         try {
             let response
-            response = await createContact(name, phone, surname, email, username, password, ico, b2b,  salesmanId, company, city, position)
-            history.push(SALESMAN_ROUTE);
+            console.log(name, phone, surname, email, ico, salesmanId, companyName, city, jobPosition)
+            response = await createContact(name, phone, surname, email, ico,  salesmanId, companyName, city, jobPosition)
+            history.push(CONTACTS_ROUTE);
         } catch (e) {
             alert(e.response.data.message)
         }
@@ -128,9 +139,9 @@ const Registration = () => {
                                                     <div className="mb-3 col-md-6">
                                                         <label htmlFor="salesmanInput" className="form-label">Obchodní zástupce</label>
                                                         <select value={salesmanId} onChange={e => setSalesmanId(e.target.value)} id="salesmanInput" className="form-select">
-                                                            <option>Obchodní zástupce 1</option>
-                                                            <option>Obchodní zástupce 2</option>
-                                                            <option>Obchodní zástupce 3</option>
+                                                            {salesman.contacts.map(contact =>
+                                                                <option value={contact.id}>{contact.name}</option>
+                                                            )}
                                                         </select>
                                                     </div>
 
@@ -143,13 +154,13 @@ const Registration = () => {
 
                                                     <div className="col-md-6 mb-3">
                                                         <label htmlFor="companyInput" className="form-label">Název společnosti</label>
-                                                        <input value={company} onChange={e => setCompany(e.target.value)} type="text" className="form-control" id="companyInput"
+                                                        <input value={companyName} onChange={e => setCompanyName(e.target.value)} type="text" className="form-control" id="companyInput"
                                                                placeholder="Název společnosti" />
                                                     </div>
 
                                                     <div className="col-md-6 mb-3">
                                                         <label htmlFor="jobInput" className="form-label">Pracovní pozice</label>
-                                                        <input value={position} onChange={e => setPosition(e.target.value)} type="text" className="form-control" id="jobInput"
+                                                        <input value={jobPosition} onChange={e => setJobPosition(e.target.value)} type="text" className="form-control" id="jobInput"
                                                                placeholder="Pracovní pozice" />
                                                     </div>
 
@@ -506,6 +517,6 @@ const Registration = () => {
 
 
     );
-};
+});
 
 export default Registration;

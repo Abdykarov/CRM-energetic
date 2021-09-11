@@ -164,10 +164,31 @@ public class UserServiceImp implements UserDetailsService, UserService {
     }
 
     @Override
+    public Integer getManagerCount() {
+        List<UserEntity> managerEntities = userRepository.findByRoles_Name("MANAGER");
+        return managerEntities.size();
+    }
+
+    @Override
+    public Integer getSalesmanCount() {
+        List<UserEntity> salesmanEntities = userRepository.findByRoles_Name("SALESMAN");
+        return salesmanEntities.size();
+    }
+
+    @Override
     public List<AdminResponseDto> getAdmins() {
         List<UserEntity> adminEntities = userRepository.findByRoles_Name("ADMIN");
         List<AdminResponseDto> collection = adminEntities.stream()
                 .map(user -> adminMapper.toResponse(user))
+                .collect(Collectors.toList());
+        return collection;
+    }
+
+    @Override
+    public List<ManagerResponseDto> getManagers() {
+        List<UserEntity> managerEntities = userRepository.findByRoles_Name("MANAGER");
+        List<ManagerResponseDto> collection = managerEntities.stream()
+                .map(user -> managerMapper.toResponse(user))
                 .collect(Collectors.toList());
         return collection;
     }

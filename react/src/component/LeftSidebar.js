@@ -9,17 +9,32 @@ import {
 } from "../utils/const";
 import {Context} from "../index";
 import {observer} from "mobx-react-lite";
-import {fetchAdminCoint, fetchUserByUsername} from "../http/contactAPI";
+import {fetchAdminCoint, fetchManagerCount, fetchSalesmanCount, fetchUserByUsername} from "../http/contactAPI";
 
 const LeftSidebar = observer(() => {
     const {user} = useContext(Context)
     const [adminCount, setAdminCount] = useState(0)
+    const [managerCount, setManagerCount] = useState(0)
+    const [salesmanCount, setSalesmanCount] = useState(0)
 
     useEffect(() => {
 
-        fetchAdminCoint().then(data => {
-            setAdminCount(data)
+        if(user.role === "ROLE_ADMIN"){
+            fetchAdminCoint().then(data => {
+                setAdminCount(data)
+            })
+        }
+
+        if(user.role === "ROLE_ADMIN" || user.role === "ROLE_MANAGER"){
+            fetchManagerCount().then(data => {
+                setManagerCount(data)
+            })
+        }
+
+        fetchSalesmanCount().then(data => {
+            setSalesmanCount(data)
         })
+
 
     }, [])
     return (
@@ -74,64 +89,87 @@ const LeftSidebar = observer(() => {
                                         <span> Hlavní stranka </span>
                                     </a>
                                 </li>
-                                <li>
-                                    <a href={ADMIN_ROUTE}>
-                                        <i className="fe-user-check"></i>
-                                        <span className="badge bg-success rounded-pill float-end">{adminCount}</span>
-                                        <span> Adminy </span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href={SALESMAN_ROUTE}>
-                                        <i className="fe-user-check"></i>
-                                        <span className="badge bg-success rounded-pill float-end">15</span>
-                                        <span> Obchodní zástupci </span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href={MANAGER_ROUTE}>
-                                        <i className="fe-user-plus"></i>
-                                        <span className="badge bg-success rounded-pill float-end">5</span>
-                                        <span> Manažeři </span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a aria-expanded={true} href="#sidebarDashboards" data-bs-toggle="collapse">
-                                        <i className="fe-user"></i>
-                                        <span> Kontakty </span>
-                                        <span className="menu-arrow"></span>
-                                    </a>
-                                    <div className="collapse show" id="sidebarDashboards">
-                                        <ul className="nav-second-level">
-                                            <li>
-                                                <a href={CONTACTS_ROUTE}>Kontakty</a>
-                                            </li>
-                                            <li>
-                                                <a href={LEAD_ROUTE}>Leady</a>
-                                            </li>
-                                            <li>
-                                                <a href={POTENTIAL_ROUTE}>Přiležitosti</a>
-                                            </li>
-                                            <li>
-                                                <a href={CURRENT_ROUTE}>Stávající zákazníci</a>
-                                            </li>
-                                            <li>
-                                                <a href={ACCEPTED_ROUTE}>Přihlášení klienti</a>
-                                            </li>
-                                            <li>
-                                                <a href={EDR_ROUTE}>Členové EDR</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </li>
-                                <li className="menu-title">Watt Peneženka</li>
-                                <li>
-                                    <a href={WATT_ROUTE}>
-                                        <i className="fe-credit-card"></i>
-                                        <span> Watt Peneženka </span>
-                                    </a>
-                                </li>
-
+                                {
+                                    user.role === "ROLE_ADMIN" ?
+                                        <li>
+                                            <a href={ADMIN_ROUTE}>
+                                                <i className="fe-user-check"></i>
+                                                <span className="badge bg-success rounded-pill float-end">{adminCount}</span>
+                                                <span> Adminy </span>
+                                            </a>
+                                        </li>
+                                        : ""
+                                }
+                                {
+                                    user.role === "ROLE_ADMIN" || user.role === "ROLE_MANAGER" ?
+                                        <li>
+                                            <a href={MANAGER_ROUTE}>
+                                                <i className="fe-user-plus"></i>
+                                                <span className="badge bg-success rounded-pill float-end">{managerCount}</span>
+                                                <span> Manažeři </span>
+                                            </a>
+                                        </li>
+                                        : ""
+                                }
+                                {
+                                    user.role === "ROLE_ADMIN" || user.role === "ROLE_MANAGER" ?
+                                        <li>
+                                            <a href={SALESMAN_ROUTE}>
+                                                <i className="fe-user-check"></i>
+                                                <span className="badge bg-success rounded-pill float-end">{salesmanCount}</span>
+                                                <span> Obchodní zástupci </span>
+                                            </a>
+                                        </li>
+                                        : ""
+                                }
+                                {
+                                    user.role === "ROLE_ADMIN" || user.role === "ROLE_SALESMAN" || user.role === "ROLE_MANAGER" ?
+                                        <li>
+                                            <a aria-expanded={true} href="#sidebarDashboards" data-bs-toggle="collapse">
+                                                <i className="fe-user"></i>
+                                                <span> Kontakty </span>
+                                                <span className="menu-arrow"></span>
+                                            </a>
+                                            <div className="collapse show" id="sidebarDashboards">
+                                                <ul className="nav-second-level">
+                                                    <li>
+                                                        <a href={CONTACTS_ROUTE}>Kontakty</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href={LEAD_ROUTE}>Leady</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href={POTENTIAL_ROUTE}>Přiležitosti</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href={CURRENT_ROUTE}>Stávající zákazníci</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href={ACCEPTED_ROUTE}>Přihlášení klienti</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href={EDR_ROUTE}>Členové EDR</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </li>
+                                        : ""
+                                }
+                                {
+                                    user.role === "ROLE_EDR" ?
+                                        <li className="menu-title">Watt Peneženka</li>
+                                        : ""
+                                }
+                                {
+                                    user.role === "ROLE_EDR" ?
+                                        <li>
+                                            <a href={WATT_ROUTE}>
+                                                <i className="fe-credit-card"></i>
+                                                <span> Watt Peneženka </span>
+                                            </a>
+                                        </li>
+                                        : ""
+                                }
 
                                 <li className="menu-title">Email</li>
                                 <li>
@@ -154,44 +192,58 @@ const LeftSidebar = observer(() => {
                                         </ul>
                                     </div>
                                 </li>
+                                {
+                                    user.role === "ROLE_ADMIN" || user.role === "ROLE_MANAGER" ?
+                                        <li className="menu-title">Faktury</li>
 
-                                <li className="menu-title">Faktury</li>
-                                <li>
-                                    <a href={FACTURE_ROUTE}>
-                                        <i className="fe-credit-card"></i>
-                                        <span> Vygenerované faktury </span>
-                                    </a>
-                                </li>
+                                        : ""
+                                }
+                                {
+                                    user.role === "ROLE_ADMIN" || user.role === "ROLE_MANAGER" ?
+                                        <li>
+                                            <a href={FACTURE_ROUTE}>
+                                                <i className="fe-credit-card"></i>
+                                                <span> Vygenerované faktury </span>
+                                            </a>
+                                        </li>
+                                        : ""
+                                }
+                                {
+                                    user.role === "ROLE_ADMIN" ?
+                                        <li className="menu-title">Admin</li>
 
-                                <li className="menu-title">Admin</li>
-                                <li>
-                                    <a href="#adminBar" data-bs-toggle="collapse">
-                                        <i className="fe-unlock "></i>
-                                        <span> Admin bar </span>
-                                        <span className="menu-arrow"></span>
-                                    </a>
-                                    <div className="collapse" id="adminBar">
-                                        <ul className="nav-second-level">
-                                            <li>
-                                                <a href={CONTACTS_ROUTE}>Vytvořit obchodního zástupce</a>
-                                            </li>
-                                            <li>
-                                                <a href={LEAD_ROUTE}>Vytvořit manažera</a>
-                                            </li>
-                                            <li>
-                                                <a href={POTENTIAL_ROUTE}>Vytvořit klientský účet</a>
-                                            </li>
-                                            <li>
-                                                <a href={CURRENT_ROUTE}>Nastavení tipů upozornění</a>
-                                            </li>
-                                            <li>
-                                                <a href={ACCEPTED_ROUTE}>Nastavení Watt peněženky</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </li>
-
-
+                                        : ""
+                                }
+                                {
+                                    user.role === "ROLE_ADMIN" ?
+                                        <li>
+                                            <a href="#adminBar" data-bs-toggle="collapse">
+                                                <i className="fe-unlock "></i>
+                                                <span> Admin bar </span>
+                                                <span className="menu-arrow"></span>
+                                            </a>
+                                            <div className="collapse" id="adminBar">
+                                                <ul className="nav-second-level">
+                                                    <li>
+                                                        <a href={CONTACTS_ROUTE}>Vytvořit obchodního zástupce</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href={LEAD_ROUTE}>Vytvořit manažera</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href={POTENTIAL_ROUTE}>Vytvořit klientský účet</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href={CURRENT_ROUTE}>Nastavení tipů upozornění</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href={ACCEPTED_ROUTE}>Nastavení Watt peněženky</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </li>
+                                        : ""
+                                }
                             </ul>
 
                         </div>
