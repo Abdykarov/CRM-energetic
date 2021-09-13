@@ -1,15 +1,30 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {useHistory, useParams} from "react-router-dom";
 import {observer} from "mobx-react-lite";
 import {edrRegistrate} from "../../http/userAPI";
-import {LOGIN_ROUTE} from "../../utils/const";
+import {LOGIN_ROUTE, MANAGER_ROUTE} from "../../utils/const";
+import {createManager, createReferalContact} from "../../http/contactAPI";
 
 const RegestrationReferal = observer(() => {
+    const [name,setName] = useState('')
+    const [surname,setSurname] = useState('')
+    const [email,setEmail] = useState('')
+    const [phone,setPhone] = useState('')
+    const [ico, setIco] = useState('')
+    const [companyName, setCompanyName] = useState(null)
+    const [city, setCity] = useState(null)
+    const [jobPosition, setJobPosition] = useState(null)
     const history = useHistory()
     const {referalLink} = useParams()
     const referealCreate = async () => {
-        let data;
-        history.push(LOGIN_ROUTE)
+
+        try {
+            let response
+            response = await createReferalContact(name, surname, phone, email, jobPosition, ico, companyName, city)
+            history.push(LOGIN_ROUTE);
+        } catch (e) {
+            alert(e.response.data.message)
+        }
     }
     return (
         <div className="referal_registration">
@@ -95,22 +110,6 @@ const RegestrationReferal = observer(() => {
                                                            placeholder="Email" required />
                                                 </div>
 
-                                                <div className="mb-3 col-md-6">
-                                                    <label htmlFor="salesmanInput" className="form-label">Obchodní zástupce</label>
-                                                    <select id="salesmanInput" className="form-select">
-                                                        <option>Choose</option>
-                                                        <option>Option 1</option>
-                                                        <option>Option 2</option>
-                                                        <option>Option 3</option>
-                                                    </select>
-                                                </div>
-
-                                                <div className="col-md-6 mb-3">
-                                                    <label htmlFor="example-readonly"
-                                                           className="form-label">Stav</label>
-                                                    <input type="text" id="example-readonly" className="form-control"
-                                                           readOnly="" value="Nový kontakt" />
-                                                </div>
 
                                                 <div className="col-md-6 mb-3">
                                                     <label htmlFor="companyInput" className="form-label">Název společnosti</label>

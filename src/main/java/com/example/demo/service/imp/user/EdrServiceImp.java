@@ -1,4 +1,4 @@
-package com.example.demo.service.imp;
+package com.example.demo.service.imp.user;
 
 import com.example.demo.domain.EdrLinkEntity;
 import com.example.demo.domain.ReferalLinkEntity;
@@ -16,6 +16,9 @@ import com.example.demo.service.RoleService;
 import com.example.demo.service.imp.user.RoleServiceImp;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +30,7 @@ import java.util.Set;
 @Service
 @Slf4j
 @AllArgsConstructor
-public class EdrServiceImp implements EdrService {
+public class EdrServiceImp implements UserDetailsService,EdrService {
 
     private final UserRepository userRepository;
     private final RoleServiceImp roleService;
@@ -143,8 +146,22 @@ public class EdrServiceImp implements EdrService {
     }
 
     @Override
-    public EdrRequestDto saveEdr(EdrRequestDto edrRequestDto) {
-        return null;
+    public EdrResponseDto saveEdr(EdrRequestDto edrRequestDto) {
+        UserEntity user = edrMapper.toEntity(edrRequestDto);
+
+        if (userRepository.existsByUsername(edrRequestDto.getUsername())) {
+            throw new RuntimeException("Edr with such username exists");
+        }
+        user.setPassword(passwordEncoder.encode(edrRequestDto.getPassword()));
+
+        RoleEntity role = roleService.findByName("EDR");
+
+        Set<RoleEntity> roleSet = new HashSet<>();
+        roleSet.add(role);
+        user.setRoles(roleSet);
+        UserEntity save = userRepository.save(user);
+
+        return edrMapper.toResponse(save);
     }
 
     private String generateUniqueString(int stringLength){
@@ -160,5 +177,10 @@ public class EdrServiceImp implements EdrService {
                 .toString();
 
         return generatedString;
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
+        return null;
     }
 }

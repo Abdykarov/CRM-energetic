@@ -1,16 +1,13 @@
 package com.example.demo.controller.user;
 
-import com.example.demo.dto.request.AdminRequestDto;
 import com.example.demo.dto.request.EdrRequestDto;
-import com.example.demo.dto.response.AdminResponseDto;
 import com.example.demo.dto.response.EdrResponseDto;
-import com.example.demo.service.imp.EdrServiceImp;
+import com.example.demo.service.imp.user.EdrServiceImp;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Random;
 
 @AllArgsConstructor
 @RestController
@@ -18,6 +15,8 @@ import java.util.Random;
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping("/edr_api/edr/")
 public class EdrController {
+
+    private AuthenticationManager authenticationManager;
 
     private EdrServiceImp edrService;
 
@@ -28,7 +27,7 @@ public class EdrController {
     }
 
     @PreAuthorize("hasRole('ROLE_EDR')")
-    @GetMapping("/registration-link/{id}")
+    @GetMapping("/referal-link/{id}")
     public String createReferalLink(@PathVariable("id") Long edrId){
         return edrService.createReferalLink(edrId);
     }
@@ -39,7 +38,7 @@ public class EdrController {
     }
 
     @PostMapping("/edr-test/")
-    public EdrRequestDto testEdr(@RequestBody EdrRequestDto edrRequestDto) {
+    public EdrResponseDto testEdr(@RequestBody EdrRequestDto edrRequestDto) {
         return edrService.saveEdr(edrRequestDto);
     }
 

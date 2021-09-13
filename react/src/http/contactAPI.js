@@ -1,4 +1,4 @@
-import {$authHost} from "./index";
+import {$authHost, $host} from "./index";
 
 export const fetchAdmins = async () =>{
     const {data} = await $authHost.get('edr_api/user/contact/admins/')
@@ -161,10 +161,9 @@ export const createContact = async (name, phone, surname, email, ico,
 
 
 // referal person registrates by referal link
-export const createReferalContact = async (name, phone, surname, email, ico,
-                                    salesmanId, companyName, city, jobPosition) => {
-    const {data} = await $authHost.post('edr_api/user/create/contact/',
-        {name, phone, surname, email, ico, salesmanId, companyName, city, jobPosition})
+export const createReferalContact = async (name, surname, phone, email, jobPosition, ico, companyName, city) => {
+    const {data} = await $host.post('edr_api/user/create/referal-contact/',
+        {name, surname, phone, email, jobPosition, ico, companyName, city})
     return data
 }
 // management creats edr link, and send to the current user by email
@@ -177,5 +176,10 @@ export const sendEdrRegistrationLink = async (id) =>{
 // edr creates new ref link and send to some person
 export const createReferalLink = async (id) => {
     const {data} = await $authHost.get('edr_api/edr/referal-link/' + id)
+    return data
+}
+
+export const fetchReferals = async (id) => {
+    const {data} = await $authHost.get('edr_api/edr/referals/' + id)
     return data
 }

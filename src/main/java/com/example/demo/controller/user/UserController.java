@@ -1,7 +1,6 @@
 package com.example.demo.controller.user;
 
-import com.example.demo.dto.ReferalContactRequestDto;
-import com.example.demo.dto.ReferalContactResponseDto;
+import com.example.demo.dto.request.ReferalContactRequestDto;
 import com.example.demo.dto.request.*;
 import com.example.demo.dto.response.*;
 import com.example.demo.security.TokenProvider;
@@ -24,7 +23,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
-import java.util.Random;
 
 @AllArgsConstructor
 @RestController
@@ -251,7 +249,7 @@ public class UserController {
     }
 
     @PostMapping("/create/referal-contact/")
-    public ReferalContactResponseDto createReferalContact(@RequestBody ReferalContactRequestDto referalContactRequestDto) {
+    public ContactResponseDto createReferalContact(@RequestBody ReferalContactRequestDto referalContactRequestDto) {
         return userService.saveReferalContact(referalContactRequestDto);
     }
 

@@ -1,29 +1,34 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {useHistory, useLocation} from "react-router-dom";
 import {Context} from "../index";
 import ContactTable from "../component/tables/ContactTable";
 import Footer from "../component/Footer";
-import {createAdmin, createReferalLink} from "../http/contactAPI";
+import {createAdmin, createReferalLink, fetchPotentials, fetchReferals} from "../http/contactAPI";
 import {ADMIN_ROUTE, WATT_ROUTE} from "../utils/const";
 import WattTable from "../component/tables/WattTable";
 
 const Watt = () => {
     const history = useHistory()
     const location = useLocation()
+    const {watt} = useContext(Context)
     const {user} = useContext(Context)
-    const {referalLink, setReferalLink} = useState('')
+    const [referalLink, setReferalLink] = useState('')
 
     const generateReferalLink = async () => {
         try {
             let response
             response = await createReferalLink(user.id)
+            console.log(response)
             setReferalLink(response)
             history.push(WATT_ROUTE);
         } catch (e) {
-            alert(e.response.data.message)
+            console.log(e)
         }
     }
 
+    useEffect(() => {
+        fetchReferals(user.id).then(data => watt.setContacts(data))
+    }, [])
     return (
         <div>
             <div className="content-page">

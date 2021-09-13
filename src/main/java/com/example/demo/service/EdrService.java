@@ -12,5 +12,5 @@ public interface EdrService {
 
     String createRegistrationLink(Long currentId);
 
-    EdrRequestDto saveEdr(EdrRequestDto edrRequestDto);
+    EdrResponseDto saveEdr(EdrRequestDto edrRequestDto);
 }

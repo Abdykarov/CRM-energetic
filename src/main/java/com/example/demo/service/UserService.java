@@ -1,9 +1,9 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.ReferalContactRequestDto;
-import com.example.demo.dto.ReferalContactResponseDto;
+import com.example.demo.dto.request.ReferalContactRequestDto;
 import com.example.demo.dto.request.*;
 import com.example.demo.dto.response.*;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -58,5 +58,13 @@ public interface UserService {
 
     List<ManagerResponseDto> getManagers();
 
-    ReferalContactResponseDto saveReferalContact(ReferalContactRequestDto referalContactRequestDto);
+    ContactResponseDto saveReferalContact(ReferalContactRequestDto referalContactRequestDto);
+
+    String createReferalLink(Long edrId);
+
+    EdrResponseDto registrateEdr(@RequestBody EdrRequestDto edrRequestDto);
+
+    String createRegistrationLink(Long currentId);
+
+    EdrResponseDto saveEdr(EdrRequestDto edrRequestDto);
 }
