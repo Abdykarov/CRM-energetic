@@ -1,5 +1,7 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.ReferalContactRequestDto;
+import com.example.demo.dto.ReferalContactResponseDto;
 import com.example.demo.dto.request.*;
 import com.example.demo.dto.response.*;
 
@@ -44,8 +46,6 @@ public interface UserService {
 
     List<EdrResponseDto> getEdr();
 
-    EdrResponseDto registrateEdr(EdrRequestDto edrRequestDto);
-
     List<AdminResponseDto> getAdmins();
 
     Integer getAdminCount();
@@ -57,4 +57,6 @@ public interface UserService {
     Integer getSalesmanCount();
 
     List<ManagerResponseDto> getManagers();
+
+    ReferalContactResponseDto saveReferalContact(ReferalContactRequestDto referalContactRequestDto);
 }

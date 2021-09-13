@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class EdrRequestDto {
-    private Long id;
+    private String edrLink;
     private String username;
     private String password;
 }

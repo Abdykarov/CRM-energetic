@@ -1,10 +1,16 @@
 import React from 'react';
-import {useParams} from "react-router-dom";
+import {useHistory, useParams} from "react-router-dom";
 import {observer} from "mobx-react-lite";
+import {edrRegistrate} from "../../http/userAPI";
+import {LOGIN_ROUTE} from "../../utils/const";
 
 const RegestrationReferal = observer(() => {
-    const {referenceLink} = useParams()
-
+    const history = useHistory()
+    const {referalLink} = useParams()
+    const referealCreate = async () => {
+        let data;
+        history.push(LOGIN_ROUTE)
+    }
     return (
         <div className="referal_registration">
             <header>
@@ -131,7 +137,7 @@ const RegestrationReferal = observer(() => {
                                                 </div>
                                             </div>
 
-                                            <button type="submit"
+                                            <button onClick={referealCreate} type="button"
                                                     className="btn btn-primary waves-effect waves-light">Vytvořit
                                             </button>
 

@@ -13,8 +13,8 @@ export const auth = async () => {
     return jwt_decode(data.token)
 }
 
-
-export const edrRegistrate = async (id, username, password) => {
-    const {data} = await $host.post('edr_api/user/edr/registrate', {id, username, password})
+// current sets his new username and password, and sends edr link
+export const edrRegistrate = async (edrLink, username, password) => {
+    const {data} = await $host.post('edr_api/user/edr/registrate', {edrLink, username, password})
     return data
 }

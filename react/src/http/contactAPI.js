@@ -89,11 +89,6 @@ export const updateToEdr = async (id) =>{
 }
 
 
-export const sendEdrRegistrationLink = async (id) =>{
-    const {data} = await $authHost.get('edr_api/user/edr/reg-link/' + id)
-    return data
-}
-
 export const deleteContract = async (id) =>{
     const {data} = await $authHost.get('edr_api/supercontract/delete/' + id)
     return data
@@ -156,6 +151,7 @@ export const createSalesman= async (name, phone, surname, email, username, passw
     return data
 }
 
+// management creates new contact
 export const createContact = async (name, phone, surname, email, ico,
                                      salesmanId, companyName, city, jobPosition) => {
     const {data} = await $authHost.post('edr_api/user/create/contact/',
@@ -163,7 +159,23 @@ export const createContact = async (name, phone, surname, email, ico,
     return data
 }
 
+
+// referal person registrates by referal link
+export const createReferalContact = async (name, phone, surname, email, ico,
+                                    salesmanId, companyName, city, jobPosition) => {
+    const {data} = await $authHost.post('edr_api/user/create/contact/',
+        {name, phone, surname, email, ico, salesmanId, companyName, city, jobPosition})
+    return data
+}
+// management creats edr link, and send to the current user by email
+export const sendEdrRegistrationLink = async (id) =>{
+    const {data} = await $authHost.get('edr_api/edr/registration-link/' + id)
+    return data
+}
+
+
+// edr creates new ref link and send to some person
 export const createReferalLink = async (id) => {
-    const {data} = await $authHost.get('edr_api/user/edr/generate-referal-link', {id})
+    const {data} = await $authHost.get('edr_api/edr/referal-link/' + id)
     return data
 }

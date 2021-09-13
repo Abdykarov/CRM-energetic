@@ -9,14 +9,12 @@ import javax.persistence.Id;
 
 @Data
 @Entity
-public class ReferalEntity {
-
+public class EmailEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String uniqueLink;
-    private Long referenceId;
-    private boolean realised;
-    private Long referralId;
-
+    private String emailFrom;
+    private String emailTo;
+    private String body;
+    private String subject;
 }

@@ -3,16 +3,17 @@ import React, {useContext, useEffect, useState} from 'react';
 import {Context} from "../../index";
 import {
     deleteContract, deleteEdrRequest, deleteFve, deleteSysel,
-    fetchUserById,
+    fetchUserById, sendEdrRegistrationLink,
     updateToAccepted,
     updateToCurrent, updateToEdr,
     updateToLead,
     updateToPotential, uploadSignedContract
 } from "../../http/contactAPI";
 import {useHistory, useParams} from "react-router-dom";
-import {DASHBOARD_ROUTE} from "../../utils/const";
+import {DASHBOARD_ROUTE, LOGIN_ROUTE} from "../../utils/const";
 import {observer} from "mobx-react-lite";
 import axios from "axios";
+import {edrRegistrate} from "../../http/userAPI";
 
 const ContactProfile = observer(() => {
     const {user} = useContext(Context)
@@ -408,11 +409,12 @@ const ContactProfile = observer(() => {
         }
     }
 
+    // Generate referal link, save to db and send to the client
     const sendEdrRegistration = async () => {
         try {
             let response
-            response = await sendEdrRegistrationLink(id)
-            window.location.reload();
+            response = await createEdrLink(id)
+            history.push(LOGIN_ROUTE)
         } catch (e) {
             alert(e.response.data.message)
         }

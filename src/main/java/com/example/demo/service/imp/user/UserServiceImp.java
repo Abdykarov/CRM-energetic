@@ -2,6 +2,8 @@ package com.example.demo.service.imp.user;
 
 import com.example.demo.domain.RoleEntity;
 import com.example.demo.domain.UserEntity;
+import com.example.demo.dto.ReferalContactRequestDto;
+import com.example.demo.dto.ReferalContactResponseDto;
 import com.example.demo.dto.request.*;
 import com.example.demo.dto.response.*;
 import com.example.demo.mapper.*;
@@ -194,6 +196,11 @@ public class UserServiceImp implements UserDetailsService, UserService {
     }
 
     @Override
+    public ReferalContactResponseDto saveReferalContact(ReferalContactRequestDto referalContactRequestDto) {
+        return null;
+    }
+
+    @Override
     public List<SalesmanResponseDto> getSalesmans() {
         List<UserEntity> salesmanEntities = userRepository.findByRoles_Name("SALESMAN");
         List<SalesmanResponseDto> collection = salesmanEntities.stream()
@@ -335,29 +342,6 @@ public class UserServiceImp implements UserDetailsService, UserService {
         return userMapper.toResponse(userEntity);
     }
 
-
-    @Override
-    public EdrResponseDto registrateEdr(EdrRequestDto edrRequestDto) {
-
-        final UserEntity user = userRepository.findById(edrRequestDto.getId())
-                .orElseThrow(() -> new EntityNotFoundException("User doesnt exist"));
-
-        if (userRepository.existsByUsername(edrRequestDto.getUsername())) {
-            throw new RuntimeException("User with such username exists");
-        }
-
-        user
-                .setUsername(edrRequestDto.getUsername())
-                .setPassword(passwordEncoder.encode(edrRequestDto.getPassword()));
-
-        RoleEntity role = roleService.findByName("EDR");
-        Set<RoleEntity> roleSet = new HashSet<>();
-        roleSet.add(role);
-        user.setRoles(roleSet);
-        UserEntity save = userRepository.save(user);
-
-        return edrMapper.toResponse(save);
-    }
 
 
 }
