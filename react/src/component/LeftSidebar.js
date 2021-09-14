@@ -112,7 +112,7 @@ const LeftSidebar = observer(() => {
                                         : ""
                                 }
                                 {
-                                    user.role === "ROLE_ADMIN" || user.role === "ROLE_MANAGER" ?
+                                    user.role === "ROLE_ADMIN" || user.role === "ROLE_MANAGER" || user.role === "ROLE_SALESMAN" ?
                                         <li>
                                             <a href={SALESMAN_ROUTE}>
                                                 <i className="fe-user-check"></i>

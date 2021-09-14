@@ -14,7 +14,11 @@ export const fetchSalesmans = async () =>{
     const {data} = await $authHost.get('edr_api/user/contact/salesmans/')
     return data
 }
-
+export const fetchSalesmanContacts = async (id) => {
+    let link = 'edr_api/user/'+ id + '/contacts/'
+    const {data} = await $authHost.get(link)
+    return data
+}
 export const fetchContacts = async () =>{
     const {data} = await $authHost.get('edr_api/user/contact/contacts/')
     return data
@@ -152,10 +156,9 @@ export const createSalesman= async (name, phone, surname, email, username, passw
 }
 
 // management creates new contact
-export const createContact = async (name, phone, surname, email, ico,
-                                     salesmanId, companyName, city, jobPosition) => {
+export const createContact = async (name, phone, surname, email, ico,  salesmanId, companyName, city, jobPosition) => {
     const {data} = await $authHost.post('edr_api/user/create/contact/',
-        {name, phone, surname, email, ico, salesmanId, companyName, city, jobPosition})
+        {name, phone, surname, email, ico,  salesmanId, companyName, city, jobPosition})
     return data
 }
 

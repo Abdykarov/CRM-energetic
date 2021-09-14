@@ -6,7 +6,7 @@ import javax.persistence.*;
 
 @Data
 @Entity
-public class ReferalLinkEntity {
+public class ReferalLinkEntity extends DateAudit{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

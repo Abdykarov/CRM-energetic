@@ -59,16 +59,21 @@ const Salesman = () => {
                                             </form>
                                         </div>
                                         <div className="col-md-4">
-                                            <div className="text-md-end mt-3 mt-md-0">
-                                                <button type="button"
-                                                        className="btn btn-success waves-effect waves-light me-1"><i
-                                                    className="mdi mdi-cog"></i></button>
-                                                <a href="/registration/salesman" type="button"
-                                                        className="btn btn-danger waves-effect waves-light">
-                                                    <i
-                                                    className="mdi mdi-plus-circle me-1"></i> Založit nového obchodního zástupce
-                                                </a>
-                                            </div>
+                                            {
+                                                salesman.role === "ROLE_SALESMAN" ?
+                                                    <div className="text-md-end mt-3 mt-md-0">
+                                                        <button type="button"
+                                                                className="btn btn-success waves-effect waves-light me-1"><i
+                                                            className="mdi mdi-cog"></i></button>
+                                                        <a href="/registration/salesman" type="button"
+                                                           className="btn btn-danger waves-effect waves-light">
+                                                            <i
+                                                                className="mdi mdi-plus-circle me-1"></i> Založit nového obchodního zástupce
+                                                        </a>
+                                                    </div>
+
+                                                    : ""
+                                            }
                                         </div>
                                     </div>
                                     

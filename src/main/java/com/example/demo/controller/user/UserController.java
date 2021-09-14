@@ -150,16 +150,22 @@ public class UserController {
         return userService.getManagers();
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER', 'ROLE_SALESMAN')")
     @GetMapping("/contact/salesmans")
     public List<SalesmanResponseDto> getSalesmans() {
         return userService.getSalesmans();
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_SALESMAN'   )")
     @GetMapping("/contact/contacts")
     public List<ContactResponseDto> getContacts() {
         return userService.getContacts();
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_SALESMAN')")
+    @GetMapping("/{salesmanId}/contacts/")
+    public List<ContactResponseDto> getSalesmanContacts(@PathVariable Long salesmanId) {
+        return userService.getSalesmanContacts(salesmanId);
     }
 
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')")
@@ -198,12 +204,6 @@ public class UserController {
         return userService.getContact(contactId);
     }
 
-
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_SALESMAN')")
-    @GetMapping("/contact/contacts/{salesmanId}")
-    public List<ContactResponseDto> getSalesmanContacts(@PathVariable Long salesmanId) {
-        return userService.getSalesmanContacts(salesmanId);
-    }
 
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_SALESMAN','ROLE_EDR')")
     @GetMapping("/account/{username}")

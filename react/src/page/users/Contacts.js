@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React, {useContext, useEffect} from 'react';
-import {fetchContacts} from "../../http/contactAPI";
+import {fetchContacts, fetchSalesmanContacts} from "../../http/contactAPI";
 import ContactItem from "../../component/items/ContactItem";
 import {observer} from "mobx-react-lite";
 import {Context} from "../../index";
@@ -9,8 +9,14 @@ import Footer from "../../component/Footer";
 
 const Contacts = observer(() => {
     const {contact} = useContext(Context)
+    const {user} = useContext(Context)
     useEffect(() => {
-        fetchContacts().then(data => contact.setContacts(data))
+        // console.log(user.userId)
+        // if(user.role === "ROLE_SALESMAN"){
+        //     fetchSalesmanContacts().then(data => contact.setContacts(data))
+        // }else{
+            fetchContacts().then(data => contact.setContacts(data))
+
     }, [])
 
     return (

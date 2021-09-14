@@ -4,7 +4,7 @@ import {Context} from "../index";
 import ContactTable from "../component/tables/ContactTable";
 import Footer from "../component/Footer";
 import {createAdmin, createReferalLink, fetchPotentials, fetchReferals} from "../http/contactAPI";
-import {ADMIN_ROUTE, WATT_ROUTE} from "../utils/const";
+import {ADMIN_ROUTE, REGISTRATION_REFERAL_ROUTE, WATT_ROUTE} from "../utils/const";
 import WattTable from "../component/tables/WattTable";
 
 const Watt = () => {
@@ -19,7 +19,7 @@ const Watt = () => {
             let response
             response = await createReferalLink(user.id)
             console.log(response)
-            setReferalLink(response)
+            setReferalLink('http://localhost:3000' + REGISTRATION_REFERAL_ROUTE + '/' + response)
             history.push(WATT_ROUTE);
         } catch (e) {
             console.log(e)

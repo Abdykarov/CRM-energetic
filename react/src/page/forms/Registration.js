@@ -29,7 +29,6 @@ const Registration = observer(() => {
     const [city, setCity] = useState(null)
     const [jobPosition, setJobPosition] = useState(null)
     const [salesmanId, setSalesmanId] = useState(null)
-
     const path = location.pathname
     const {salesman} = useContext(Context)
 
@@ -37,6 +36,7 @@ const Registration = observer(() => {
         useEffect(() => {
             fetchSalesmans().then(data => {
                 salesman.setContacts(data)
+                setSalesmanId(data[0].id)
                 console.log(data)
             })
         }, [])
@@ -140,7 +140,7 @@ const Registration = observer(() => {
                                                         <label htmlFor="salesmanInput" className="form-label">Obchodní zástupce</label>
                                                         <select value={salesmanId} onChange={e => setSalesmanId(e.target.value)} id="salesmanInput" className="form-select">
                                                             {salesman.contacts.map(contact =>
-                                                                <option value={contact.id}>{contact.name}</option>
+                                                                <option value={contact.id}>{contact.name} {contact.surname}</option>
                                                             )}
                                                         </select>
                                                     </div>

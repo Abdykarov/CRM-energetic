@@ -60,6 +60,8 @@ const Manager = () => {
                                             </form>
                                         </div>
                                         <div className="col-md-4">
+                                            {
+                                                manager.role === "ROLE_ADMIN" ?
                                             <div className="text-md-end mt-3 mt-md-0">
                                                 <button type="button"
                                                         className="btn btn-success waves-effect waves-light me-1"><i
@@ -70,6 +72,8 @@ const Manager = () => {
                                                         className="mdi mdi-plus-circle me-1"></i> Založit nového manažera
                                                 </a>
                                             </div>
+                                            : ""
+                                            }
                                         </div>
                                     </div>
 

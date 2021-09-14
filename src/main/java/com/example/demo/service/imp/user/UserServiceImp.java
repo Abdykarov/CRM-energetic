@@ -161,6 +161,13 @@ public class UserServiceImp implements UserDetailsService, UserService {
         return contactMapper.toResponse(save);
     }
 
+    //TODO find all contacts where salesman id == id
+    @Override
+    public List<ContactResponseDto> getSalesmanContacts(Long salesmanId) {
+        List<UserEntity> all = userRepository.findBySalesmanId(salesmanId);
+        return all.stream().map(contactMapper::toResponse).collect(Collectors.toList());
+    }
+
     @Override
     public List<ContactResponseDto> getContacts() {
         List<UserEntity> newContacts = userRepository.findByRoles_Name("NEW");
@@ -325,12 +332,6 @@ public class UserServiceImp implements UserDetailsService, UserService {
         userEntity.setRoles(roleSet);
         UserEntity save = userRepository.save(userEntity);
         return userMapper.toResponse(save);
-    }
-
-    //TODO find all contacts where salesman id == id
-    @Override
-    public List<ContactResponseDto> getSalesmanContacts(Long salesmanId) {
-        return null;
     }
 
     @Override
