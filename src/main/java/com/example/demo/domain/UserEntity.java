@@ -24,9 +24,8 @@ public class UserEntity {
     String email;
     String password;
     String city;
-    String jobPosition;
+    String contactPerson;
     String ico;
-    String companyName;
     String area;
     Long salesmanId;
     @Column(name = "referal_id")

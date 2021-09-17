@@ -4,7 +4,7 @@ import {
     CONTACTS_ROUTE,
     CURRENT_ROUTE,
     DASHBOARD_ROUTE, EDR_ROUTE, FACTURE_ROUTE, INBOX_ROUTE, LEAD_ROUTE,
-    MANAGER_ROUTE, POTENTIAL_ROUTE,
+    MANAGER_ROUTE, OUTBOX_ROUTE, POTENTIAL_ROUTE,
     SALESMAN_ROUTE, SENT_ROUTE, WATT_ROUTE, WRITE_ROUTE
 } from "../utils/const";
 import {Context} from "../index";
@@ -81,7 +81,7 @@ const LeftSidebar = observer(() => {
 
                             <ul id="side-menu">
 
-                                <li className="menu-title">Navigation</li>
+                                <li className="menu-title">Navigace</li>
 
                                 <li>
                                     <a href={DASHBOARD_ROUTE}>
@@ -184,10 +184,7 @@ const LeftSidebar = observer(() => {
                                                 <a href={INBOX_ROUTE}>Příchozí</a>
                                             </li>
                                             <li>
-                                                <a href={SENT_ROUTE}>Odeslané</a>
-                                            </li>
-                                            <li>
-                                                <a href={WRITE_ROUTE}>Odeslat nový email</a>
+                                                <a href={OUTBOX_ROUTE}>Odeslané</a>
                                             </li>
                                         </ul>
                                     </div>
@@ -225,16 +222,7 @@ const LeftSidebar = observer(() => {
                                             <div className="collapse" id="adminBar">
                                                 <ul className="nav-second-level">
                                                     <li>
-                                                        <a href={CONTACTS_ROUTE}>Vytvořit obchodního zástupce</a>
-                                                    </li>
-                                                    <li>
-                                                        <a href={LEAD_ROUTE}>Vytvořit manažera</a>
-                                                    </li>
-                                                    <li>
-                                                        <a href={POTENTIAL_ROUTE}>Vytvořit klientský účet</a>
-                                                    </li>
-                                                    <li>
-                                                        <a href={CURRENT_ROUTE}>Nastavení tipů upozornění</a>
+                                                        <a href={CURRENT_ROUTE}>Nastavení parametrů systému</a>
                                                     </li>
                                                     <li>
                                                         <a href={ACCEPTED_ROUTE}>Nastavení Watt peněženky</a>

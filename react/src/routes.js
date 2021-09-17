@@ -12,7 +12,7 @@ import {
     INBOX_ROUTE,
     LEAD_ROUTE,
     LOGIN_ROUTE,
-    MANAGER_ROUTE,
+    MANAGER_ROUTE, OUTBOX_ROUTE,
     POTENTIAL_ROUTE, REGISTRATION_ADMIN_ROUTE,
     REGISTRATION_CONTACT_ROUTE,
     REGISTRATION_MANAGER_ROUTE, REGISTRATION_REFERAL_ROUTE,
@@ -38,6 +38,7 @@ import Registration from "./page/forms/Registration";
 import Edr_Registration from "./page/forms/EdrRegistration";
 import RegestrationReferal from "./page/forms/RegestrationReferal";
 import EdrRegistration from "./page/forms/EdrRegistration";
+import Outbox from "./page/Outbox";
 
 export const authRoutes = [
     {
@@ -83,6 +84,10 @@ export const authRoutes = [
     {
         path: SALESMAN_ROUTE,
         Component: Salesman
+    },
+    {
+        path: OUTBOX_ROUTE,
+        Component: Outbox
     },
     {
         path: INBOX_ROUTE,

@@ -12,6 +12,7 @@ import SalesmanStore from "./store/SalesmanStore";
 import AdminStore from "./store/AdminStore";
 import ManagerStore from "./store/ManagerStore";
 import WattStore from "./store/WattStore";
+import MailStore from "./store/MailStore";
 
 export const Context = createContext(null)
 ReactDOM.render(
@@ -26,7 +27,8 @@ ReactDOM.render(
         salesman: new SalesmanStore(),
         manager: new ManagerStore(),
         edr: new EdrStore(),
-        watt: new WattStore()
+        watt: new WattStore(),
+        inbox: new MailStore()
     }}>
         <App />
     </Context.Provider>,

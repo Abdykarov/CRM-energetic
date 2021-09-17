@@ -17,4 +17,5 @@ public class EmailEntity {
     private String emailTo;
     private String body;
     private String subject;
+    private boolean inbox;
 }

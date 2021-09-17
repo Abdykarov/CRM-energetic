@@ -1,23 +1,7 @@
 /* eslint-disable */
-import React, {useContext, useEffect} from 'react';
-import {fetchAdminCoint} from "../http/contactAPI";
-import {Context} from "../index";
-import {fetchInboxCrm} from "../http/mailAPI";
+import React from 'react';
 
-const Inbox = observer(() => {
-
-    const {user} = useContext(Context)
-    const {mail} = useContext(Context)
-
-    useEffect(() => {
-
-        if (user.role === "ROLE_ADMIN") {
-            fetchInboxCrm().then(data => mail.setMails(data))
-            console.log(mail.mails)
-        }
-
-    }, [])
-
+const Outbox = () => {
     return (
         <div>
             <div className="content-page">
@@ -34,10 +18,10 @@ const Inbox = observer(() => {
                                             </li>
                                             <li className="breadcrumb-item"><a href="javascript: void(0);">Email</a>
                                             </li>
-                                            <li className="breadcrumb-item active">Příchozí maily</li>
+                                            <li className="breadcrumb-item active">Odchozí maily</li>
                                         </ol>
                                     </div>
-                                    <h4 className="page-title">Příchozí maily</h4>
+                                    <h4 className="page-title">Odchozí maily</h4>
                                 </div>
                             </div>
                         </div>
@@ -162,6 +146,6 @@ const Inbox = observer(() => {
             </div>
         </div>
     );
-});
+};
 
-export default Inbox;
+export default Outbox;

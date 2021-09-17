@@ -16,7 +16,7 @@ const Contacts = observer(() => {
         //     fetchSalesmanContacts().then(data => contact.setContacts(data))
         // }else{
             fetchContacts().then(data => contact.setContacts(data))
-
+        
     }, [])
 
     return (

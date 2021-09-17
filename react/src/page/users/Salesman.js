@@ -6,6 +6,7 @@ import SalesmanTable from "../../component/tables/SalesmanTable";
 
 const Salesman = () => {
     const {salesman} = useContext(Context)
+    const {user} = useContext(Context)
     useEffect(() => {
         fetchSalesmans().then(data => {
             salesman.setContacts(data)
@@ -60,7 +61,7 @@ const Salesman = () => {
                                         </div>
                                         <div className="col-md-4">
                                             {
-                                                salesman.role === "ROLE_SALESMAN" ?
+                                                user.role !== "ROLE_SALESMAN" ?
                                                     <div className="text-md-end mt-3 mt-md-0">
                                                         <button type="button"
                                                                 className="btn btn-success waves-effect waves-light me-1"><i

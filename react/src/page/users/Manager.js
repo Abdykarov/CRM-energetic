@@ -6,6 +6,7 @@ import AdminTable from "../../component/tables/AdminTable";
 import ManagerTable from "../../component/tables/ManagerTable";
 
 const Manager = () => {
+    const {user} = useContext(Context)
     const {manager} = useContext(Context)
     useEffect(() => {
         fetchManagers().then(data => {
@@ -61,7 +62,7 @@ const Manager = () => {
                                         </div>
                                         <div className="col-md-4">
                                             {
-                                                manager.role === "ROLE_ADMIN" ?
+                                                user.role === "ROLE_ADMIN" ?
                                             <div className="text-md-end mt-3 mt-md-0">
                                                 <button type="button"
                                                         className="btn btn-success waves-effect waves-light me-1"><i
