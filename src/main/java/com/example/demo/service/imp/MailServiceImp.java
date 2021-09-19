@@ -11,7 +11,7 @@ import java.util.List;
 @Slf4j
 public class MailServiceImp implements MailService {
 
-    // connect email bean imap
+    // connect email bean imap-
 
     @Override
     public List<EmailEntity> getInbox() {
