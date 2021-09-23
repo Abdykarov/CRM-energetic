@@ -168,29 +168,18 @@ public class UserController {
         return userService.getSalesmanContacts(salesmanId);
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_SALESMAN')")
     @GetMapping("/contact/leads")
     public List<LeadResponseDto> getLeads() {
         return userService.getLeads();
     }
 
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')")
-    @GetMapping("/contact/potentials")
-    public List<PotentialResponseDto> getPotentials() {
-        return userService.getPotentials();
+    @GetMapping("/contact/applicants/")
+    public List<ApplicantResponseDto> getApplicants() {
+        return userService.getApplicants();
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')")
-    @GetMapping("/contact/currents")
-    public List<CurrentResponseDto> getCurrents() {
-        return userService.getCurrents();
-    }
-
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')")
-    @GetMapping("/contact/accepted")
-    public List<AcceptedResponseDto> getAccepted() {
-        return userService.getAccepted();
-    }
 
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')")
     @GetMapping("/contact/edr")
@@ -224,23 +213,6 @@ public class UserController {
         return userService.changeToLead(id);
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_SALESMAN')")
-    @GetMapping("/to_potential/{id}")
-    public UserResponseDto changeToPotential(@PathVariable Long id) {
-        return userService.changeToPotential(id);
-    }
-
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_SALESMAN')")
-    @GetMapping("/to_current/{id}")
-    public UserResponseDto changeToCurrent(@PathVariable Long id) {
-        return userService.changeToCurrent(id);
-    }
-
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_SALESMAN')")
-    @GetMapping("/to_accepted/{id}")
-    public UserResponseDto changeToAccepted(@PathVariable Long id) {
-        return userService.changeToAccepted(id);
-    }
 
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_SALESMAN')")
     @GetMapping("/to_edr/{id}")

@@ -3,6 +3,7 @@ import React, {useContext, useEffect} from 'react';
 import {fetchAdminCoint} from "../http/contactAPI";
 import {Context} from "../index";
 import {fetchInboxCrm} from "../http/mailAPI";
+import {observer} from "mobx-react-lite";
 
 const Inbox = observer(() => {
 

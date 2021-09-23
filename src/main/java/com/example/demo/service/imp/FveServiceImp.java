@@ -34,7 +34,7 @@ public class FveServiceImp implements FveService {
             log.info("Deleting fve - Updating userId {} signedContract attribute", userId);
             final UserEntity userEntity = userRepository.findById(userId)
                     .orElseThrow(() -> new EntityNotFoundException("User doesnt exist"));
-            userEntity.setConnectedFVE(false);
+            userEntity.setConnectedFveSigned(false);
             return "success";
 
         } catch (IOException e) {
@@ -61,7 +61,7 @@ public class FveServiceImp implements FveService {
             log.info("Uploading fve - Updating userId {} signedContract attribute", userId);
             final UserEntity userEntity = userRepository.findById(userId)
                     .orElseThrow(() -> new EntityNotFoundException("User doesnt exist"));
-            userEntity.setConnectedFVE(true);
+            userEntity.setConnectedFveSigned(true);
             return "success";
 
         } catch (IOException e) {

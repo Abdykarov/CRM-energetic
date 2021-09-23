@@ -6,17 +6,18 @@ import {Context} from "../../index";
 import {Row} from "react-bootstrap";
 import ContactItem from "../items/ContactItem";
 import LeadItem from "../items/LeadItem";
-import PotentialItem from "../items/PotentialItem";
+import EdrItem from "../items/EdrItem";
+import Applicant from "../../page/users/Applicant";
 
-const PotentialTable = observer(() => {
-    const {potential} = useContext(Context)
+const ApplicantTable = observer(() => {
+    const {applicant} = useContext(Context)
     return (
         <tbody>
-        {potential.contacts.map(contact =>
-            <PotentialItem key={contact.id} contact={contact}/>
+        {applicant.contacts.map(contact =>
+            <ApplicantItem key={contact.id} applicant={contact}/>
         )}
         </tbody>
     );
 });
 
-export default PotentialTable;
+export default ApplicantTable;

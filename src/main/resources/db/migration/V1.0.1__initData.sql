@@ -12,10 +12,12 @@ VALUES ('OLD');
 INSERT INTO role_entity (name)
 VALUES ('LEAD');
 INSERT INTO role_entity (name)
-VALUES ('POTENTIAL');
+VALUES ('LOST');
 INSERT INTO role_entity (name)
-VALUES ('CURRENT');
+VALUES ('DEFERRED');
 INSERT INTO role_entity (name)
-VALUES ('ACCEPTED');
+VALUES ('APPLICANT');
 INSERT INTO role_entity (name)
 VALUES ('EDR');
+INSERT INTO role_entity (name)
+VALUES ('EDR_CANCELLED');

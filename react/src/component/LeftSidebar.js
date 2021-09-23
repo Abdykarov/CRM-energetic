@@ -1,11 +1,10 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {
-    ACCEPTED_ROUTE, ADMIN_ROUTE,
+    ADMIN_ROUTE, APPLICANT_ROUTE,
     CONTACTS_ROUTE,
-    CURRENT_ROUTE,
     DASHBOARD_ROUTE, EDR_ROUTE, FACTURE_ROUTE, INBOX_ROUTE, LEAD_ROUTE,
-    MANAGER_ROUTE, OUTBOX_ROUTE, POTENTIAL_ROUTE,
-    SALESMAN_ROUTE, SENT_ROUTE, WATT_ROUTE, WRITE_ROUTE
+    MANAGER_ROUTE, OUTBOX_ROUTE,
+    SALESMAN_ROUTE, WATT_ROUTE
 } from "../utils/const";
 import {Context} from "../index";
 import {observer} from "mobx-react-lite";
@@ -139,13 +138,7 @@ const LeftSidebar = observer(() => {
                                                         <a href={LEAD_ROUTE}>Leady</a>
                                                     </li>
                                                     <li>
-                                                        <a href={POTENTIAL_ROUTE}>Přiležitosti</a>
-                                                    </li>
-                                                    <li>
-                                                        <a href={CURRENT_ROUTE}>Stávající zákazníci</a>
-                                                    </li>
-                                                    <li>
-                                                        <a href={ACCEPTED_ROUTE}>Přihlášení klienti</a>
+                                                        <a href={APPLICANT_ROUTE}>Uchazeči</a>
                                                     </li>
                                                     <li>
                                                         <a href={EDR_ROUTE}>Členové EDR</a>
@@ -171,11 +164,11 @@ const LeftSidebar = observer(() => {
                                         : ""
                                 }
 
-                                <li className="menu-title">Email</li>
+                                <li className="menu-title">Komunikace</li>
                                 <li>
                                     <a href="#emailBar" data-bs-toggle="collapse">
                                         <i className="fe-mail"></i>
-                                        <span> Email </span>
+                                        <span> Komunikace </span>
                                         <span className="menu-arrow"></span>
                                     </a>
                                     <div className="collapse" id="emailBar">
@@ -222,10 +215,10 @@ const LeftSidebar = observer(() => {
                                             <div className="collapse" id="adminBar">
                                                 <ul className="nav-second-level">
                                                     <li>
-                                                        <a href={CURRENT_ROUTE}>Nastavení parametrů systému</a>
+                                                        <a href="#">Nastavení parametrů systému</a>
                                                     </li>
                                                     <li>
-                                                        <a href={ACCEPTED_ROUTE}>Nastavení Watt peněženky</a>
+                                                        <a href="#">Nastavení Watt peněženky</a>
                                                     </li>
                                                 </ul>
                                             </div>

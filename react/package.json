@@ -6,7 +6,8 @@
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
-    "axios": "^0.21.3",
+    "@types/jwt-decode": "^3.1.0",
+    "axios": "^0.21.4",
     "bootstrap": "^5.1.0",
     "jwt-decode": "^3.1.2",
     "mobx": "^6.3.3",
@@ -41,5 +42,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "path-to-regexp": "^1.8.0"
   }
 }

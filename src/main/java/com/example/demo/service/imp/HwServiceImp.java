@@ -34,7 +34,7 @@ public class HwServiceImp implements HwService {
             log.info("Deleting supercontract - Updating userId {} signedContract attribute", userId);
             final UserEntity userEntity = userRepository.findById(userId)
                     .orElseThrow(() -> new EntityNotFoundException("User doesnt exist"));
-            userEntity.setHWSunMonitor(false);
+            userEntity.setHwsunMonitorSigned(false);
             return "success";
 
         } catch (IOException e) {
@@ -61,7 +61,7 @@ public class HwServiceImp implements HwService {
             log.info("Uploading supercontract - Updating userId {} signedContract attribute", userId);
             final UserEntity userEntity = userRepository.findById(userId)
                     .orElseThrow(() -> new EntityNotFoundException("User doesnt exist"));
-            userEntity.setHWSunMonitor(true);
+            userEntity.setHwsunMonitorSigned(true);
             return "success";
 
         } catch (IOException e) {

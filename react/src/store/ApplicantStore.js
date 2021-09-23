@@ -1,6 +1,6 @@
 import {makeAutoObservable} from "mobx";
 
-export default class PotentialStore {
+export default class ApplicantStore {
 
     constructor() {
         this._contacts = []

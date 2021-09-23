@@ -34,7 +34,7 @@ public class SyselServiceImp implements SyselService {
             log.info("Deleting sysel document - Updating userId {} signedContract attribute", userId);
             final UserEntity userEntity = userRepository.findById(userId)
                     .orElseThrow(() -> new EntityNotFoundException("User doesnt exist"));
-            userEntity.setSyselAgreement(false);
+            userEntity.setSyselAgreementSigned(false);
             return "success";
 
         } catch (IOException e) {
@@ -61,7 +61,7 @@ public class SyselServiceImp implements SyselService {
             log.info("Uploading sysel document - Updating userId {} signedContract attribute", userId);
             final UserEntity userEntity = userRepository.findById(userId)
                     .orElseThrow(() -> new EntityNotFoundException("User doesnt exist"));
-            userEntity.setSyselAgreement(true);
+            userEntity.setSyselAgreementSigned(true);
             return "success";
 
         } catch (IOException e) {

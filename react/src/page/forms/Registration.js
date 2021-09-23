@@ -1,5 +1,4 @@
 import React, {useContext, useEffect, useState} from 'react';
-import AcceptedTable from "../../component/tables/AcceptedTable";
 import {useHistory, useLocation} from "react-router-dom";
 import {
     ADMIN_ROUTE, CONTACTS_ROUTE, DASHBOARD_ROUTE, MANAGER_ROUTE,

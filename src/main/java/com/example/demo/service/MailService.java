@@ -6,8 +6,8 @@ import java.util.List;
 
 public interface MailService {
 
-    List<EmailEntity> getInbox();
+    List<EmailEntity> getInbox() throws Exception;
 
-    List<EmailEntity> getOutbox();
+    List<EmailEntity> getOutbox() throws Exception;
 
 }

@@ -34,7 +34,7 @@ public class EdrRequestServiceImp implements EdrRequestService {
             log.info("Deleting request - Updating userId {} signedContract attribute", userId);
             final UserEntity userEntity = userRepository.findById(userId)
                     .orElseThrow(() -> new EntityNotFoundException("User doesnt exist"));
-            userEntity.setSignedRequestToEdr(false);
+            userEntity.setRequestToEdrSigned(false);
             return "success";
 
         } catch (IOException e) {
@@ -61,7 +61,7 @@ public class EdrRequestServiceImp implements EdrRequestService {
             log.info("Uploading request - Updating userId {} signedContract attribute", userId);
             final UserEntity userEntity = userRepository.findById(userId)
                     .orElseThrow(() -> new EntityNotFoundException("User doesnt exist"));
-            userEntity.setSignedRequestToEdr(true);
+            userEntity.setRequestToEdrSigned(true);
             return "success";
 
         } catch (IOException e) {

@@ -59,11 +59,11 @@ const Facture = () => {
                                                                    htmlFor="customCheck1">&nbsp;</label>
                                                         </div>
                                                     </th>
-                                                    <th>ID Faktury</th>
                                                     <th>Jméno</th>
                                                     <th>Příjmení</th>
                                                     <th>Adresa</th>
-                                                    <th>Datum</th>
+                                                    <th>Datum vydání</th>
+                                                    <th>Datum splatností</th>
                                                     <th>Čas</th>
                                                     <th>Variabilní symbol</th>
                                                     <th>Položka</th>
@@ -88,9 +88,6 @@ const Facture = () => {
                                                         </div>
                                                     </td>
                                                     <td>
-                                                        1
-                                                    </td>
-                                                    <td>
                                                         Simon
                                                     </td>
                                                     <td>
@@ -100,6 +97,7 @@ const Facture = () => {
                                                         Karlovo Namesti
                                                     </td>
                                                     <td>20.08.2021</td>
+                                                    <td>04.09.2021</td>
                                                     <td>
                                                         16:00
                                                     </td>
@@ -137,9 +135,6 @@ const Facture = () => {
                                                         </div>
                                                     </td>
                                                     <td>
-                                                        1
-                                                    </td>
-                                                    <td>
                                                         Simon
                                                     </td>
                                                     <td>
@@ -149,6 +144,7 @@ const Facture = () => {
                                                         Karlovo Namesti
                                                     </td>
                                                     <td>20.08.2021</td>
+                                                    <td>04.09.2021</td>
                                                     <td>
                                                         16:00
                                                     </td>
@@ -186,9 +182,6 @@ const Facture = () => {
                                                         </div>
                                                     </td>
                                                     <td>
-                                                        1
-                                                    </td>
-                                                    <td>
                                                         Simon
                                                     </td>
                                                     <td>
@@ -198,6 +191,7 @@ const Facture = () => {
                                                         Karlovo Namesti
                                                     </td>
                                                     <td>20.08.2021</td>
+                                                    <td>04.09.2021</td>
                                                     <td>
                                                         16:00
                                                     </td>
@@ -235,9 +229,6 @@ const Facture = () => {
                                                         </div>
                                                     </td>
                                                     <td>
-                                                        1
-                                                    </td>
-                                                    <td>
                                                         Simon
                                                     </td>
                                                     <td>
@@ -247,6 +238,7 @@ const Facture = () => {
                                                         Karlovo Namesti
                                                     </td>
                                                     <td>20.08.2021</td>
+                                                    <td>04.09.2021</td>
                                                     <td>
                                                         16:00
                                                     </td>
@@ -284,9 +276,6 @@ const Facture = () => {
                                                         </div>
                                                     </td>
                                                     <td>
-                                                        1
-                                                    </td>
-                                                    <td>
                                                         Simon
                                                     </td>
                                                     <td>
@@ -296,300 +285,7 @@ const Facture = () => {
                                                         Karlovo Namesti
                                                     </td>
                                                     <td>20.08.2021</td>
-                                                    <td>
-                                                        16:00
-                                                    </td>
-                                                    <td>
-                                                        VS00112222
-                                                    </td>
-                                                    <td>
-                                                        Položka
-                                                    </td>
-                                                    <td>
-                                                        5
-                                                    </td>
-                                                    <td>
-                                                        0
-                                                    </td>
-                                                    <td>Ano</td>
-                                                    <td>Ano</td>
-                                                    <td>Ne</td>
-                                                    <td>Ne</td>
-                                                    <td>Ne</td>
-                                                    <td>
-                                                        <a href="javascript:void(0);" className="action-icon"> <i
-                                                            className="mdi mdi-square-edit-outline"></i></a>
-                                                        <a href="javascript:void(0);" className="action-icon"> <i
-                                                            className="mdi mdi-delete"></i></a>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <div className="form-check">
-                                                            <input type="checkbox" className="form-check-input"
-                                                                   id="customCheck2" />
-                                                            <label className="form-check-label"
-                                                                   htmlFor="customCheck2">&nbsp;</label>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        1
-                                                    </td>
-                                                    <td>
-                                                        Simon
-                                                    </td>
-                                                    <td>
-                                                        Blumel
-                                                    </td>
-                                                    <td>
-                                                        Karlovo Namesti
-                                                    </td>
-                                                    <td>20.08.2021</td>
-                                                    <td>
-                                                        16:00
-                                                    </td>
-                                                    <td>
-                                                        VS00112222
-                                                    </td>
-                                                    <td>
-                                                        Položka
-                                                    </td>
-                                                    <td>
-                                                        5
-                                                    </td>
-                                                    <td>
-                                                        0
-                                                    </td>
-                                                    <td>Ano</td>
-                                                    <td>Ano</td>
-                                                    <td>Ne</td>
-                                                    <td>Ne</td>
-                                                    <td>Ne</td>
-                                                    <td>
-                                                        <a href="javascript:void(0);" className="action-icon"> <i
-                                                            className="mdi mdi-square-edit-outline"></i></a>
-                                                        <a href="javascript:void(0);" className="action-icon"> <i
-                                                            className="mdi mdi-delete"></i></a>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <div className="form-check">
-                                                            <input type="checkbox" className="form-check-input"
-                                                                   id="customCheck2" />
-                                                            <label className="form-check-label"
-                                                                   htmlFor="customCheck2">&nbsp;</label>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        1
-                                                    </td>
-                                                    <td>
-                                                        Simon
-                                                    </td>
-                                                    <td>
-                                                        Blumel
-                                                    </td>
-                                                    <td>
-                                                        Karlovo Namesti
-                                                    </td>
-                                                    <td>20.08.2021</td>
-                                                    <td>
-                                                        16:00
-                                                    </td>
-                                                    <td>
-                                                        VS00112222
-                                                    </td>
-                                                    <td>
-                                                        Položka
-                                                    </td>
-                                                    <td>
-                                                        5
-                                                    </td>
-                                                    <td>
-                                                        0
-                                                    </td>
-                                                    <td>Ano</td>
-                                                    <td>Ano</td>
-                                                    <td>Ne</td>
-                                                    <td>Ne</td>
-                                                    <td>Ne</td>
-                                                    <td>
-                                                        <a href="javascript:void(0);" className="action-icon"> <i
-                                                            className="mdi mdi-square-edit-outline"></i></a>
-                                                        <a href="javascript:void(0);" className="action-icon"> <i
-                                                            className="mdi mdi-delete"></i></a>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <div className="form-check">
-                                                            <input type="checkbox" className="form-check-input"
-                                                                   id="customCheck2" />
-                                                            <label className="form-check-label"
-                                                                   htmlFor="customCheck2">&nbsp;</label>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        1
-                                                    </td>
-                                                    <td>
-                                                        Simon
-                                                    </td>
-                                                    <td>
-                                                        Blumel
-                                                    </td>
-                                                    <td>
-                                                        Karlovo Namesti
-                                                    </td>
-                                                    <td>20.08.2021</td>
-                                                    <td>
-                                                        16:00
-                                                    </td>
-                                                    <td>
-                                                        VS00112222
-                                                    </td>
-                                                    <td>
-                                                        Položka
-                                                    </td>
-                                                    <td>
-                                                        5
-                                                    </td>
-                                                    <td>
-                                                        0
-                                                    </td>
-                                                    <td>Ano</td>
-                                                    <td>Ano</td>
-                                                    <td>Ne</td>
-                                                    <td>Ne</td>
-                                                    <td>Ne</td>
-                                                    <td>
-                                                        <a href="javascript:void(0);" className="action-icon"> <i
-                                                            className="mdi mdi-square-edit-outline"></i></a>
-                                                        <a href="javascript:void(0);" className="action-icon"> <i
-                                                            className="mdi mdi-delete"></i></a>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <div className="form-check">
-                                                            <input type="checkbox" className="form-check-input"
-                                                                   id="customCheck2" />
-                                                            <label className="form-check-label"
-                                                                   htmlFor="customCheck2">&nbsp;</label>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        1
-                                                    </td>
-                                                    <td>
-                                                        Simon
-                                                    </td>
-                                                    <td>
-                                                        Blumel
-                                                    </td>
-                                                    <td>
-                                                        Karlovo Namesti
-                                                    </td>
-                                                    <td>20.08.2021</td>
-                                                    <td>
-                                                        16:00
-                                                    </td>
-                                                    <td>
-                                                        VS00112222
-                                                    </td>
-                                                    <td>
-                                                        Položka
-                                                    </td>
-                                                    <td>
-                                                        5
-                                                    </td>
-                                                    <td>
-                                                        0
-                                                    </td>
-                                                    <td>Ano</td>
-                                                    <td>Ano</td>
-                                                    <td>Ne</td>
-                                                    <td>Ne</td>
-                                                    <td>Ne</td>
-                                                    <td>
-                                                        <a href="javascript:void(0);" className="action-icon"> <i
-                                                            className="mdi mdi-square-edit-outline"></i></a>
-                                                        <a href="javascript:void(0);" className="action-icon"> <i
-                                                            className="mdi mdi-delete"></i></a>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <div className="form-check">
-                                                            <input type="checkbox" className="form-check-input"
-                                                                   id="customCheck2" />
-                                                            <label className="form-check-label"
-                                                                   htmlFor="customCheck2">&nbsp;</label>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        1
-                                                    </td>
-                                                    <td>
-                                                        Simon
-                                                    </td>
-                                                    <td>
-                                                        Blumel
-                                                    </td>
-                                                    <td>
-                                                        Karlovo Namesti
-                                                    </td>
-                                                    <td>20.08.2021</td>
-                                                    <td>
-                                                        16:00
-                                                    </td>
-                                                    <td>
-                                                        VS00112222
-                                                    </td>
-                                                    <td>
-                                                        Položka
-                                                    </td>
-                                                    <td>
-                                                        5
-                                                    </td>
-                                                    <td>
-                                                        0
-                                                    </td>
-                                                    <td>Ano</td>
-                                                    <td>Ano</td>
-                                                    <td>Ne</td>
-                                                    <td>Ne</td>
-                                                    <td>Ne</td>
-                                                    <td>
-                                                        <a href="javascript:void(0);" className="action-icon"> <i
-                                                            className="mdi mdi-square-edit-outline"></i></a>
-                                                        <a href="javascript:void(0);" className="action-icon"> <i
-                                                            className="mdi mdi-delete"></i></a>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <div className="form-check">
-                                                            <input type="checkbox" className="form-check-input"
-                                                                   id="customCheck2" />
-                                                            <label className="form-check-label"
-                                                                   htmlFor="customCheck2">&nbsp;</label>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        1
-                                                    </td>
-                                                    <td>
-                                                        Simon
-                                                    </td>
-                                                    <td>
-                                                        Blumel
-                                                    </td>
-                                                    <td>
-                                                        Karlovo Namesti
-                                                    </td>
-                                                    <td>20.08.2021</td>
+                                                    <td>04.09.2021</td>
                                                     <td>
                                                         16:00
                                                     </td>

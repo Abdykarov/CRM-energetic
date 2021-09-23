@@ -1,46 +1,28 @@
-package com.example.demo.domain;
+package com.example.demo.dto.response;
 
+import com.example.demo.domain.RoleEntity;
 import lombok.AccessLevel;
 import lombok.Data;
-import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
 
-import javax.persistence.*;
-import java.sql.Date;
 import java.util.Set;
 
-@Entity
 @Data
-@Accessors(chain = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserEntity {
+public class ApplicantResponseDto {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
     String opNumber;
-    String username;
     String name;
     String surname;
     String phone;
     String email;
-    String password;
     String city;
     String ico;
     String area;
-    @ManyToOne
-    @JoinColumn(name = "salesman_id")
-    UserEntity salesman;
-    @ManyToOne
-    @JoinColumn(name = "referal_id")
-    UserEntity referal;
-    Integer walletPoints;
-    Date acceptedAt;
-    @ManyToOne
-    @JoinColumn(name = "campaign_id")
-    CampaignEntity campaignId;
-
-    @ManyToMany(fetch = FetchType.EAGER)
+    Long salesmanId;
+    Long referalId;
+    Long campaign;
     Set<RoleEntity> roles;
 
     boolean hwsunMonitorGenerated;
@@ -64,4 +46,5 @@ public class UserEntity {
     boolean factureSent;
     boolean facturePaid;
     boolean confirmationAboutPaymentSent;
+
 }

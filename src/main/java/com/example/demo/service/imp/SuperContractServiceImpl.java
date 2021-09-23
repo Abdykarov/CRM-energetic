@@ -34,7 +34,7 @@ public class SuperContractServiceImpl implements SuperContractService {
             log.info("Deleting supercontract - Updating userId {} signedContract attribute", userId);
             final UserEntity userEntity = userRepository.findById(userId)
                     .orElseThrow(() -> new EntityNotFoundException("User doesnt exist"));
-            userEntity.setSignedContract(false);
+            userEntity.setEdrContractSigned(false);
             return "success";
 
         } catch (IOException e) {
@@ -61,7 +61,7 @@ public class SuperContractServiceImpl implements SuperContractService {
             log.info("Uploading supercontract - Updating userId {} signedContract attribute", userId);
             final UserEntity userEntity = userRepository.findById(userId)
                     .orElseThrow(() -> new EntityNotFoundException("User doesnt exist"));
-            userEntity.setSignedContract(true);
+            userEntity.setEdrContractSigned(true);
             return "success";
 
         } catch (IOException e) {

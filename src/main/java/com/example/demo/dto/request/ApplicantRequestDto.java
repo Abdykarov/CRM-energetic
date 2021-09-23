@@ -1,48 +1,34 @@
-package com.example.demo.domain;
+package com.example.demo.dto.request;
 
+import com.example.demo.domain.CampaignEntity;
+import com.example.demo.domain.RoleEntity;
+import com.example.demo.domain.UserEntity;
 import lombok.AccessLevel;
 import lombok.Data;
-import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
 
-import javax.persistence.*;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import java.sql.Date;
 import java.util.Set;
 
-@Entity
 @Data
-@Accessors(chain = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserEntity {
+public class ApplicantRequestDto {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
     String opNumber;
-    String username;
     String name;
     String surname;
     String phone;
     String email;
-    String password;
     String city;
     String ico;
     String area;
-    @ManyToOne
-    @JoinColumn(name = "salesman_id")
-    UserEntity salesman;
-    @ManyToOne
-    @JoinColumn(name = "referal_id")
-    UserEntity referal;
-    Integer walletPoints;
-    Date acceptedAt;
-    @ManyToOne
-    @JoinColumn(name = "campaign_id")
-    CampaignEntity campaignId;
-
-    @ManyToMany(fetch = FetchType.EAGER)
-    Set<RoleEntity> roles;
-
+    Long salesmanId;
+    Long referalId;
+    Long campaign;
     boolean hwsunMonitorGenerated;
     boolean hwsunMonitorSent;
     boolean hwsunMonitorSigned;
@@ -64,4 +50,5 @@ public class UserEntity {
     boolean factureSent;
     boolean facturePaid;
     boolean confirmationAboutPaymentSent;
+
 }

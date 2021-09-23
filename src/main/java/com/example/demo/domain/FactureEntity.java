@@ -7,6 +7,7 @@ import org.springframework.data.annotation.CreatedDate;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -20,7 +21,8 @@ public class FactureEntity {
     private UserEntity user;
     @CreatedDate
     private LocalDateTime createdAt;
-    private String VarSymbol;
+    private Date due_date;
+    private String varSymbol;
     @OneToMany(mappedBy = "facture",
             fetch = FetchType.EAGER,
             cascade = CascadeType.ALL)

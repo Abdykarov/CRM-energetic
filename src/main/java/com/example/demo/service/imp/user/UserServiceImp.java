@@ -44,13 +44,11 @@ public class UserServiceImp implements UserDetailsService, UserService {
     private final ContactMapper contactMapper;
     private final SalesmanMapper salesmanMapper;
     private final AccountMapper accountMapper;
-    private final PotentialMapper potentialMapper;
-    private final CurrentMapper currentMapper;
-    private final AcceptedMapper acceptedMapper;
     private final EdrMapper edrMapper;
     private final EdrLinkRepository edrLinkRepository;
     private final ReferalLinkRepository referalLinkRepository;
     private final AdminMapper adminMapper;
+    private final ApplicantMapper applicantMapper;
     private final RoleServiceImp roleService;
     private final RoleRepository roleRepository;
     private final BCryptPasswordEncoder passwordEncoder;
@@ -172,15 +170,47 @@ public class UserServiceImp implements UserDetailsService, UserService {
     public List<ContactResponseDto> getContacts() {
         List<UserEntity> newContacts = userRepository.findByRoles_Name("NEW");
         List<UserEntity> oldContacts = userRepository.findByRoles_Name("OLD");
+        List<UserEntity> lostContacts = userRepository.findByRoles_Name("LOST");
+        List<UserEntity> deferredContacts = userRepository.findByRoles_Name("DEFERRED");
+        List<UserEntity> edrCancelledContacts = userRepository.findByRoles_Name("EDR_CANCELLED");
+
         List<ContactResponseDto> collectNew = newContacts.stream()
-                .map(user -> contactMapper.toResponse(user))
+                .map(contactMapper::toResponse)
                 .collect(Collectors.toList());
         List<ContactResponseDto> collectOld = oldContacts.stream()
-                .map(user -> contactMapper.toResponse(user))
+                .map(contactMapper::toResponse)
                 .collect(Collectors.toList());
-        List<ContactResponseDto> collect = Stream.concat(collectNew.stream(), collectOld.stream())
+        List<ContactResponseDto> collectLost = lostContacts.stream()
+                .map(contactMapper::toResponse)
                 .collect(Collectors.toList());
-        return collect;
+        List<ContactResponseDto> collectDeferred = deferredContacts.stream()
+                .map(contactMapper::toResponse)
+                .collect(Collectors.toList());
+        List<ContactResponseDto> collectEdrCancelled = edrCancelledContacts.stream()
+                .map(contactMapper::toResponse)
+                .collect(Collectors.toList());
+
+        List<ContactResponseDto> collect = Stream.concat(
+                        collectNew.stream(),
+                        collectOld.stream())
+                .collect(Collectors.toList());
+
+        List<ContactResponseDto> collect2 = Stream.concat(
+                        collect.stream(),
+                        collectLost.stream())
+                .collect(Collectors.toList());
+
+        List<ContactResponseDto> collect3 = Stream.concat(
+                        collect2.stream(),
+                        collectDeferred.stream())
+                .collect(Collectors.toList());
+
+        List<ContactResponseDto> collect4 = Stream.concat(
+                        collect3.stream(),
+                        collectEdrCancelled.stream())
+                .collect(Collectors.toList());
+
+        return collect4;
     }
 
     @Override
@@ -237,32 +267,16 @@ public class UserServiceImp implements UserDetailsService, UserService {
         return collection;
     }
 
+
     @Override
-    public List<PotentialResponseDto> getPotentials() {
-        List<UserEntity> leadEntities = userRepository.findByRoles_Name("POTENTIAL");
-        List<PotentialResponseDto> collection = leadEntities.stream()
-                .map(user -> potentialMapper.toResponse(user))
+    public List<ApplicantResponseDto> getApplicants() {
+        List<UserEntity> applicantEntities = userRepository.findByRoles_Name("APPLICANT");
+        List<ApplicantResponseDto> collection = applicantEntities.stream()
+                .map(user -> applicantMapper.toResponse(user))
                 .collect(Collectors.toList());
         return collection;
     }
 
-    @Override
-    public List<CurrentResponseDto> getCurrents() {
-        List<UserEntity> leadEntities = userRepository.findByRoles_Name("CURRENT");
-        List<CurrentResponseDto> collection = leadEntities.stream()
-                .map(user -> currentMapper.toResponse(user))
-                .collect(Collectors.toList());
-        return collection;
-    }
-
-    @Override
-    public List<AcceptedResponseDto> getAccepted() {
-        List<UserEntity> leadEntities = userRepository.findByRoles_Name("ACCEPTED");
-        List<AcceptedResponseDto> collection = leadEntities.stream()
-                .map(user -> acceptedMapper.toResponse(user))
-                .collect(Collectors.toList());
-        return collection;
-    }
 
     @Override
     public List<EdrResponseDto> getEdr() {
@@ -285,42 +299,6 @@ public class UserServiceImp implements UserDetailsService, UserService {
         return userMapper.toResponse(save);
     }
 
-    @Override
-    public UserResponseDto changeToPotential(Long userId) {
-        final UserEntity userEntity = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("User doesnt exist"));
-        RoleEntity lead = roleService.findByName("POTENTIAL");
-        Set<RoleEntity> roleSet = new HashSet<>();
-        roleSet.add(lead);
-        userEntity.setRoles(roleSet);
-        UserEntity save = userRepository.save(userEntity);
-        return userMapper.toResponse(save);
-    }
-
-
-    @Override
-    public UserResponseDto changeToCurrent(Long userId) {
-        final UserEntity userEntity = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("User doesnt exist"));
-        RoleEntity lead = roleService.findByName("CURRENT");
-        Set<RoleEntity> roleSet = new HashSet<>();
-        roleSet.add(lead);
-        userEntity.setRoles(roleSet);
-        UserEntity save = userRepository.save(userEntity);
-        return userMapper.toResponse(save);
-    }
-
-    @Override
-    public UserResponseDto changeToAccepted(Long userId) {
-        final UserEntity userEntity = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("User doesnt exist"));
-        RoleEntity lead = roleService.findByName("ACCEPTED");
-        Set<RoleEntity> roleSet = new HashSet<>();
-        roleSet.add(lead);
-        userEntity.setRoles(roleSet);
-        UserEntity save = userRepository.save(userEntity);
-        return userMapper.toResponse(save);
-    }
 
     @Override
     public UserResponseDto changeToEdr(Long userId) {

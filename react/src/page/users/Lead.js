@@ -3,6 +3,7 @@ import React, {useContext, useEffect} from 'react';
 import {Context} from "../../index";
 import {fetchContacts, fetchLeads} from "../../http/contactAPI";
 import LeadTable from "../../component/tables/LeadTable";
+import {CONTACT_PROFILE_ROUTE} from "../../utils/const";
 
 const Lead = () => {
     const {lead} = useContext(Context)
@@ -39,13 +40,27 @@ const Lead = () => {
                                 <div className="card">
                                     <div className="card-body">
                                         <div className="row mb-2">
-                                            <div className="col-sm-4">
-                                                <button type="button" className="btn btn-danger waves-effect waves-light"
-                                                        data-bs-toggle="modal" data-bs-target="#custom-modal"><i
-                                                    className="mdi mdi-plus-circle me-1"></i> Add Customers
-                                                </button>
-                                            </div>
                                             <div className="col-sm-8">
+                                                <form className="d-flex flex-wrap align-items-center">
+                                                    <label htmlFor="inputPassword2"
+                                                           className="visually-hidden">Search</label>
+                                                    <div className="me-3">
+                                                        <input type="search" className="form-control my-1 my-lg-0"
+                                                               id="inputPassword2" placeholder="Search..." />
+                                                    </div>
+                                                    <label htmlFor="status-select" className="me-2">Sort By</label>
+                                                    <div className="me-sm-3">
+                                                        <select className="form-select my-1 my-lg-0" id="status-select">
+                                                            <option selected="">All</option>
+                                                            <option value="1">Popular</option>
+                                                            <option value="2">Price Low</option>
+                                                            <option value="3">Price High</option>
+                                                            <option value="4">Sold Out</option>
+                                                        </select>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <div className="col-sm-4">
                                                 <div className="text-sm-end mt-2 mt-sm-0">
                                                     <button type="button" className="btn btn-success mb-2 me-1"><i
                                                         className="mdi mdi-cog"></i></button>
@@ -55,6 +70,7 @@ const Lead = () => {
                                                 </div>
                                             </div>
                                         </div>
+
 
                                         <div className="table-responsive">
                                             <table className="table table-centered table-nowrap table-striped"
@@ -70,22 +86,171 @@ const Lead = () => {
                                                         </div>
                                                     </th>
                                                     <th>Kontakt</th>
-                                                    <th>Id</th>
                                                     <th>Jméno</th>
                                                     <th>Příjmení</th>
                                                     <th>Telefon</th>
                                                     <th>Email</th>
                                                     <th>Stav</th>
                                                     <th>Obchodní zástupce</th>
-                                                    <th>Název společnosti</th>
-                                                    <th>Pracovní pozice</th>
+                                                    <th>Kontaktní osoba</th>
                                                     <th>Město</th>
-                                                    <th>PSČ</th>
-                                                    <th>FO/PO</th>
-                                                    <th style={{width: '85px'}}>Action</th>
+                                                    <th>Kraj</th>
+                                                    <th>Kampaň</th>
+                                                    <th>Nainstalovaná FVE od Solid Sun</th>
+                                                    <th>Supersmlouva</th>
+                                                    <th>Dílčí supersmlouva</th>
+                                                    <th style={{width: '85px'}}>Osobní Stranka</th>
                                                 </tr>
                                                 </thead>
-                                                <LeadTable></LeadTable>
+                                                <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <div className="form-check">
+                                                            <input type="checkbox" className="form-check-input"
+                                                                   id="customCheck2" />
+                                                            <label className="form-check-label"
+                                                                   htmlFor="customCheck2">&nbsp;</label>
+                                                        </div>
+                                                    </td>
+                                                    <td className="table-user">
+                                                        <a href={CONTACT_PROFILE_ROUTE + '/' + 1} className="text-body fw-semibold">Ilias</a>
+                                                    </td>
+                                                    <td>
+                                                       Ilias
+                                                    </td>
+                                                    <td>
+                                                       Abdykarov
+                                                    </td>
+                                                    <td>
+                                                        123232323
+                                                    </td>
+                                                    <td>
+                                                        n13wka@gmail.com
+                                                    </td>
+                                                    <td>
+                                                        <span className="badge bg-soft-success text-success">LEAD</span>
+                                                    </td>
+                                                    <td>
+                                                        <a href={CONTACT_PROFILE_ROUTE + '/' + 1} className="text-body fw-semibold"> Petr Olsak</a>
+                                                    </td>
+                                                    <td>
+                                                        <a href={CONTACT_PROFILE_ROUTE + '/' + 1} className="text-body fw-semibold">Vladimir Sykora</a>
+                                                    </td>
+                                                    <td>
+                                                        Praha
+                                                    </td>
+                                                    <td>
+                                                        Praha 6
+                                                    </td>
+                                                    <td>
+                                                        Kampan
+                                                    </td>
+                                                    <td>
+                                                        Ano
+                                                    </td>
+                                                    <td>
+                                                        Potřebuje dílčí supersmlouvu
+                                                    </td>
+                                                    <td>
+                                                            <div className="form-check">
+                                                                <input type="checkbox" className="form-check-input"
+                                                                       id="customCheck1" />
+                                                                    <label className="form-check-label"
+                                                                           htmlFor="customCheck1">vygenerovaný dodatek</label>
+                                                            </div>
+                                                            <div className="form-check">
+                                                                <input type="checkbox" className="form-check-input"
+                                                                       id="customCheck2" />
+                                                                    <label className="form-check-label"
+                                                                           htmlFor="customCheck2">odeslaný dodatek</label>
+                                                            </div>
+                                                        <div className="form-check">
+                                                                <input type="checkbox" className="form-check-input"
+                                                                       id="customCheck2" />
+                                                                    <label className="form-check-label"
+                                                                           htmlFor="customCheck2">podepsaný dodatek</label>
+                                                            </div>
+                                                    </td>
+                                                    <td>
+                                                        <a href={CONTACT_PROFILE_ROUTE + '/'+ 1} className="action-icon">
+                                                            <img width="35px" src="https://cdn.pixabay.com/photo/2020/07/14/13/07/icon-5404125_1280.png" alt=""/></a>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div className="form-check">
+                                                            <input type="checkbox" className="form-check-input"
+                                                                   id="customCheck2" />
+                                                            <label className="form-check-label"
+                                                                   htmlFor="customCheck2">&nbsp;</label>
+                                                        </div>
+                                                    </td>
+                                                    <td className="table-user">
+                                                        <a href={CONTACT_PROFILE_ROUTE + '/' + 1} className="text-body fw-semibold">Ilias</a>
+                                                    </td>
+                                                    <td>
+                                                        Ilias
+                                                    </td>
+                                                    <td>
+                                                        Abdykarov
+                                                    </td>
+                                                    <td>
+                                                        123232323
+                                                    </td>
+                                                    <td>
+                                                        n13wka@gmail.com
+                                                    </td>
+                                                    <td>
+                                                        <span className="badge bg-soft-success text-success">LEAD</span>
+                                                    </td>
+                                                    <td>
+                                                        <a href={CONTACT_PROFILE_ROUTE + '/' + 1} className="text-body fw-semibold"> Petr Olsak</a>
+                                                    </td>
+                                                    <td>
+                                                        <a href={CONTACT_PROFILE_ROUTE + '/' + 1} className="text-body fw-semibold">Vladimir Sykora</a>
+                                                    </td>
+                                                    <td>
+                                                        Praha
+                                                    </td>
+                                                    <td>
+                                                        Praha 6
+                                                    </td>
+                                                    <td>
+                                                        Kampan
+                                                    </td>
+                                                    <td>
+                                                        Ne
+                                                    </td>
+                                                    <td>
+                                                        <div className="form-check">
+                                                            <input type="checkbox" className="form-check-input"
+                                                                   id="customCheck1" />
+                                                            <label className="form-check-label"
+                                                                   htmlFor="customCheck1">vygenerovaný dodatek</label>
+                                                        </div>
+                                                        <div className="form-check">
+                                                            <input type="checkbox" className="form-check-input"
+                                                                   id="customCheck2" />
+                                                            <label className="form-check-label"
+                                                                   htmlFor="customCheck2">odeslaný dodatek</label>
+                                                        </div>
+                                                        <div className="form-check">
+                                                            <input type="checkbox" className="form-check-input"
+                                                                   id="customCheck2" />
+                                                            <label className="form-check-label"
+                                                                   htmlFor="customCheck2">podepsaný dodatek</label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        Nepotřebuje dílčí supersmlouvu
+                                                    </td>
+                                                    <td>
+                                                        <a href={CONTACT_PROFILE_ROUTE + '/'+ 1} className="action-icon">
+                                                            <img width="35px" src="https://cdn.pixabay.com/photo/2020/07/14/13/07/icon-5404125_1280.png" alt=""/></a>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                                {/*<LeadTable></LeadTable>*/}
                                             </table>
                                         </div>
 

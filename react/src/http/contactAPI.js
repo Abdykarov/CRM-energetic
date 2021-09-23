@@ -30,20 +30,8 @@ export const fetchLeads = async () =>{
 }
 
 
-export const fetchPotentials = async () =>{
-    const {data} = await $authHost.get('edr_api/user/contact/potentials/')
-    return data
-}
-
-
-export const fetchCurrent = async () =>{
-    const {data} = await $authHost.get('edr_api/user/contact/currents/')
-    return data
-}
-
-
-export const fetchAccepted = async () =>{
-    const {data} = await $authHost.get('edr_api/user/contact/accepted/')
+export const fetchApplicants = async () =>{
+    const {data} = await $authHost.get('edr_api/user/contact/applicants/')
     return data
 }
 

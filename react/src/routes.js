@@ -1,11 +1,9 @@
 import Admin from "./page/users/Admin";
 import {
-    ACCEPTED_ROUTE,
-    ADMIN_ROUTE,
+    ADMIN_ROUTE, APPLICANT_ROUTE,
     CONTACT_PROFILE_ROUTE,
     CONTACTS_ROUTE,
     CREATE_EDR_ROUTE,
-    CURRENT_ROUTE,
     DASHBOARD_ROUTE,
     EDR_ROUTE,
     FACTURE_ROUTE,
@@ -13,7 +11,7 @@ import {
     LEAD_ROUTE,
     LOGIN_ROUTE,
     MANAGER_ROUTE, OUTBOX_ROUTE,
-    POTENTIAL_ROUTE, REGISTRATION_ADMIN_ROUTE,
+    REGISTRATION_ADMIN_ROUTE,
     REGISTRATION_CONTACT_ROUTE,
     REGISTRATION_MANAGER_ROUTE, REGISTRATION_REFERAL_ROUTE,
     REGISTRATION_SALESMAN_ROUTE,
@@ -28,9 +26,6 @@ import Auth from "./page/forms/Auth";
 import Dashboard from "./page/Dashboard";
 import Manager from "./page/users/Manager";
 import Salesman from "./page/users/Salesman";
-import Potential from "./page/users/Potential";
-import Current from "./page/users/Current";
-import Accepted from "./page/users/Accepted";
 import ContactProfile from "./page/users/ContactProfile";
 import Inbox from "./page/Inbox";
 import Facture from "./page/Facture";
@@ -39,6 +34,7 @@ import Edr_Registration from "./page/forms/EdrRegistration";
 import RegestrationReferal from "./page/forms/RegestrationReferal";
 import EdrRegistration from "./page/forms/EdrRegistration";
 import Outbox from "./page/Outbox";
+import Applicant from "./page/users/Applicant";
 
 export const authRoutes = [
     {
@@ -58,16 +54,8 @@ export const authRoutes = [
         Component: Lead
     },
     {
-        path: POTENTIAL_ROUTE,
-        Component: Potential
-    },
-    {
-        path: CURRENT_ROUTE,
-        Component: Current
-    },
-    {
-        path: ACCEPTED_ROUTE,
-        Component: Accepted
+        path: APPLICANT_ROUTE,
+        Component: Applicant
     },
     {
         path: CONTACT_PROFILE_ROUTE + '/:id',

@@ -489,23 +489,7 @@ const ContactProfile = observer(() => {
                                                         : <div></div>
                                                 }
                                                 {
-                                                    (role === "POTENTIAL") ?
-                                                        <div>
-                                                            <p className="text-muted mb-1 font-13"><strong>Vygenerovaná smlouva :</strong> <span
-                                                                className="ms-2">{ contact.generatedContract ? 'Ano' : 'Ne'}</span></p>
-                                                            <p className="text-muted mb-1 font-13"><strong>Podepsaná smlouva :</strong> <span
-                                                                className="ms-2">{ contact.signedContract ? 'Ano' : 'Ne'}</span></p>
-                                                            <p className="text-muted mb-1 font-13"><strong>Hardware Sun monitor :</strong> <span
-                                                                className="ms-2">{ contact.hwsunMonitor ? 'Ano' : 'Ne'}</span></p>
-                                                            <p className="text-muted mb-1 font-13"><strong>Smlouva sysel :</strong> <span
-                                                                className="ms-2">{ contact.syselAgreement ? 'Ano' : 'Ne'}</span></p>
-                                                            <p className="text-muted mb-1 font-13"><strong>Fve dokument :</strong> <span
-                                                                className="ms-2">{ contact.connectedFVE ? 'Ano' : 'Ne'}</span></p>
-                                                        </div>
-                                                        : <div></div>
-                                                }
-                                                {
-                                                    (role === "CURRENT") ?
+                                                    (role === "APPLICANT") ?
                                                         <div>
                                                             <p className="text-muted mb-1 font-13"><strong>Vygenerovaná smlouva :</strong> <span
                                                                 className="ms-2">{ contact.generatedContract ? 'Ano' : 'Ne'}</span></p>
@@ -593,129 +577,40 @@ const ContactProfile = observer(() => {
                                                                     : <div></div>
                                                             }
                                                             {
-                                                                (role === "POTENTIAL") ?
+                                                                (role === "APPLICANT") ?
                                                                     <div className="col-md-6">
-                                                                        <h3 className="mb-3">Hardware Sun monitor</h3>
-                                                                        <div className="mb-3">
-                                                                            { (!hwsunMonitor) ?
-                                                                                <div className="mb-3">
-                                                                                    <label htmlFor="example-fileinput" className="form-label">
-                                                                                        Uložit dokument o hw sun monitor</label>
-                                                                                    <input type="file" onChange={e => setSelectedHWFile(e.target.files[0])} id="example-fileinput"
-                                                                                           className="form-control"/>
-                                                                                    <button onClick={saveHwFile} type="button"
-                                                                                            className="mt-3 btn btn-primary waves-effect waves-light">Uložit dokument o hw sun monitor
-                                                                                    </button>
-                                                                                </div>
-                                                                                :
-                                                                                <div>
-                                                                                    <button onClick={fetchHwSunMonitor} type="button"
-                                                                                            className="btn btn-success waves-effect waves-light">Stahnout dokument o hw sun monitor
-                                                                                    </button>
-                                                                                    <button onClick={deleteHwSunMonitor} type="button"
-                                                                                            className="mt-3 btn btn-danger waves-effect waves-light">Odstranit dokument o hw sun monitor
-                                                                                    </button>
-                                                                                </div>
-                                                                            }
-                                                                        </div>
-
-
-                                                                        <h3 className="mt-3 mb-3">Smlouva sysel</h3>
-                                                                        <div className="mb-3">
-                                                                            { (!syselAgreement) ?
-                                                                                <div className="mb-3">
-                                                                                    <label htmlFor="example-fileinput" className="form-label">
-                                                                                        Uložit smlouvu sysel</label>
-                                                                                    <input type="file" onChange={e => setSelectedSyselAgreementFile(e.target.files[0])} id="example-fileinput"
-                                                                                           className="form-control"/>
-                                                                                    <button onClick={saveSyselAgreement} type="button"
-                                                                                            className="mt-3 btn btn-primary waves-effect waves-light">Uložit sysel dokument
-                                                                                    </button>
-                                                                                </div>
-                                                                                :
-                                                                                <div>
-                                                                                    <button onClick={fetchSyselAgreement} type="button"
-                                                                                            className="btn btn-success waves-effect waves-light">Stahnout sysel dokument
-                                                                                    </button>
-                                                                                    <button onClick={deleteSyselAgreement} type="button"
-                                                                                            className="mt-3 btn btn-danger waves-effect waves-light">Odstranit sysel dokument
-                                                                                    </button>
-                                                                                </div>
-                                                                            }
-                                                                        </div>
-
-                                                                        <h3>Zapojení FVE Solid Sun</h3>
-                                                                        <div className="mb-3">
-                                                                            { (!connectedFVE) ?
-                                                                                <div className="mb-3">
-                                                                                    <label htmlFor="example-fileinput" className="form-label">
-                                                                                        Uložit dokument o zapojení FVE Solid Sun</label>
-                                                                                    <input type="file" onChange={e => setSelectedConnectedFVE(e.target.files[0])} id="example-fileinput"
-                                                                                           className="form-control"/>
-                                                                                    <button onClick={saveConnectedFVE} type="button"
-                                                                                            className="mt-3 btn btn-primary waves-effect waves-light">Uložit dokument o zapojení FVE Solid Sun
-                                                                                    </button>
-                                                                                </div>
-                                                                                :
-                                                                                <div>
-                                                                                    <button onClick={fetchConnectedFve} type="button"
-                                                                                            className="btn btn-success waves-effect waves-light">Stahnout dokument o zapojení FVE Solid Sun
-                                                                                    </button>
-                                                                                    <button onClick={deleteConnectedFve} type="button"
-                                                                                            className="mt-3 btn btn-danger waves-effect waves-light">Odstranit dokument o zapojení FVE Solid Sun
-                                                                                    </button>
-                                                                                </div>
-                                                                            }
-                                                                        </div>
-
-                                                                    </div>
-                                                                    : <div></div>
-                                                            }
-
-                                                            {
-                                                                (role === "CURRENT") ?
-                                                                    <div className="col-md-6">
-                                                                        <h3>Přihláška</h3> <button onClick={generateEdrRequest} type="button"
-                                                                                                      className="mb-3 mt-2 btn btn-info waves-effect waves-light"><i
-                                                                        className="mdi mdi-cloud-outline me-1"></i> Vygenerovat přihlášku
-                                                                    </button>
+                                                                        <h3>Supersmlouva</h3>
+                                                                        <button onClick={generateSupercontract} type="button" className="mb-3 mt-2 btn btn-info waves-effect waves-light"><i
+                                                                            className="mdi mdi-cloud-outline me-1"></i> Vygenerovat supersmlouvu
+                                                                        </button>
                                                                         <button type="button"
                                                                                 className="mb-3 btn btn-dark waves-effect waves-light"><i
-                                                                            className="mdi mdi-cloud-outline me-1"></i> Zaslat přihlášku do mailu
+                                                                            className="mdi mdi-cloud-outline me-1"></i> Zaslat supersmlouvu do mailu
                                                                         </button>
                                                                         <br/><br/>
                                                                         <div className="mb-3">
-                                                                            { (!edrRequest) ?
+                                                                            { (!signedContract) ?
                                                                                 <div className="mb-3">
                                                                                     <label htmlFor="example-fileinput" className="form-label">
-                                                                                        Uložit podepsanou přihlášku</label>
-                                                                                    <input type="file" onChange={e => setSelectedEdrRequest(e.target.files[0])} id="example-fileinput"
+                                                                                        Přidat podepsanou smlouvu</label>
+                                                                                    <input type="file" onChange={e => setSelectedContractFile(e.target.files[0])} id="example-fileinput"
                                                                                            className="form-control"/>
-                                                                                    <button onClick={saveRequest} type="button"
-                                                                                            className="mt-3 btn btn-primary waves-effect waves-light">Uložit podepsanou přihlášku
+                                                                                    <button onClick={saveContract} type="button"
+                                                                                            className="mt-3 btn btn-primary waves-effect waves-light">Uložit podepsanou smlouvu
                                                                                     </button>
                                                                                 </div>
                                                                                 :
                                                                                 <div>
-                                                                                    <button onClick={fetchEdrRequest} type="button"
-                                                                                            className="btn btn-success waves-effect waves-light">Stahnout podepsanou přihlášku
+                                                                                    <button onClick={fetchSupercontract} type="button"
+                                                                                            className="btn btn-success waves-effect waves-light">Stahnout podepsanou smlouvu
                                                                                     </button>
-                                                                                    <button onClick={deleteRequest} type="button"
-                                                                                            className="mt-3 btn btn-danger waves-effect waves-light">Odstranit podepsanou přihlášku
+                                                                                    <button onClick={deleteSignedContract} type="button"
+                                                                                            className="mt-3 btn btn-danger waves-effect waves-light">Odstranit podepsanou smlouvu
                                                                                     </button>
                                                                                 </div>
                                                                             }
                                                                         </div>
-                                                                        <h3>Faktura</h3> <button type="button"
-                                                                                                   className="mb-3 mt-2 btn btn-info waves-effect waves-light"><i
-                                                                        className="mdi mdi-cloud-outline me-1"></i> Vygenerovat fakturu
-                                                                    </button>
-                                                                        <button type="button"
-                                                                                className="mb-3 btn btn-dark waves-effect waves-light"><i
-                                                                            className="mdi mdi-cloud-outline me-1"></i> Zaslat fakturu do mailu
-                                                                        </button>
                                                                     </div>
-
                                                                     : <div></div>
                                                             }
 
@@ -804,51 +699,7 @@ const ContactProfile = observer(() => {
                                                                     </div> : <div></div>
                                                             }
                                                             {
-                                                                (role === "POTENTIAL")?
-                                                                    <div className="row">
-                                                                        <div className="col-md-6">
-                                                                            <button onClick={changeToCurrent} type="button"
-                                                                                    className="mb-3 btn btn-primary waves-effect waves-light">Změnit stav na Stavající klient
-
-                                                                            </button>
-                                                                            <div className="mb-3 form-check">
-                                                                                <input type="checkbox" className="form-check-input"
-                                                                                       id="customCheck1"/>
-                                                                                <label className="form-check-label"
-                                                                                       htmlFor="customCheck1">Potvrdit</label>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div className="col-md-6">
-                                                                            <button type="button"
-                                                                                    className="btn btn-info waves-effect waves-light">Kontrola přechodu
-                                                                            </button>
-                                                                        </div>
-                                                                    </div> : <div></div>
-                                                            }
-                                                            {
-                                                                (role === "CURRENT")?
-                                                                    <div className="row">
-                                                                        <div className="col-md-6">
-                                                                            <button onClick={changeToAccepted} type="button"
-                                                                                    className="mb-3 btn btn-primary waves-effect waves-light">Změnit stav na Přihlášený klient
-
-                                                                            </button>
-                                                                            <div className="mb-3 form-check">
-                                                                                <input type="checkbox" className="form-check-input"
-                                                                                       id="customCheck1"/>
-                                                                                <label className="form-check-label"
-                                                                                       htmlFor="customCheck1">Potvrdit</label>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div className="col-md-6">
-                                                                            <button type="button"
-                                                                                    className="btn btn-info waves-effect waves-light">Kontrola přechodu
-                                                                            </button>
-                                                                        </div>
-                                                                    </div> : <div></div>
-                                                            }
-                                                            {
-                                                                (role === "ACCEPTED")?
+                                                                (role === "APPLICANT")?
                                                                     <div className="row">
                                                                         <div className="col-md-6">
                                                                             <button onClick={sendEdrRegistration} type="button"
@@ -938,6 +789,227 @@ const ContactProfile = observer(() => {
                                 </div>
                             </div>
 
+                            <div className="row mt-3">
+
+                                <div className="col-xl-8">
+                                    <div className="email-communication">
+                                        <h4>Komunikace OZ s klientem</h4>
+                                        <ul className="conversation-list" data-simplebar="init">
+                                            <li className="clearfix">
+                                                <div className="chat-avatar">
+                                                    <img src="/images/users/user-5.jpg" alt="James Z"
+                                                         className="rounded" />
+                                                        <i>10:02</i>
+                                                </div>
+                                                <div className="conversation-text">
+                                                    <div className="ctext-wrap">
+                                                        <i>James Z</i>
+                                                        <p>
+                                                            Zdravím všechny členy naší Ekocesty,
+
+
+
+                                                            již určitě netrpělivě čekáte na další informace k našemu teambuildingu, ale nejprve bych Vás poprosila o vyplnění kraťoučkého dotazníčku, který mi pomůže v doplánování: https://www.survio.com/survey/d/I9K8F7S2H9N3M6R5D. Prosím aby dotazník vyplnili všichni příjemci tohoto e-mailu, pokud byste věděli o někom, kdo tento e-mail měl dostat a nedostal, tak mu ho klidně pošlete. 😊
+
+
+
+                                                            Už Vám můžu prozradit, že akce se bude konat v Národním domě ve Frýdku-Místku na adrese Palackého 134, 738 01 Frýdek – Místek a sraz na místě proběhne mezi 11:00 až 12:00 hodinou.
+
+
+
+                                                            Můžete se těšit na výborné jídlo, soutěžní aktivity, prezentaci Ekocesty, diskotéku a další překvapení !
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div className="conversation-actions dropdown">
+                                                    <button className="btn btn-sm btn-link" data-bs-toggle="dropdown"
+                                                            aria-expanded="false"><i
+                                                        className="mdi mdi-dots-vertical font-16"></i></button>
+
+                                                    <div className="dropdown-menu dropdown-menu-end">
+                                                        <a className="dropdown-item" href="#">Copy Message</a>
+                                                        <a className="dropdown-item" href="#">Edit</a>
+                                                        <a className="dropdown-item" href="#">Delete</a>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li className="clearfix odd">
+                                                <div className="chat-avatar">
+                                                    <img src="/images/users/user-1.jpg" alt="Geneva M"
+                                                         className="rounded" />
+                                                        <i>10:03</i>
+                                                </div>
+                                                <div className="conversation-text">
+                                                    <div className="ctext-wrap">
+                                                        <i>Geneva M</i>
+                                                        <p>
+
+
+                                                            Ahoj,
+
+
+
+                                                            jsem ráda, že o kurzy máte zájem, Emoční inteligenci a Stress management jste už zaplnili a zůstává mi pár volných míst na tyto kurzy, pokud budete mít zájem, tak neváhejte a pište 😉
+
+
+
+                                                            22.9. Týmová spolupráce – Ing. Šárka Tomisová - pokud byste měli nápady čemu se chcete věnovat na Týmové spolupráci, lze podněty předat lektorce a ta upraví obsah kurzu.
+
+                                                            Osobnostní typologie – sami si vyhodnotíte a lze uplatnit v každodenní praxi, kde dostanete návod na rozpoznání jednotlivých typů chování a jednání.
+
+                                                            ·         test týmových rolí (M. Belbin) – poznáte své místo ve skupině a také můžete zjistit něco o svých blízkých, jak fungují a proč tak reagují, kdy a za jakých podmínek se jim daří.
+
+                                                            ·         test smyslového vnímání – uvědomění si svých preferencí, principy paměti a učení se a také můžete získat informace o svém komunikačním partnerovi, jakým způsobem mu předávat informace.
+
+                                                            Nastavení týmového myšlení
+
+                                                            ·         řízení a vedení lidí – rozdíly, mýty a fakta, která nás upozorní, zda řídíme, vedeme nebo odhalíme ještě další formy spolupráce v týmu, skupině a organizaci.
+
+                                                            ·         projektovém řízení – základní předpoklady skupinového řešení problémů v obecné rovině
+
+                                                            ·         leadership – principy a úrovně leadreshipu
+
+                                                            Metodiky a postupy v hravé formě – praktické ukázky podložené teorií a případovými studiemi, vlastní příběhy umíme zařadit, objasnit a také správně nastavit.
+
+
+
+                                                            30.9. Konfliktní situace – Ing. Šárka Tomisová
+
+                                                            osobnostní typologie
+                                                            test typologické preference
+                                                            řešení obtížných situací
+                                                            asertivita
+                                                            Time management
+                                                            Efektivní řízení skupiny v konfliktní situaci
+                                                            Metodiky a postupy v hravé formě
+
+
+
+                                                            8.10. Zvyšování výkonnosti II – Ing. Kamil Košťál, MBA, Alog.
+
+                                                            Jedná se o navazující školení na Zvyšování výkonnosti I a Zvyšování efektivity procesů, pokud jste jeden z těchto kurzů absolvovali, tak doporučuji i tento pokračující kurz, věřím, že zde načerpáte další přínosné informace.
+
+
+
+
+
+                                                            Hezký pátek
+
+                                                            Renata
+
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div className="conversation-actions dropdown">
+                                                    <button className="btn btn-sm btn-link" data-bs-toggle="dropdown"
+                                                            aria-expanded="false"><i
+                                                        className="mdi mdi-dots-vertical font-16"></i></button>
+
+                                                    <div className="dropdown-menu">
+                                                        <a className="dropdown-item" href="#">Copy Message</a>
+                                                        <a className="dropdown-item" href="#">Edit</a>
+                                                        <a className="dropdown-item" href="#">Delete</a>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+
+                                        <div className="row">
+                                            <div className="col">
+                                                <div className="mt-2 bg-light p-3 rounded">
+                                                    <form className="needs-validation" noValidate="" name="chat-form"
+                                                          id="chat-form">
+                                                        <div className="row">
+                                                            <div className="col mb-2 mb-sm-0">
+                                                                <input type="text" className="form-control border-0"
+                                                                       placeholder="Enter your text" required="" />
+                                                                    <div className="invalid-feedback">
+                                                                        Please enter your messsage
+                                                                    </div>
+                                                            </div>
+                                                            <div className="col-sm-auto">
+                                                                <div className="btn-group">
+                                                                    <a href="#" className="btn btn-light"><i
+                                                                        className="fe-paperclip"></i></a>
+                                                                    <button type="submit"
+                                                                            className="btn btn-success chat-send w-100">
+                                                                        <i className="fe-send"></i></button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="col-xl-4">
+                                    <div className="notes">
+                                        <div className="row mt-3">
+                                            <div className="col">
+                                                <h5 className="mb-2 font-size-16">Poznamky backoffice</h5>
+
+                                                <div className="d-flex align-items-start mt-3 p-1">
+                                                    <img src="/images/users/user-9.jpg"
+                                                         className="me-2 rounded-circle" alt="Arya Stark" height="36"/>
+                                                        <div className="w-100">
+                                                            <h5 className="mt-0 mb-0 font-size-14">
+                                                                <span
+                                                                    className="float-end text-muted font-12">4:30am</span>
+                                                                Arya Stark
+                                                            </h5>
+                                                            <p className="mt-1 mb-0 text-muted">
+                                                                Should I review the last 3 years legal documents as
+                                                                well?
+                                                            </p>
+                                                        </div>
+                                                </div>
+
+
+                                                    <div className="d-flex align-items-start mt-2 p-1">
+                                                        <img src="/images/users/user-5.jpg"
+                                                             className="me-2 rounded-circle" alt="Dominc B" height="36" />
+                                                            <div className="w-100">
+                                                                <h5 className="mt-0 mb-0 font-size-14">
+                                                                    <span
+                                                                        className="float-end text-muted font-12">3:30am</span>
+                                                                    Gary Somya
+                                                                </h5>
+                                                                <p className="mt-1 mb-0 text-muted">
+                                                                    @Arya FYI..I have created some general guidelines
+                                                                    last year.
+                                                                </p>
+                                                            </div>
+                                                    </div>
+                                            </div>
+                                        </div>
+                                        <div className="row mt-2">
+                                            <div className="col">
+                                                <div className="border rounded">
+                                                    <form action="#">
+                                                        <textarea rows="3" className="form-control border-0 resize-none"
+                                                                  placeholder="Váší poznámka...."></textarea>
+                                                        <div
+                                                            className="p-2 bg-light d-flex justify-content-between align-items-center">
+                                                            <div>
+                                                                <a href="#"
+                                                                   className="btn btn-sm px-2 font-16 btn-light"><i
+                                                                    className="mdi mdi-cloud-upload-outline"></i></a>
+                                                                <a href="#"
+                                                                   className="btn btn-sm px-2 font-16 btn-light"><i
+                                                                    className="mdi mdi-at"></i></a>
+                                                            </div>
+                                                            <button type="submit" className="btn btn-sm btn-success"><i
+                                                                className="mdi mdi-send me-1"></i>Přidat poznámku
+                                                            </button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
                         </div>
 

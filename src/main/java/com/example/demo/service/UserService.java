@@ -30,19 +30,7 @@ public interface UserService {
 
     UserResponseDto changeToLead(Long userId);
 
-    UserResponseDto changeToPotential(Long userId);
-
-    UserResponseDto changeToCurrent(Long userId);
-
-    UserResponseDto changeToAccepted(Long userId);
-
     UserResponseDto changeToEdr(Long id);
-
-    List<PotentialResponseDto> getPotentials();
-
-    List<CurrentResponseDto> getCurrents();
-
-    List<AcceptedResponseDto> getAccepted();
 
     List<EdrResponseDto> getEdr();
 
@@ -67,4 +55,6 @@ public interface UserService {
     String createRegistrationLink(Long currentId);
 
     EdrResponseDto saveEdr(EdrRequestDto edrRequestDto);
+
+    List<ApplicantResponseDto> getApplicants();
 }
