@@ -6,7 +6,7 @@ import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
-import java.sql.Date;
+import java.util.Date;
 import java.util.Set;
 
 @Entity
@@ -35,10 +35,6 @@ public class UserEntity {
     @JoinColumn(name = "referal_id")
     UserEntity referal;
     Integer walletPoints;
-    Date acceptedAt;
-    @ManyToOne
-    @JoinColumn(name = "campaign_id")
-    CampaignEntity campaignId;
 
     @ManyToMany(fetch = FetchType.EAGER)
     Set<RoleEntity> roles;
@@ -54,7 +50,7 @@ public class UserEntity {
     boolean requestToEdrAccepted;
     boolean concurrentFveInstalled;
     boolean concurrentFveName;
-    boolean concurrentFveDueDate;
+    Date concurrentFveDueDate;
     boolean connectedFveGenerated;
     boolean connectedFveSent;
     boolean connectedFveSigned;
@@ -64,4 +60,25 @@ public class UserEntity {
     boolean factureSent;
     boolean facturePaid;
     boolean confirmationAboutPaymentSent;
+    Date roleChangedDate;
+    Date hwsunMonitorGeneratedDate;
+    Date hwsunMonitorSentDate;
+    Date hwsunMonitorSignedDate;
+    Date syselAgreementGeneratedDate;
+    Date syselAgreementSentDate;
+    Date syselAgreementSignedDate;
+    Date requestToEdrGeneratedDate;
+    Date requestToEdrSignedDate;
+    Date requestToEdrAcceptedDate;
+    Date concurrentFveInstalledDate;
+    Date concurrentFveNameDate;
+    Date connectedFveGeneratedDate;
+    Date connectedFveSentDate;
+    Date connectedFveSignedDate;
+    Date edrContractGeneratedDate;
+    Date edrContractSignedDate;
+    Date factureGeneratedDate;
+    Date factureSentDate;
+    Date facturePaidDate;
+    Date confirmationAboutPaymentSentDate;
 }

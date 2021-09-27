@@ -16,9 +16,11 @@ import java.util.Date;
 public class NotificationEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
     String type;
+    Long activeUserId;
+    Long passiveUserId;
     String description;
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)

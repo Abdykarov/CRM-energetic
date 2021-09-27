@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
+import java.util.Date;
 import java.util.Set;
 
 @Data
@@ -36,7 +37,7 @@ public class ApplicantResponseDto {
     boolean requestToEdrAccepted;
     boolean concurrentFveInstalled;
     boolean concurrentFveName;
-    boolean concurrentFveDueDate;
+    Date concurrentFveDueDate;
     boolean connectedFveGenerated;
     boolean connectedFveSent;
     boolean connectedFveSigned;

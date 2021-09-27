@@ -1,9 +1,11 @@
 package com.example.demo.controller;
 
 import com.example.demo.domain.EmailEntity;
-import com.example.demo.security.TokenProvider;
+import com.example.demo.domain.NoteEntity;
+import com.example.demo.dto.request.NoteRequestDto;
+import com.example.demo.dto.response.NoteResponseDto;
 import com.example.demo.service.imp.MailServiceImp;
-import com.example.demo.service.imp.user.UserServiceImp;
+import com.example.demo.service.imp.NoteServiceImp;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,8 +18,8 @@ import java.util.List;
 @RestController
 @Slf4j
 @CrossOrigin(origins = "*", maxAge = 3600)
-@RequestMapping("edr_api/mail/")
-public class MailController {
+@RequestMapping("edr_api/edr-notes/")
+public class NoteController {
 
     private final String HEADER_STRING = "Authorization";
 
@@ -25,17 +27,18 @@ public class MailController {
 
     private AuthenticationManager authenticationManager;
 
-    private MailServiceImp mailService;
+    private NoteServiceImp noteService;
 
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')")
-    @GetMapping("inbox")
-    public List<EmailEntity> getInbox() throws Exception {
-        return mailService.getInbox();
+    @GetMapping("{contactId}/")
+    public List<NoteResponseDto> getContactNotes(@PathVariable Long contactId){
+        return noteService.getContactNotes(contactId);
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER', 'ROLE_SALESMAN')")
-    @GetMapping("{contactId}/communication")
-    public List<EmailEntity> getCommunication(@PathVariable Long contactId){
-        return mailService.getCommunication(contactId);
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
+    @PostMapping
+    public void saveContactNote(@RequestBody NoteRequestDto noteRequestDto){
+        noteService.saveContactNote(noteRequestDto);
     }
+
 }

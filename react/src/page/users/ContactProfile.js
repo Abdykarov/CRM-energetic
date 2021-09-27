@@ -14,9 +14,11 @@ import {DASHBOARD_ROUTE, LOGIN_ROUTE} from "../../utils/const";
 import {observer} from "mobx-react-lite";
 import axios from "axios";
 import {edrRegistrate} from "../../http/userAPI";
+import {fetchCommunicationByUserId} from "../../http/mailAPI";
 
 const ContactProfile = observer(() => {
     const {user} = useContext(Context)
+    const {communication} = useContext(Context)
     const [contact, setContact] = useState({info: []})
     const [selectedContractFile, setSelectedContractFile] = useState(null)
     const [role,setRole] = useState('')
@@ -41,6 +43,10 @@ const ContactProfile = observer(() => {
             setSyselAgreement(data.syselAgreement)
             setEdrRequest(data.signedRequestToEdr)
             setRole(data.roles[0].name)
+        })
+        fetchCommunicationByUserId(id).then(data => {
+            communication.setContacts(data)
+            console.log(data)
         })
     }, [])
     console.log(contact)
@@ -805,19 +811,7 @@ const ContactProfile = observer(() => {
                                                     <div className="ctext-wrap">
                                                         <i>James Z</i>
                                                         <p>
-                                                            Zdravím všechny členy naší Ekocesty,
 
-
-
-                                                            již určitě netrpělivě čekáte na další informace k našemu teambuildingu, ale nejprve bych Vás poprosila o vyplnění kraťoučkého dotazníčku, který mi pomůže v doplánování: https://www.survio.com/survey/d/I9K8F7S2H9N3M6R5D. Prosím aby dotazník vyplnili všichni příjemci tohoto e-mailu, pokud byste věděli o někom, kdo tento e-mail měl dostat a nedostal, tak mu ho klidně pošlete. 😊
-
-
-
-                                                            Už Vám můžu prozradit, že akce se bude konat v Národním domě ve Frýdku-Místku na adrese Palackého 134, 738 01 Frýdek – Místek a sraz na místě proběhne mezi 11:00 až 12:00 hodinou.
-
-
-
-                                                            Můžete se těšit na výborné jídlo, soutěžní aktivity, prezentaci Ekocesty, diskotéku a další překvapení !
                                                         </p>
                                                     </div>
                                                 </div>
@@ -843,59 +837,6 @@ const ContactProfile = observer(() => {
                                                     <div className="ctext-wrap">
                                                         <i>Geneva M</i>
                                                         <p>
-
-
-                                                            Ahoj,
-
-
-
-                                                            jsem ráda, že o kurzy máte zájem, Emoční inteligenci a Stress management jste už zaplnili a zůstává mi pár volných míst na tyto kurzy, pokud budete mít zájem, tak neváhejte a pište 😉
-
-
-
-                                                            22.9. Týmová spolupráce – Ing. Šárka Tomisová - pokud byste měli nápady čemu se chcete věnovat na Týmové spolupráci, lze podněty předat lektorce a ta upraví obsah kurzu.
-
-                                                            Osobnostní typologie – sami si vyhodnotíte a lze uplatnit v každodenní praxi, kde dostanete návod na rozpoznání jednotlivých typů chování a jednání.
-
-                                                            ·         test týmových rolí (M. Belbin) – poznáte své místo ve skupině a také můžete zjistit něco o svých blízkých, jak fungují a proč tak reagují, kdy a za jakých podmínek se jim daří.
-
-                                                            ·         test smyslového vnímání – uvědomění si svých preferencí, principy paměti a učení se a také můžete získat informace o svém komunikačním partnerovi, jakým způsobem mu předávat informace.
-
-                                                            Nastavení týmového myšlení
-
-                                                            ·         řízení a vedení lidí – rozdíly, mýty a fakta, která nás upozorní, zda řídíme, vedeme nebo odhalíme ještě další formy spolupráce v týmu, skupině a organizaci.
-
-                                                            ·         projektovém řízení – základní předpoklady skupinového řešení problémů v obecné rovině
-
-                                                            ·         leadership – principy a úrovně leadreshipu
-
-                                                            Metodiky a postupy v hravé formě – praktické ukázky podložené teorií a případovými studiemi, vlastní příběhy umíme zařadit, objasnit a také správně nastavit.
-
-
-
-                                                            30.9. Konfliktní situace – Ing. Šárka Tomisová
-
-                                                            osobnostní typologie
-                                                            test typologické preference
-                                                            řešení obtížných situací
-                                                            asertivita
-                                                            Time management
-                                                            Efektivní řízení skupiny v konfliktní situaci
-                                                            Metodiky a postupy v hravé formě
-
-
-
-                                                            8.10. Zvyšování výkonnosti II – Ing. Kamil Košťál, MBA, Alog.
-
-                                                            Jedná se o navazující školení na Zvyšování výkonnosti I a Zvyšování efektivity procesů, pokud jste jeden z těchto kurzů absolvovali, tak doporučuji i tento pokračující kurz, věřím, že zde načerpáte další přínosné informace.
-
-
-
-
-
-                                                            Hezký pátek
-
-                                                            Renata
 
                                                         </p>
                                                     </div>

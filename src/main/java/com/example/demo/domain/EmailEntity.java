@@ -2,20 +2,20 @@ package com.example.demo.domain;
 
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.Date;
 
 @Data
 @Entity
 public class EmailEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String emailFrom;
     private String emailTo;
+    @Column(columnDefinition="text")
     private String body;
     private String subject;
+    private Date emailDate;
     private boolean inbox;
 }

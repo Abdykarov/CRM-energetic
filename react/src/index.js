@@ -11,6 +11,7 @@ import ManagerStore from "./store/ManagerStore";
 import WattStore from "./store/WattStore";
 import MailStore from "./store/MailStore";
 import ApplicantStore from "./store/ApplicantStore";
+import CommunicationStore from "./store/CommunicationStore";
 
 export const Context = createContext(null)
 ReactDOM.render(
@@ -24,6 +25,7 @@ ReactDOM.render(
         edr: new EdrStore(),
         watt: new WattStore(),
         inbox: new MailStore(),
+        communication: new CommunicationStore(),
         applicant: new ApplicantStore()
     }}>
         <App />

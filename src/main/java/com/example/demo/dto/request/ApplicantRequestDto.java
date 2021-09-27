@@ -1,18 +1,10 @@
 package com.example.demo.dto.request;
 
-import com.example.demo.domain.CampaignEntity;
-import com.example.demo.domain.RoleEntity;
-import com.example.demo.domain.UserEntity;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import java.sql.Date;
-import java.util.Set;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -40,7 +32,7 @@ public class ApplicantRequestDto {
     boolean requestToEdrAccepted;
     boolean concurrentFveInstalled;
     boolean concurrentFveName;
-    boolean concurrentFveDueDate;
+    Date concurrentFveDueDate;
     boolean connectedFveGenerated;
     boolean connectedFveSent;
     boolean connectedFveSigned;
