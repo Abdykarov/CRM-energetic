@@ -30,7 +30,7 @@ public class NoteController {
     private NoteServiceImp noteService;
 
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')")
-    @GetMapping("{contactId}/")
+    @GetMapping("{contactId}")
     public List<NoteResponseDto> getContactNotes(@PathVariable Long contactId){
         return noteService.getContactNotes(contactId);
     }

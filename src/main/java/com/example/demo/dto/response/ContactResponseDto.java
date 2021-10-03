@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Data
@@ -19,8 +20,11 @@ public class ContactResponseDto {
     String email;
     Set<RoleEntity> roles;
     String city;
-    String jobPosition;
+    String area;
     String ico;
-    String companyName;
-    Long salesmanId;
+    EdrResponseDto referal;
+    boolean male;
+    boolean concurrentFveInstalled;
+    boolean concurrentFveName;
+    LocalDateTime concurrentFveDueDate;
 }

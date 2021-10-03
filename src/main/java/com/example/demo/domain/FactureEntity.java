@@ -21,17 +21,9 @@ public class FactureEntity {
     @OneToOne
     @JoinColumn(name = "userId")
     private UserEntity user;
-    @CreatedDate
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private Date createdAt;
-    private Date dueDate;
+    private LocalDateTime createdAt;
+    private LocalDateTime dueDate;
     private String varSymbol;
-    @OneToMany(mappedBy = "facture",
-            fetch = FetchType.EAGER,
-            cascade = CascadeType.ALL)
-    @JsonManagedReference
-    private List<FactureItemEntity> items;
-
     private BigDecimal totalPrice;
     @Enumerated(EnumType.STRING)
     private FactureStatus factureStatus;

@@ -16,8 +16,10 @@ const Contacts = observer(() => {
         // if(user.role === "ROLE_SALESMAN"){
         //     fetchSalesmanContacts().then(data => contact.setContacts(data))
         // }else{
-            fetchContacts().then(data => contact.setContacts(data))
-        
+            fetchContacts().then(data => {
+                contact.setContacts(data)
+                console.log(data)
+            })
     }, [])
 
     return (

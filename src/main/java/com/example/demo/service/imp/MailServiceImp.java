@@ -110,6 +110,11 @@ public class MailServiceImp implements MailService {
             //Message[] msgs = inbox.getMessages();
 
             final int inboxMessageCount = inbox.getMessageCount();
+            final int lastEmailId = emailRepository.findAllByInboxTrue().size();
+            if(!(inboxMessageCount - 1 > lastEmailId)){
+                log.info("no new messages");
+                return;
+            }
 
             FetchProfile fp = new FetchProfile();
             fp.add(FetchProfile.Item.ENVELOPE);
@@ -117,8 +122,6 @@ public class MailServiceImp implements MailService {
             inbox.fetch(messages, fp);
 
             try {
-                final int lastEmailId = emailRepository.findAllByInboxTrue().size();
-
                 for (int i = inboxMessageCount - 1; i > -1; i--) {
 
                     if( i > lastEmailId){

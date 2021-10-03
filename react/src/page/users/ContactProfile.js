@@ -13,12 +13,13 @@ import {useHistory, useParams} from "react-router-dom";
 import {DASHBOARD_ROUTE, LOGIN_ROUTE} from "../../utils/const";
 import {observer} from "mobx-react-lite";
 import axios from "axios";
-import {edrRegistrate} from "../../http/userAPI";
-import {fetchCommunicationByUserId} from "../../http/mailAPI";
+import {edrRegistrate, login} from "../../http/userAPI";
+import {createEdrNote, fetchCommunicationByUserId, fetchEdrNotesByUserId} from "../../http/mailAPI";
 
 const ContactProfile = observer(() => {
     const {user} = useContext(Context)
     const {communication} = useContext(Context)
+    const {notes} = useContext(Context)
     const [contact, setContact] = useState({info: []})
     const [selectedContractFile, setSelectedContractFile] = useState(null)
     const [role,setRole] = useState('')
@@ -31,6 +32,7 @@ const ContactProfile = observer(() => {
     const [selectedConnectedFveFile, setSelectedConnectedFVE] = useState(null)
     const [selectedSyselAgreementFile, setSelectedSyselAgreementFile] = useState(null)
     const [selectedEdrRequest, setSelectedEdrRequest] = useState(null)
+    const [noteMessage,setNoteMessage] = useState('')
     const {id} = useParams()
     const history = useHistory()
 
@@ -43,6 +45,10 @@ const ContactProfile = observer(() => {
             setSyselAgreement(data.syselAgreement)
             setEdrRequest(data.signedRequestToEdr)
             setRole(data.roles[0].name)
+        })
+        fetchEdrNotesByUserId(id).then(data => {
+            notes.setNotes(data)
+            console.log(data)
         })
         fetchCommunicationByUserId(id).then(data => {
             communication.setContacts(data)
@@ -419,13 +425,27 @@ const ContactProfile = observer(() => {
     const sendEdrRegistration = async () => {
         try {
             let response
-            response = await createEdrLink(id)
+            response = await sendEdrRegistrationLink(id)
             history.push(LOGIN_ROUTE)
         } catch (e) {
             alert(e.response.data.message)
         }
     }
 
+    // notes
+    const createNote = async () => {
+        try {
+            let data;
+            let managerId = user.id;
+            let userId = id;
+            let message = noteMessage;
+
+            data = await createEdrNote(managerId, userId, message);
+            window.location.reload();
+        } catch (e) {
+            alert(e.response.data.message)
+        }
+    }
 
 
     return (
@@ -801,87 +821,46 @@ const ContactProfile = observer(() => {
                                     <div className="email-communication">
                                         <h4>Komunikace OZ s klientem</h4>
                                         <ul className="conversation-list" data-simplebar="init">
-                                            <li className="clearfix">
-                                                <div className="chat-avatar">
-                                                    <img src="/images/users/user-5.jpg" alt="James Z"
-                                                         className="rounded" />
-                                                        <i>10:02</i>
-                                                </div>
-                                                <div className="conversation-text">
-                                                    <div className="ctext-wrap">
-                                                        <i>James Z</i>
-                                                        <p>
-
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                                <div className="conversation-actions dropdown">
-                                                    <button className="btn btn-sm btn-link" data-bs-toggle="dropdown"
-                                                            aria-expanded="false"><i
-                                                        className="mdi mdi-dots-vertical font-16"></i></button>
-
-                                                    <div className="dropdown-menu dropdown-menu-end">
-                                                        <a className="dropdown-item" href="#">Copy Message</a>
-                                                        <a className="dropdown-item" href="#">Edit</a>
-                                                        <a className="dropdown-item" href="#">Delete</a>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li className="clearfix odd">
-                                                <div className="chat-avatar">
-                                                    <img src="/images/users/user-1.jpg" alt="Geneva M"
-                                                         className="rounded" />
-                                                        <i>10:03</i>
-                                                </div>
-                                                <div className="conversation-text">
-                                                    <div className="ctext-wrap">
-                                                        <i>Geneva M</i>
-                                                        <p>
-
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                                <div className="conversation-actions dropdown">
-                                                    <button className="btn btn-sm btn-link" data-bs-toggle="dropdown"
-                                                            aria-expanded="false"><i
-                                                        className="mdi mdi-dots-vertical font-16"></i></button>
-
-                                                    <div className="dropdown-menu">
-                                                        <a className="dropdown-item" href="#">Copy Message</a>
-                                                        <a className="dropdown-item" href="#">Edit</a>
-                                                        <a className="dropdown-item" href="#">Delete</a>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                        </ul>
-
-                                        <div className="row">
-                                            <div className="col">
-                                                <div className="mt-2 bg-light p-3 rounded">
-                                                    <form className="needs-validation" noValidate="" name="chat-form"
-                                                          id="chat-form">
-                                                        <div className="row">
-                                                            <div className="col mb-2 mb-sm-0">
-                                                                <input type="text" className="form-control border-0"
-                                                                       placeholder="Enter your text" required="" />
-                                                                    <div className="invalid-feedback">
-                                                                        Please enter your messsage
-                                                                    </div>
-                                                            </div>
-                                                            <div className="col-sm-auto">
-                                                                <div className="btn-group">
-                                                                    <a href="#" className="btn btn-light"><i
-                                                                        className="fe-paperclip"></i></a>
-                                                                    <button type="submit"
-                                                                            className="btn btn-success chat-send w-100">
-                                                                        <i className="fe-send"></i></button>
-                                                                </div>
+                                            {communication.contacts.map(mail =>
+                                                mail.emailFrom == contact.email ?
+                                                    <li className="clearfix odd" >
+                                                        <div className="chat-avatar">
+                                                            <img src="/images/users/user-5.jpg" alt="James Z"
+                                                                 className="rounded" />
+                                                        </div>
+                                                        <div className="conversation-text">
+                                                            <div className="ctext-wrap">
+                                                                <i>{mail.emailFrom}</i>
+                                                                <i>{mail.emailDate}</i>
+                                                                <i>{mail.subject}</i>
+                                                                <p className="ft-intro ft-day1 ft-day2"
+                                                                   dangerouslySetInnerHTML={{__html:mail.body}} >
+                                                                </p>
                                                             </div>
                                                         </div>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
+                                                    </li>
+                                                    :
+                                                    <li className="clearfix" >
+                                                        <div className="chat-avatar">
+                                                            <img src="/images/users/user-5.jpg" alt="James Z"
+                                                                 className="rounded" />
+                                                        </div>
+                                                        <div className="conversation-text">
+                                                            <div className="ctext-wrap">
+                                                                <i>{mail.emailFrom}</i>
+                                                                <i>{mail.emailDate}</i>
+                                                                <i>{mail.subject}</i>
+                                                                <p className="ft-intro ft-day1 ft-day2"
+                                                                   dangerouslySetInnerHTML={{__html:mail.body}} >
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                            )}
+
+                                        </ul>
+
+
                                     </div>
                                 </div>
                                 <div className="col-xl-4">
@@ -890,57 +869,37 @@ const ContactProfile = observer(() => {
                                             <div className="col">
                                                 <h5 className="mb-2 font-size-16">Poznamky backoffice</h5>
 
-                                                <div className="d-flex align-items-start mt-3 p-1">
-                                                    <img src="/images/users/user-9.jpg"
-                                                         className="me-2 rounded-circle" alt="Arya Stark" height="36"/>
+                                                {notes.notes.map(note =>
+                                                    <div className="d-flex align-items-start mt-3 p-1">
+                                                        <img src="/images/users/user-9.jpg"
+                                                             className="me-2 rounded-circle" alt="Arya Stark" height="36"/>
                                                         <div className="w-100">
                                                             <h5 className="mt-0 mb-0 font-size-14">
                                                                 <span
-                                                                    className="float-end text-muted font-12">4:30am</span>
-                                                                Arya Stark
+                                                                    className="float-end text-muted font-12">{note.createdAt}</span>
+                                                                {note.manager.name}
+                                                                <br/>
+                                                                {note.manager.email}
                                                             </h5>
                                                             <p className="mt-1 mb-0 text-muted">
-                                                                Should I review the last 3 years legal documents as
-                                                                well?
+                                                                {note.message}
                                                             </p>
                                                         </div>
-                                                </div>
-
-
-                                                    <div className="d-flex align-items-start mt-2 p-1">
-                                                        <img src="/images/users/user-5.jpg"
-                                                             className="me-2 rounded-circle" alt="Dominc B" height="36" />
-                                                            <div className="w-100">
-                                                                <h5 className="mt-0 mb-0 font-size-14">
-                                                                    <span
-                                                                        className="float-end text-muted font-12">3:30am</span>
-                                                                    Gary Somya
-                                                                </h5>
-                                                                <p className="mt-1 mb-0 text-muted">
-                                                                    @Arya FYI..I have created some general guidelines
-                                                                    last year.
-                                                                </p>
-                                                            </div>
                                                     </div>
+                                                )}
+
                                             </div>
                                         </div>
                                         <div className="row mt-2">
                                             <div className="col">
                                                 <div className="border rounded">
                                                     <form action="#">
-                                                        <textarea rows="3" className="form-control border-0 resize-none"
+                                                        <textarea  value={noteMessage} onChange={e => setNoteMessage(e.target.value)} rows="3" className="form-control border-0 resize-none"
                                                                   placeholder="Váší poznámka...."></textarea>
                                                         <div
                                                             className="p-2 bg-light d-flex justify-content-between align-items-center">
-                                                            <div>
-                                                                <a href="#"
-                                                                   className="btn btn-sm px-2 font-16 btn-light"><i
-                                                                    className="mdi mdi-cloud-upload-outline"></i></a>
-                                                                <a href="#"
-                                                                   className="btn btn-sm px-2 font-16 btn-light"><i
-                                                                    className="mdi mdi-at"></i></a>
-                                                            </div>
-                                                            <button type="submit" className="btn btn-sm btn-success"><i
+
+                                                            <button onClick={createNote} type="button" className="btn btn-sm btn-success"><i
                                                                 className="mdi mdi-send me-1"></i>Přidat poznámku
                                                             </button>
                                                         </div>

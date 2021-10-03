@@ -16,7 +16,7 @@ import java.util.Date;
 public abstract class DateAudit implements Serializable {
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)
-    private Date createdAt;
+    private LocalDateTime createdAt;
 
     @LastModifiedDate
     @Column(name = "updated_at")
