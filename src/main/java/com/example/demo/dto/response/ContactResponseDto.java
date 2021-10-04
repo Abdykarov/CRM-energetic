@@ -5,7 +5,9 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -18,13 +20,17 @@ public class ContactResponseDto {
     String surname;
     String phone;
     String email;
+    String contactPerson;
     Set<RoleEntity> roles;
+    LocalDateTime roleChangedDate;
     String city;
-    String area;
+    AreaResponseDto area;
     String ico;
     EdrResponseDto referal;
     boolean male;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    LocalDate concurrentFveDueDate;
     boolean concurrentFveInstalled;
-    boolean concurrentFveName;
-    LocalDateTime concurrentFveDueDate;
+    String concurrentFveName;
+    boolean connectedFveSigned;
 }

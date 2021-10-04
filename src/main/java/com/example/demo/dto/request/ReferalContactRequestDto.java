@@ -15,11 +15,10 @@ public class ReferalContactRequestDto {
     @NotBlank
     String surname;
     String phone;
+    boolean male;
+    String referalLinkId;
     @NotBlank
     String email;
-    Long salesmanId;
-    String jobPosition;
+    Long areaId;
     String ico;
-    String companyName;
-    String city;
 }

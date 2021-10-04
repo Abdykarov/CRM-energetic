@@ -10,7 +10,6 @@ public class SalesmanRequestDto {
     private String surname;
     private String phone;
     private String email;
-    private String area;
-    private String B2B;
+    private Long areaId;
     private String ico;
 }

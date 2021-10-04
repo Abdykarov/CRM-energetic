@@ -8,6 +8,7 @@ import ContactItem from "../items/ContactItem";
 import LeadItem from "../items/LeadItem";
 import EdrItem from "../items/EdrItem";
 import Applicant from "../../page/users/Applicant";
+import ApplicantItem from "../items/ApplicantItem";
 
 const ApplicantTable = observer(() => {
     const {applicant} = useContext(Context)

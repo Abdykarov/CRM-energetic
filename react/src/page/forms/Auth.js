@@ -36,14 +36,13 @@ const Auth = observer(() => {
                         <h4 className="mt-6">Přihlásit</h4>
                         <p className="text-muted mb-4">Pro přístup k účtu zadejte svou e-mailovou adresu a heslo.</p>
 
-                        <Form>
+                        <Form action="#">
                             <div className="mb-3">
                                 <label htmlFor="emailaddress" className="form-label">Username</label>
                                 <Form.Control className="form-control" value={username} onChange={e => setUsername(e.target.value)} type="text" id="emailaddress" required=""
                                        placeholder="Enter your email" />
                             </div>
                             <div className="mb-3">
-                                <a href="auth-recoverpw-2.html" className="text-muted float-end"><small>Zapomněli jste své héslo?</small></a>
                                 <label htmlFor="password" className="form-label">Héslo</label>
                                 <div className="input-group input-group-merge">
                                     <Form.Control type="password" value={password} onChange={e => setPassword(e.target.value)} id="password" className="form-control"
@@ -53,15 +52,8 @@ const Auth = observer(() => {
                                         </div>
                                 </div>
                             </div>
-
-                            <div className="mb-3">
-                                <div className="form-check">
-                                    <input type="checkbox" className="form-check-input" id="checkbox-signin" />
-                                        <label className="form-check-label" htmlFor="checkbox-signin">Zapamatovat mě</label>
-                                </div>
-                            </div>
                             <div className="text-center d-grid">
-                                <Button onClick={click} className="btn btn-primary">Přihlasit</Button>
+                                <Button onClick={click} type="submit" className="btn btn-primary">Přihlasit</Button>
                             </div>
 
                         </Form>

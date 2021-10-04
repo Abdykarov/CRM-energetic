@@ -57,4 +57,16 @@ public interface UserService {
     EdrResponseDto saveEdr(EdrRequestDto edrRequestDto);
 
     List<ApplicantResponseDto> getApplicants();
+
+    void testData();
+
+    void setFveSigned(Long id);
+
+    void setContractGenerated(Long id);
+
+    void setContractSent(Long id);
+
+    void setContractSigned(Long id);
+
+    UserResponseDto changeToApplicant(Long id);
 }

@@ -38,4 +38,16 @@ public class MailController {
     public List<EmailEntity> getCommunication(@PathVariable Long contactId){
         return mailService.getCommunication(contactId);
     }
+
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')")
+    @GetMapping("fetch/inbox")
+    public List<EmailEntity> fetchAllInbox() throws Exception {
+        return mailService.fetchAllInbox();
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')")
+    @GetMapping("fetch/outbox")
+    public List<EmailEntity> fetchAllOutbox() throws Exception {
+        return mailService.fetchAllOutbox();
+    }
 }

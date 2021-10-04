@@ -3,8 +3,8 @@ import React, {useContext, useEffect, useState} from 'react';
 import {Context} from "../../index";
 import {
     deleteContract, deleteEdrRequest, deleteFve, deleteSysel,
-    fetchUserById, sendEdrRegistrationLink,
-    updateToAccepted,
+    fetchUserById, sendEdrRegistrationLink, setEdrContractGenerated, setEdrContractSent, setEdrContractSigned,
+    updateToAccepted, updateToApplicant,
     updateToCurrent, updateToEdr,
     updateToLead,
     updateToPotential, uploadSignedContract
@@ -15,6 +15,7 @@ import {observer} from "mobx-react-lite";
 import axios from "axios";
 import {edrRegistrate, login} from "../../http/userAPI";
 import {createEdrNote, fetchCommunicationByUserId, fetchEdrNotesByUserId} from "../../http/mailAPI";
+import Footer from "../../component/Footer";
 
 const ContactProfile = observer(() => {
     const {user} = useContext(Context)
@@ -35,16 +36,25 @@ const ContactProfile = observer(() => {
     const [noteMessage,setNoteMessage] = useState('')
     const {id} = useParams()
     const history = useHistory()
+    const [contractGenerated, setContractGenerated] = useState(null)
+    const [contractSent, setContractSent] = useState(null)
+    const [contractSigned, setContractSigned] = useState(null)
+
 
     useEffect(() => {
+
         fetchUserById(id).then(data => {
             setContact(data)
+            setContractSigned(data.edrContractSigned)
+            setContractSent(data.edrContractSent)
+            setContractGenerated(data.edrContractGenerated)
             setSignedContract(data.signedContract)
             setHwSunMonitor(data.hwsunMonitor)
             setConnectedFVE(data.connectedFVE)
             setSyselAgreement(data.syselAgreement)
             setEdrRequest(data.signedRequestToEdr)
             setRole(data.roles[0].name)
+            console.log(data)
         })
         fetchEdrNotesByUserId(id).then(data => {
             notes.setNotes(data)
@@ -55,7 +65,42 @@ const ContactProfile = observer(() => {
             console.log(data)
         })
     }, [])
-    console.log(contact)
+
+    const setGenerated = async (e) => {
+        try {
+            let response
+            let id = contact.id
+            response =  await setEdrContractGenerated(id)
+            setContractGenerated(true)
+            window.location.reload()
+        } catch (e) {
+            alert(e.response.data.message)
+        }
+    }
+
+    const setSent = async (e) => {
+        try {
+            let response
+            let id = contact.id
+            response =  await setEdrContractSent(id)
+            setContractSent(true)
+            window.location.reload()
+        } catch (e) {
+            alert(e.response.data.message)
+        }
+    }
+
+    const setSigned = async (e) => {
+        try {
+            let response
+            let id = contact.id
+            response =  await setEdrContractSigned(id)
+            setContractSigned(true)
+            window.location.reload()
+        } catch (e) {
+            alert(e.response.data.message)
+        }
+    }
 
     // REQEUST TO EDR
 
@@ -381,30 +426,10 @@ const ContactProfile = observer(() => {
         }
     }
 
-    const changeToPotential = async () => {
+    const changeToApplicant = async () => {
         try {
             let response
-            response = await updateToPotential(id)
-            window.location.reload();
-        } catch (e) {
-            alert(e.response.data.message)
-        }
-    }
-
-    const changeToCurrent = async () => {
-        try {
-            let response
-            response = await updateToCurrent(id)
-            window.location.reload();
-        } catch (e) {
-            alert(e.response.data.message)
-        }
-    }
-
-    const changeToAccepted = async () => {
-        try {
-            let response
-            response = await updateToAccepted(id)
+            response = await updateToApplicant(id)
             window.location.reload();
         } catch (e) {
             alert(e.response.data.message)
@@ -543,270 +568,377 @@ const ContactProfile = observer(() => {
                                 <div className="col-lg-8 col-xl-8">
                                     <div className="card">
                                         <div className="card-body">
-                                            <ul className="nav nav-pills nav-fill navtab-bg">
-                                                <li className="nav-item">
-                                                    <a href="#attachments" data-bs-toggle="tab" aria-expanded="true"
-                                                       className="nav-link active">
-                                                        Přílohy
-                                                    </a>
-                                                </li>
-                                                <li className="nav-item">
-                                                    <a href="#edit" data-bs-toggle="tab" aria-expanded="false"
-                                                       className="nav-link">
-                                                        Edit profile
-                                                    </a>
-                                                </li>
-                                            </ul>
+                                                {
+                                                    (role === "ADMIN" || role === "MANAGER" || role === "SALESMAN") ?
+                                                        <ul className="nav nav-pills nav-fill navtab-bg">
+                                                            <li className="nav-item">
+                                                                <a href="#edit" data-bs-toggle="tab" aria-expanded="false"
+                                                                   className="nav-link active">
+                                                                    Edit profile
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                        :
+                                                    <ul className="nav nav-pills nav-fill navtab-bg">
+                                                        <li className="nav-item">
+                                                            <a href="#attachments" data-bs-toggle="tab" aria-expanded="true"
+                                                               className="nav-link active">
+                                                                Přílohy
+                                                            </a>
+                                                        </li>
+                                                        <li className="nav-item">
+                                                            <a href="#edit" data-bs-toggle="tab" aria-expanded="false"
+                                                               className="nav-link">
+                                                                Edit profile
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                }
                                             <div className="tab-content">
+                                                {(role === "ADMIN" || role === "MANAGER" || role === "SALESMAN") ?
+                                                    <div className="tab-pane show" id="attachments">
+                                                    </div>
+                                                    :
+                                                    <div className="tab-pane show active" id="attachments">
+                                                        <h5>Přílohy</h5>
 
-                                                <div className="tab-pane show active" id="attachments">
-
-                                                    <h5>Přílohy</h5>
-
-                                                    <div className="row">
-                                                        <div className="col-md-12">
-                                                            {
-                                                                (role === "LEAD") ?
-                                                                    <div className="col-md-6">
-                                                                        <h3>Supersmlouva</h3>
-                                                                        <button onClick={generateSupercontract} type="button" className="mb-3 mt-2 btn btn-info waves-effect waves-light"><i
-                                                                        className="mdi mdi-cloud-outline me-1"></i> Vygenerovat supersmlouvu
-                                                                    </button>
-                                                                        <button type="button"
-                                                                                className="mb-3 btn btn-dark waves-effect waves-light"><i
-                                                                            className="mdi mdi-cloud-outline me-1"></i> Zaslat supersmlouvu do mailu
-                                                                        </button>
-                                                                        <br/><br/>
-                                                                        <div className="mb-3">
-                                                                        { (!signedContract) ?
+                                                        <div className="row">
+                                                            <div className="col-md-12">
+                                                                {
+                                                                    (role === "LEAD") ?
+                                                                        <div className="col-md-6">
+                                                                            <h3>Supersmlouva</h3>
+                                                                            <button onClick={generateSupercontract} type="button" className="mb-3 mt-2 btn btn-info waves-effect waves-light"><i
+                                                                                className="mdi mdi-cloud-outline me-1"></i> Vygenerovat supersmlouvu
+                                                                            </button>
+                                                                            <button onClick={generateSupercontract} type="button" className="mb-3 mt-2 btn btn-info waves-effect waves-light"><i
+                                                                                className="mdi mdi-cloud-outline me-1"></i> Vygenerovat dilčí supersmlouvu
+                                                                            </button>
+                                                                            <br/><br/>
                                                                             <div className="mb-3">
-                                                                                <label htmlFor="example-fileinput" className="form-label">
-                                                                                    Přidat podepsanou smlouvu</label>
-                                                                                <input type="file" onChange={e => setSelectedContractFile(e.target.files[0])} id="example-fileinput"
-                                                                                       className="form-control"/>
-                                                                                <button onClick={saveContract} type="button"
-                                                                                        className="mt-3 btn btn-primary waves-effect waves-light">Uložit podepsanou smlouvu
-                                                                                </button>
+                                                                                { (!signedContract) ?
+                                                                                    <div className="mb-3">
+                                                                                        <label htmlFor="example-fileinput" className="form-label">
+                                                                                            Přidat podepsanou super nebo dilčí smlouvu</label>
+                                                                                        <input type="file" onChange={e => setSelectedContractFile(e.target.files[0])} id="example-fileinput"
+                                                                                               className="form-control"/>
+                                                                                        <button onClick={saveContract} type="button"
+                                                                                                className="mt-3 btn btn-primary waves-effect waves-light">Uložit podepsanou smlouvu
+                                                                                        </button>
+                                                                                    </div>
+                                                                                    :
+                                                                                    <div>
+                                                                                        <button onClick={fetchSupercontract} type="button"
+                                                                                                className="btn btn-success waves-effect waves-light">Stahnout podepsanou smlouvu
+                                                                                        </button>
+                                                                                        <button onClick={deleteSignedContract} type="button"
+                                                                                                className="mt-3 btn btn-danger waves-effect waves-light">Odstranit podepsanou smlouvu
+                                                                                        </button>
+                                                                                    </div>
+                                                                                }
                                                                             </div>
-                                                                            :
-                                                                            <div>
-                                                                                <button onClick={fetchSupercontract} type="button"
-                                                                                        className="btn btn-success waves-effect waves-light">Stahnout podepsanou smlouvu
-                                                                                </button>
-                                                                                <button onClick={deleteSignedContract} type="button"
-                                                                                        className="mt-3 btn btn-danger waves-effect waves-light">Odstranit podepsanou smlouvu
-                                                                                </button>
+                                                                        </div>
+                                                                        : <div></div>
+                                                                }
+                                                                {
+                                                                    (role === "APPLICANT") ?
+                                                                        <div className="col-md-6">
+                                                                            <h3>Supersmlouva</h3>
+                                                                            <button onClick={generateSupercontract} type="button" className="mb-3 mt-2 btn btn-info waves-effect waves-light"><i
+                                                                                className="mdi mdi-cloud-outline me-1"></i> Vygenerovat supersmlouvu
+                                                                            </button>
+                                                                            <button type="button"
+                                                                                    className="mb-3 btn btn-dark waves-effect waves-light"><i
+                                                                                className="mdi mdi-cloud-outline me-1"></i> Zaslat supersmlouvu do mailu
+                                                                            </button>
+                                                                            <br/><br/>
+                                                                            <div className="mb-3">
+                                                                                { (!signedContract) ?
+                                                                                    <div className="mb-3">
+                                                                                        <label htmlFor="example-fileinput" className="form-label">
+                                                                                            Přidat podepsanou smlouvu</label>
+                                                                                        <input type="file" onChange={e => setSelectedContractFile(e.target.files[0])} id="example-fileinput"
+                                                                                               className="form-control"/>
+                                                                                        <button onClick={saveContract} type="button"
+                                                                                                className="mt-3 btn btn-primary waves-effect waves-light">Uložit podepsanou smlouvu
+                                                                                        </button>
+                                                                                    </div>
+                                                                                    :
+                                                                                    <div>
+                                                                                        <button onClick={fetchSupercontract} type="button"
+                                                                                                className="btn btn-success waves-effect waves-light">Stahnout podepsanou smlouvu
+                                                                                        </button>
+                                                                                        <button onClick={deleteSignedContract} type="button"
+                                                                                                className="mt-3 btn btn-danger waves-effect waves-light">Odstranit podepsanou smlouvu
+                                                                                        </button>
+                                                                                    </div>
+                                                                                }
                                                                             </div>
-                                                                        }
                                                                         </div>
-                                                                    </div>
-                                                                    : <div></div>
-                                                            }
-                                                            {
-                                                                (role === "APPLICANT") ?
-                                                                    <div className="col-md-6">
-                                                                        <h3>Supersmlouva</h3>
-                                                                        <button onClick={generateSupercontract} type="button" className="mb-3 mt-2 btn btn-info waves-effect waves-light"><i
-                                                                            className="mdi mdi-cloud-outline me-1"></i> Vygenerovat supersmlouvu
-                                                                        </button>
-                                                                        <button type="button"
-                                                                                className="mb-3 btn btn-dark waves-effect waves-light"><i
-                                                                            className="mdi mdi-cloud-outline me-1"></i> Zaslat supersmlouvu do mailu
-                                                                        </button>
-                                                                        <br/><br/>
-                                                                        <div className="mb-3">
-                                                                            { (!signedContract) ?
-                                                                                <div className="mb-3">
-                                                                                    <label htmlFor="example-fileinput" className="form-label">
-                                                                                        Přidat podepsanou smlouvu</label>
-                                                                                    <input type="file" onChange={e => setSelectedContractFile(e.target.files[0])} id="example-fileinput"
-                                                                                           className="form-control"/>
-                                                                                    <button onClick={saveContract} type="button"
-                                                                                            className="mt-3 btn btn-primary waves-effect waves-light">Uložit podepsanou smlouvu
-                                                                                    </button>
-                                                                                </div>
-                                                                                :
-                                                                                <div>
-                                                                                    <button onClick={fetchSupercontract} type="button"
-                                                                                            className="btn btn-success waves-effect waves-light">Stahnout podepsanou smlouvu
-                                                                                    </button>
-                                                                                    <button onClick={deleteSignedContract} type="button"
-                                                                                            className="mt-3 btn btn-danger waves-effect waves-light">Odstranit podepsanou smlouvu
-                                                                                    </button>
-                                                                                </div>
-                                                                            }
+                                                                        : <div></div>
+                                                                }
+
+                                                                {
+                                                                    (role === "NEW") ?
+                                                                        <div className="col-md-6">
+                                                                            <h3>Nemáte žádné přílohy</h3>
                                                                         </div>
-                                                                    </div>
-                                                                    : <div></div>
-                                                            }
 
-                                                            {
-                                                                (role === "NEW") ?
-                                                                    <div className="col-md-6">
-                                                                        <h3>Nemáte žádné přílohy</h3>
-                                                                    </div>
-
-                                                                    : <div></div>
-                                                            }
+                                                                        : <div></div>
+                                                                }
+                                                            </div>
                                                         </div>
+
                                                     </div>
-
-                                                </div>
-
-                                                <div className="tab-pane" id="edit">
-                                                    <div className="row">
-                                                        <div className="col-md-12 mb-6">
+                                                }
+                                                {(role === "ADMIN" || role === "MANAGER" || role === "SALESMAN") ?
+                                                    <div className="tab-pane active" id="edit">
+                                                        <form>
                                                             <h5 className="mb-4 text-uppercase"><i
-                                                                className="mdi mdi-account-circle me-1"></i> Změna stavu</h5>
-                                                            {
-                                                                (role === "NEW")?
-                                                                    <div className="row">
-                                                                       <div className="col-md-6">
-                                                                           <button onClick={changeToLead} type="button"
-                                                                                   className="mb-3 btn btn-primary waves-effect waves-light">Změnit stav na Lead
+                                                                className="mdi mdi-account-circle me-1"></i> Osobní informace</h5>
+                                                            <div className="row">
 
-                                                                           </button>
-                                                                           <div className="mb-3 form-check">
-                                                                               <input type="checkbox" className="form-check-input"
-                                                                                      id="customCheck1"/>
-                                                                               <label className="form-check-label"
-                                                                                      htmlFor="customCheck1">Potvrdit</label>
-                                                                           </div>
-                                                                       </div>
-                                                                        <div className="col-md-6">
-                                                                            <button type="button"
-                                                                                    className="btn btn-info waves-effect waves-light">Kontrola přechodu
-                                                                            </button>
-                                                                        </div>
-                                                                    </div> : <div></div>
-                                                            }
-                                                            {
-                                                                (role === "OLD")?
-                                                                    <div className="row">
-                                                                        <div className="col-md-6">
-                                                                            <button onClick={changeToLead} type="button"
-                                                                                    className="mb-3 btn btn-primary waves-effect waves-light">Změnit stav na Lead
+                                                            </div>
+                                                            <div className="row">
+                                                                <div className="col-md-6">
+                                                                    <div className="mb-3">
+                                                                        <label htmlFor="firstname" className="form-label">Jméno</label>
+                                                                        <input value={contact.name} type="text" className="form-control"
+                                                                               id="firstname" placeholder="Enter first name" />
+                                                                    </div>
+                                                                </div>
+                                                                <div className="col-md-6">
+                                                                    <div className="mb-3">
+                                                                        <label htmlFor="lastname" className="form-label">Příjmení</label>
+                                                                        <input value={contact.surname} type="text" className="form-control"
+                                                                               id="lastname" placeholder="Enter last name"/>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="col-md-6">
+                                                                    <div className="mb-3">
+                                                                        <label htmlFor="lastname" className="form-label">Telefon</label>
+                                                                        <input value={contact.phone} type="number" className="form-control"
+                                                                               id="lastname" placeholder="Enter last name"/>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="col-md-6">
+                                                                    <div className="mb-3">
+                                                                        <label htmlFor="lastname" className="form-label">Email</label>
+                                                                        <input value={contact.email} type="name" className="form-control"
+                                                                               id="lastname" placeholder="Enter last name"/>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="col-md-6">
+                                                                    <div className="mb-3">
+                                                                        <label htmlFor="lastname" className="form-label">Město</label>
+                                                                        <input value={contact.city} type="name" className="form-control"
+                                                                               id="lastname" placeholder="Enter last name"/>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="col-md-6">
+                                                                    <div className="mb-3">
+                                                                        <label htmlFor="lastname" className="form-label">PSČ</label>
+                                                                        <input value={contact.ico} type="name" className="form-control"
+                                                                               id="lastname" placeholder="Enter last name"/>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
 
-                                                                            </button>
-                                                                            <div className="mb-3 form-check">
-                                                                                <input type="checkbox" className="form-check-input"
-                                                                                       id="customCheck1"/>
-                                                                                <label className="form-check-label"
-                                                                                       htmlFor="customCheck1">Potvrdit</label>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div className="col-md-6">
-                                                                            <button type="button"
-                                                                                    className="btn btn-info waves-effect waves-light">Kontrola přechodu
-                                                                            </button>
-                                                                        </div>
-                                                                    </div> : <div></div>
-                                                            }
-                                                            {
-                                                                (role === "LEAD")?
-                                                                    <div className="row">
-                                                                        <div className="col-md-6">
-                                                                            <button onClick={changeToPotential} type="button"
-                                                                                    className="mb-3 btn btn-primary waves-effect waves-light">Změnit stav na Příležitosti
-
-                                                                            </button>
-                                                                            <div className="mb-3 form-check">
-                                                                                <input type="checkbox" className="form-check-input"
-                                                                                       id="customCheck1"/>
-                                                                                <label className="form-check-label"
-                                                                                       htmlFor="customCheck1">Potvrdit</label>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div className="col-md-6">
-                                                                            <button type="button"
-                                                                                    className="btn btn-info waves-effect waves-light">Kontrola přechodu
-                                                                            </button>
-                                                                        </div>
-                                                                    </div> : <div></div>
-                                                            }
-                                                            {
-                                                                (role === "APPLICANT")?
-                                                                    <div className="row">
-                                                                        <div className="col-md-6">
-                                                                            <button onClick={sendEdrRegistration} type="button"
-                                                                                    className="mb-3 btn btn-primary waves-effect waves-light">Změnit stav na EDR a odeslat odkaz na registraci v sýstemu
-
-                                                                            </button>
-                                                                            <div className="mb-3 form-check">
-                                                                                <input type="checkbox" className="form-check-input"
-                                                                                       id="customCheck1"/>
-                                                                                <label className="form-check-label"
-                                                                                       htmlFor="customCheck1">Potvrdit</label>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div className="col-md-6">
-                                                                            <button type="button"
-                                                                                    className="btn btn-info waves-effect waves-light">Kontrola přechodu
-                                                                            </button>
-                                                                        </div>
-                                                                    </div> : <div></div>
-                                                            }
-                                                        </div>
+                                                            <div className="text-end">
+                                                                <button type="submit"
+                                                                        className="btn btn-success waves-effect waves-light mt-2">
+                                                                    <i className="mdi mdi-content-save"></i> Save
+                                                                </button>
+                                                            </div>
+                                                        </form>
                                                     </div>
-                                                    <form>
-                                                        <h5 className="mb-4 text-uppercase"><i
-                                                            className="mdi mdi-account-circle me-1"></i> Osobní informace</h5>
+                                                    :
+                                                    <div className="tab-pane" id="edit">
                                                         <div className="row">
+                                                            <div className="col-md-12 mb-6">
+                                                                {
+                                                                    (role === "NEW")?
+                                                                        <div className="row">
+                                                                            <h5 className="mb-4 text-uppercase"><i
+                                                                                className="mdi mdi-account-circle me-1"></i> Změna stavu</h5>
+                                                                            <div className="col-md-6">
+                                                                                <button onClick={changeToLead} type="button"
+                                                                                        className="mb-3 btn btn-primary waves-effect waves-light">Změnit stav na Lead
 
-                                                        </div>
-                                                        <div className="row">
-                                                            <div className="col-md-6">
-                                                                <div className="mb-3">
-                                                                    <label htmlFor="firstname" className="form-label">Jméno</label>
-                                                                    <input value={contact.name} type="text" className="form-control"
-                                                                           id="firstname" placeholder="Enter first name" />
-                                                                </div>
-                                                            </div>
-                                                            <div className="col-md-6">
-                                                                <div className="mb-3">
-                                                                    <label htmlFor="lastname" className="form-label">Příjmení</label>
-                                                                    <input value={contact.surname} type="text" className="form-control"
-                                                                           id="lastname" placeholder="Enter last name"/>
-                                                                </div>
-                                                            </div>
-                                                            <div className="col-md-6">
-                                                                <div className="mb-3">
-                                                                    <label htmlFor="lastname" className="form-label">Telefon</label>
-                                                                    <input value={contact.phone} type="number" className="form-control"
-                                                                           id="lastname" placeholder="Enter last name"/>
-                                                                </div>
-                                                            </div>
-                                                            <div className="col-md-6">
-                                                                <div className="mb-3">
-                                                                    <label htmlFor="lastname" className="form-label">Email</label>
-                                                                    <input value={contact.email} type="name" className="form-control"
-                                                                           id="lastname" placeholder="Enter last name"/>
-                                                                </div>
-                                                            </div>
-                                                            <div className="col-md-6">
-                                                                <div className="mb-3">
-                                                                    <label htmlFor="lastname" className="form-label">Město</label>
-                                                                    <input value={contact.city} type="name" className="form-control"
-                                                                           id="lastname" placeholder="Enter last name"/>
-                                                                </div>
-                                                            </div>
-                                                            <div className="col-md-6">
-                                                                <div className="mb-3">
-                                                                    <label htmlFor="lastname" className="form-label">PSČ</label>
-                                                                    <input value={contact.ico} type="name" className="form-control"
-                                                                           id="lastname" placeholder="Enter last name"/>
-                                                                </div>
-                                                            </div>
-                                                        </div>
+                                                                                </button>
+                                                                                <div className="mb-3 form-check">
+                                                                                    <input type="checkbox" className="form-check-input"
+                                                                                           id="customCheck1"/>
+                                                                                    <label className="form-check-label"
+                                                                                           htmlFor="customCheck1">Potvrdit</label>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div className="col-md-6">
+                                                                                <button type="button"
+                                                                                        className="btn btn-info waves-effect waves-light">Kontrola přechodu
+                                                                                </button>
+                                                                            </div>
+                                                                        </div> : <div></div>
+                                                                }
+                                                                {
+                                                                    (role === "LEAD")?
+                                                                        <div className="row">
+                                                                            <h5 className="mb-4 text-uppercase"><i
+                                                                                className="mdi mdi-account-circle me-1"></i> Změna stavu</h5>
+                                                                            <div className="col-md-6">
+                                                                                <button onClick={changeToApplicant} type="button"
+                                                                                        className="mb-3 btn btn-primary waves-effect waves-light">Změnit stav na úchazeče
+                                                                                </button>
+                                                                                <div className="mb-3 form-check">
+                                                                                    <input type="checkbox" className="form-check-input"
+                                                                                           id="customCheck1"/>
+                                                                                    <label className="form-check-label"
+                                                                                           htmlFor="customCheck1">Potvrdit</label>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div className="col-md-6">
+                                                                                <button type="button"
+                                                                                        className="btn btn-info waves-effect waves-light">Kontrola přechodu
+                                                                                </button>
+                                                                            </div>
+                                                                        </div> : <div></div>
+                                                                }
+                                                                {
+                                                                    (role === "APPLICANT")?
+                                                                        <div className="row">
+                                                                            <h5 className="mb-4 text-uppercase"><i
+                                                                                className="mdi mdi-account-circle me-1"></i> Změna stavu</h5>
+                                                                            <div className="col-md-6">
+                                                                                <button onClick={sendEdrRegistration} type="button"
+                                                                                        className="mb-3 btn btn-primary waves-effect waves-light">Změnit stav na EDR a odeslat odkaz na registraci v sýstemu
 
-                                                        <div className="text-end">
-                                                            <button type="submit"
-                                                                    className="btn btn-success waves-effect waves-light mt-2">
-                                                                <i className="mdi mdi-content-save"></i> Save
-                                                            </button>
+                                                                                </button>
+                                                                                <div className="mb-3 form-check">
+                                                                                    <input type="checkbox" className="form-check-input"
+                                                                                           id="customCheck1"/>
+                                                                                    <label className="form-check-label"
+                                                                                           htmlFor="customCheck1">Potvrdit</label>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div className="col-md-6">
+                                                                                <button type="button"
+                                                                                        className="btn btn-info waves-effect waves-light">Kontrola přechodu
+                                                                                </button>
+                                                                            </div>
+                                                                        </div> : <div></div>
+                                                                }
+                                                            </div>
                                                         </div>
-                                                    </form>
-                                                </div>
+                                                        <div className="row mb-3">
+                                                            <h5 className="mb-4 text-uppercase"><i
+                                                                className="mdi mdi-account-circle me-1"></i> Podminky přechodu</h5>                                                            <div className="col-md-6">
+                                                                {
+                                                                    contact.connectedFveSigned === false ?
+                                                                        <div>
+                                                                            <div className="form-check">
+                                                                                <input type="checkbox" onChange={setGenerated} className="form-check-input"
+                                                                                />
+                                                                                <label className="form-check-label"
+                                                                                       htmlFor="customCheck1">vygenerovaná supersmlouva</label>
+                                                                            </div>
+                                                                            <div className="form-check">
+                                                                                <input type="checkbox" onChange={setSent} className="form-check-input"
+                                                                                />
+                                                                                <label className="form-check-label"
+                                                                                       htmlFor="customCheck2">odeslaná supersmlouva</label>
+                                                                            </div>
+                                                                            <div className="form-check">
+                                                                                <input type="checkbox" onChange={setSigned} className="form-check-input"
+                                                                                />
+                                                                                <label className="form-check-label"
+                                                                                       htmlFor="customCheck2">podepsaná supersmlouva</label>
+                                                                            </div>
+                                                                        </div>
+                                                                        :
+                                                                        <div>
+                                                                            <div className="form-check">
+                                                                                <input type="checkbox" onChange={setGenerated} className="form-check-input"
+                                                                                />
+                                                                                <label className="form-check-label"
+                                                                                       htmlFor="customCheck1">vygenerovaná dilčí smlouva</label>
+                                                                            </div>
+                                                                            <div className="form-check">
+                                                                                <input type="checkbox" onChange={setSent} className="form-check-input"
+                                                                                />
+                                                                                <label className="form-check-label"
+                                                                                       htmlFor="customCheck2">odeslaná dilčí smlouva</label>
+                                                                            </div>
+                                                                            <div className="form-check">
+                                                                                <input type="checkbox" onChange={setSigned} className="form-check-input"
+                                                                                />
+                                                                                <label className="form-check-label"
+                                                                                       htmlFor="customCheck2">podepsaná dilčí smlouva</label>
+                                                                            </div>
+                                                                        </div>
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                        <form>
+                                                            <h5 className="mb-4 text-uppercase"><i
+                                                                className="mdi mdi-account-circle me-1"></i> Osobní informace</h5>
+                                                            <div className="row">
+
+                                                            </div>
+                                                            <div className="row">
+                                                                <div className="col-md-6">
+                                                                    <div className="mb-3">
+                                                                        <label htmlFor="firstname" className="form-label">Jméno</label>
+                                                                        <input value={contact.name} type="text" className="form-control"
+                                                                               id="firstname" placeholder="Enter first name" />
+                                                                    </div>
+                                                                </div>
+                                                                <div className="col-md-6">
+                                                                    <div className="mb-3">
+                                                                        <label htmlFor="lastname" className="form-label">Příjmení</label>
+                                                                        <input value={contact.surname} type="text" className="form-control"
+                                                                               id="lastname" placeholder="Enter last name"/>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="col-md-6">
+                                                                    <div className="mb-3">
+                                                                        <label htmlFor="lastname" className="form-label">Telefon</label>
+                                                                        <input value={contact.phone} type="number" className="form-control"
+                                                                               id="lastname" placeholder="Enter last name"/>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="col-md-6">
+                                                                    <div className="mb-3">
+                                                                        <label htmlFor="lastname" className="form-label">Email</label>
+                                                                        <input value={contact.email} type="name" className="form-control"
+                                                                               id="lastname" placeholder="Enter last name"/>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="col-md-6">
+                                                                    <div className="mb-3">
+                                                                        <label htmlFor="lastname" className="form-label">Město</label>
+                                                                        <input value={contact.city} type="name" className="form-control"
+                                                                               id="lastname" placeholder="Enter last name"/>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="col-md-6">
+                                                                    <div className="mb-3">
+                                                                        <label htmlFor="lastname" className="form-label">PSČ</label>
+                                                                        <input value={contact.ico} type="name" className="form-control"
+                                                                               id="lastname" placeholder="Enter last name"/>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div className="text-end">
+                                                                <button type="submit"
+                                                                        className="btn btn-success waves-effect waves-light mt-2">
+                                                                    <i className="mdi mdi-content-save"></i> Save
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                }
+
 
                                             </div>
                                         </div>
@@ -815,124 +947,113 @@ const ContactProfile = observer(() => {
                                 </div>
                             </div>
 
-                            <div className="row mt-3">
+                            {
+                                (role === "ADMIN" || role === "MANAGER" || role === "SALESMAN") ?
+                                    ""
+                                    :
+                                    <div className="row mt-3">
 
-                                <div className="col-xl-8">
-                                    <div className="email-communication">
-                                        <h4>Komunikace OZ s klientem</h4>
-                                        <ul className="conversation-list" data-simplebar="init">
-                                            {communication.contacts.map(mail =>
-                                                mail.emailFrom == contact.email ?
-                                                    <li className="clearfix odd" >
-                                                        <div className="chat-avatar">
-                                                            <img src="/images/users/user-5.jpg" alt="James Z"
-                                                                 className="rounded" />
-                                                        </div>
-                                                        <div className="conversation-text">
-                                                            <div className="ctext-wrap">
-                                                                <i>{mail.emailFrom}</i>
-                                                                <i>{mail.emailDate}</i>
-                                                                <i>{mail.subject}</i>
-                                                                <p className="ft-intro ft-day1 ft-day2"
-                                                                   dangerouslySetInnerHTML={{__html:mail.body}} >
-                                                                </p>
-                                                            </div>
-                                                        </div>
-                                                    </li>
-                                                    :
-                                                    <li className="clearfix" >
-                                                        <div className="chat-avatar">
-                                                            <img src="/images/users/user-5.jpg" alt="James Z"
-                                                                 className="rounded" />
-                                                        </div>
-                                                        <div className="conversation-text">
-                                                            <div className="ctext-wrap">
-                                                                <i>{mail.emailFrom}</i>
-                                                                <i>{mail.emailDate}</i>
-                                                                <i>{mail.subject}</i>
-                                                                <p className="ft-intro ft-day1 ft-day2"
-                                                                   dangerouslySetInnerHTML={{__html:mail.body}} >
-                                                                </p>
-                                                            </div>
-                                                        </div>
-                                                    </li>
-                                            )}
+                                        <div className="col-xl-8">
+                                            <div className="email-communication">
+                                                <h4>Komunikace OZ s klientem</h4>
+                                                <ul className="conversation-list" data-simplebar="init">
+                                                    {communication.contacts.map(mail =>
+                                                        mail.emailFrom == contact.email ?
+                                                            <li className="clearfix odd" >
+                                                                <div className="chat-avatar">
+                                                                    <img src="/images/users/user-5.jpg" alt="James Z"
+                                                                         className="rounded" />
+                                                                </div>
+                                                                <div className="conversation-text">
+                                                                    <div className="ctext-wrap">
+                                                                        <i>{mail.emailFrom}</i>
+                                                                        <i>{mail.emailDate}</i>
+                                                                        <i>{mail.subject}</i>
+                                                                        <p className="ft-intro ft-day1 ft-day2"
+                                                                           dangerouslySetInnerHTML={{__html:mail.body}} >
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+                                                            </li>
+                                                            :
+                                                            <li className="clearfix" >
+                                                                <div className="chat-avatar">
+                                                                    <img src="/images/users/user-5.jpg" alt="James Z"
+                                                                         className="rounded" />
+                                                                </div>
+                                                                <div className="conversation-text">
+                                                                    <div className="ctext-wrap">
+                                                                        <i>{mail.emailFrom}</i>
+                                                                        <i>{mail.emailDate}</i>
+                                                                        <i>{mail.subject}</i>
+                                                                        <p className="ft-intro ft-day1 ft-day2"
+                                                                           dangerouslySetInnerHTML={{__html:mail.body}} >
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+                                                            </li>
+                                                    )}
 
-                                        </ul>
+                                                </ul>
 
 
-                                    </div>
-                                </div>
-                                <div className="col-xl-4">
-                                    <div className="notes">
-                                        <div className="row mt-3">
-                                            <div className="col">
-                                                <h5 className="mb-2 font-size-16">Poznamky backoffice</h5>
+                                            </div>
+                                        </div>
+                                        <div className="col-xl-4">
+                                            <div className="notes">
+                                                <div className="row mt-3">
+                                                    <div className="col">
+                                                        <h5 className="mb-2 font-size-16">Poznamky backoffice</h5>
 
-                                                {notes.notes.map(note =>
-                                                    <div className="d-flex align-items-start mt-3 p-1">
-                                                        <img src="/images/users/user-9.jpg"
-                                                             className="me-2 rounded-circle" alt="Arya Stark" height="36"/>
-                                                        <div className="w-100">
-                                                            <h5 className="mt-0 mb-0 font-size-14">
+                                                        {notes.notes.map(note =>
+                                                            <div className="d-flex align-items-start mt-3 p-1">
+                                                                <img src="/images/users/user-9.jpg"
+                                                                     className="me-2 rounded-circle" alt="Arya Stark" height="36"/>
+                                                                <div className="w-100">
+                                                                    <h5 className="mt-0 mb-0 font-size-14">
                                                                 <span
                                                                     className="float-end text-muted font-12">{note.createdAt}</span>
-                                                                {note.manager.name}
-                                                                <br/>
-                                                                {note.manager.email}
-                                                            </h5>
-                                                            <p className="mt-1 mb-0 text-muted">
-                                                                {note.message}
-                                                            </p>
+                                                                        {note.manager.name}
+                                                                        <br/>
+                                                                        {note.manager.email}
+                                                                    </h5>
+                                                                    <p className="mt-1 mb-0 text-muted">
+                                                                        {note.message}
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                        )}
+
+                                                    </div>
+                                                </div>
+                                                <div className="row mt-2">
+                                                    <div className="col">
+                                                        <div className="border rounded">
+                                                            <form action="#">
+                                                        <textarea  value={noteMessage} onChange={e => setNoteMessage(e.target.value)} rows="3" className="form-control border-0 resize-none"
+                                                                   placeholder="Váší poznámka...."></textarea>
+                                                                <div
+                                                                    className="p-2 bg-light d-flex justify-content-between align-items-center">
+
+                                                                    <button onClick={createNote} type="button" className="btn btn-sm btn-success"><i
+                                                                        className="mdi mdi-send me-1"></i>Přidat poznámku
+                                                                    </button>
+                                                                </div>
+                                                            </form>
                                                         </div>
                                                     </div>
-                                                )}
-
-                                            </div>
-                                        </div>
-                                        <div className="row mt-2">
-                                            <div className="col">
-                                                <div className="border rounded">
-                                                    <form action="#">
-                                                        <textarea  value={noteMessage} onChange={e => setNoteMessage(e.target.value)} rows="3" className="form-control border-0 resize-none"
-                                                                  placeholder="Váší poznámka...."></textarea>
-                                                        <div
-                                                            className="p-2 bg-light d-flex justify-content-between align-items-center">
-
-                                                            <button onClick={createNote} type="button" className="btn btn-sm btn-success"><i
-                                                                className="mdi mdi-send me-1"></i>Přidat poznámku
-                                                            </button>
-                                                        </div>
-                                                    </form>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
+                            }
 
                         </div>
 
 
                     </div>
 
-                    <footer className="footer">
-                        <div className="container-fluid">
-                            <div className="row">
-                                <div className="col-md-6">
-                                    <script>document.write(new Date().getFullYear())</script>
-                                    &copy; UBold theme by <a href="">Coderthemes</a>
-                                </div>
-                                <div className="col-md-6">
-                                    <div className="text-md-end footer-links d-none d-sm-block">
-                                        <a href="javascript:void(0);">About Us</a>
-                                        <a href="javascript:void(0);">Help</a>
-                                        <a href="javascript:void(0);">Contact Us</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </footer>
+                    <Footer></Footer>
                 </div>
         </div>
     );

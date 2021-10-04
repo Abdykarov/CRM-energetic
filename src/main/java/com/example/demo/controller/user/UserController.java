@@ -97,8 +97,8 @@ public class UserController {
     }
 
     @PostMapping("/admin/")
-    public AdminResponseDto testAdmin(@RequestBody AdminRequestDto adminRequestDto) {
-        return userService.saveAdmin(adminRequestDto);
+    public void testData() {
+        userService.testData();
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -213,12 +213,44 @@ public class UserController {
         return userService.changeToLead(id);
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_SALESMAN')")
+    @GetMapping("/to_applicant/{id}")
+    public UserResponseDto changeToApplicant(@PathVariable Long id) {
+        return userService.changeToApplicant(id);
+    }
+
 
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_SALESMAN')")
     @GetMapping("/to_edr/{id}")
     public UserResponseDto changeToEdr(@PathVariable Long id) {
         return userService.changeToEdr(id);
     }
+
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_SALESMAN')")
+    @GetMapping("/fve-signed/{id}")
+    public void setFveSigned(@PathVariable Long id) {
+        userService.setFveSigned(id);
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_SALESMAN')")
+    @GetMapping("/contract-generated/{id}")
+    public void setContractGenerated(@PathVariable Long id) {
+        userService.setContractGenerated(id);
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_SALESMAN')")
+    @GetMapping("/contract-sent/{id}")
+    public void setContractSent(@PathVariable Long id) {
+        userService.setContractSent(id);
+    }
+
+
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_SALESMAN')")
+    @GetMapping("/contract-signed/{id}")
+    public void setContractSigned(@PathVariable Long id) {
+        userService.setContractSigned(id);
+    }
+
 
     @PostMapping("/create/referal-contact/")
     public ContactResponseDto createReferalContact(@RequestBody ReferalContactRequestDto referalContactRequestDto) {

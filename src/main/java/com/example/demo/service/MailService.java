@@ -13,4 +13,8 @@ public interface MailService {
     List<EmailEntity> getOutbox() throws Exception;
 
     List<EmailEntity> getCommunication(Long contactId);
+
+    List<EmailEntity> fetchAllOutbox();
+
+    List<EmailEntity> fetchAllInbox();
 }

@@ -1,17 +1,11 @@
 package com.example.demo.service.imp.user;
 
-import com.example.demo.domain.EdrLinkEntity;
-import com.example.demo.domain.ReferalLinkEntity;
-import com.example.demo.domain.RoleEntity;
-import com.example.demo.domain.UserEntity;
+import com.example.demo.domain.*;
 import com.example.demo.dto.request.ReferalContactRequestDto;
 import com.example.demo.dto.request.*;
 import com.example.demo.dto.response.*;
 import com.example.demo.mapper.*;
-import com.example.demo.repository.EdrLinkRepository;
-import com.example.demo.repository.ReferalLinkRepository;
-import com.example.demo.repository.RoleRepository;
-import com.example.demo.repository.UserRepository;
+import com.example.demo.repository.*;
 import com.example.demo.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
@@ -38,6 +33,7 @@ import java.util.stream.Stream;
 public class UserServiceImp implements UserDetailsService, UserService {
 
     private final ManagerMapper managerMapper;
+    private final AreaMapper areaMapper;
     private final UserMapper userMapper;
     private final LeadMapper leadMapper;
     private final UserRepository userRepository;
@@ -47,6 +43,7 @@ public class UserServiceImp implements UserDetailsService, UserService {
     private final EdrMapper edrMapper;
     private final EdrLinkRepository edrLinkRepository;
     private final ReferalLinkRepository referalLinkRepository;
+    private final AreaRepository areaRepository;
     private final AdminMapper adminMapper;
     private final ApplicantMapper applicantMapper;
     private final RoleServiceImp roleService;
@@ -69,6 +66,120 @@ public class UserServiceImp implements UserDetailsService, UserService {
             authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getName()));
         });
         return authorities;
+    }
+
+    @Override
+    public void testData() {
+        // admin
+        final AdminRequestDto adminRequestDto = new AdminRequestDto()
+                .setUsername("admin")
+                .setPassword("123")
+                .setName("Tomas")
+                .setSurname("Pavlivec");
+        saveAdmin(adminRequestDto);
+        // manager
+        final ManagerRequestDto managerRequestDto1 = new ManagerRequestDto()
+                .setUsername("manager1")
+                .setPassword("123")
+                .setName("Tomas")
+                .setSurname("Pavlivec");
+        saveManager(managerRequestDto1);
+
+        final ManagerRequestDto managerRequestDto2 = new ManagerRequestDto()
+                .setUsername("manager2")
+                .setPassword("123")
+                .setName("Tomas")
+                .setSurname("Pavlivec");
+        saveManager(managerRequestDto2);
+
+        // salesman
+        final SalesmanRequestDto salesmanRequestDto1 = new SalesmanRequestDto()
+                .setUsername("salesman1")
+                .setPassword("123")
+                .setName("Tomas")
+                .setSurname("Pavlivec")
+                .setAreaId(1L);
+        saveSalesman(salesmanRequestDto1);
+
+        final SalesmanRequestDto salesmanRequestDto2 = new SalesmanRequestDto()
+                .setUsername("salesman2")
+                .setPassword("123")
+                .setName("Tomas")
+                .setSurname("Pavlivec")
+                .setAreaId(2L);
+        saveSalesman(salesmanRequestDto2);
+
+        // contacts
+        final ContactRequestDto contactRequestDto = new ContactRequestDto()
+                .setName("Ilias")
+                .setSurname("Abdykarov")
+                .setEmail("ilias.abdykarov@gmail.com")
+                .setPhone("+420792254131")
+                .setSalesmanId(4L)
+                .setAreaId(1L);
+        saveContact(contactRequestDto);
+    }
+
+    @Override
+    @Transactional
+    public void setFveSigned(Long id) {
+        log.info("Setting fve signed | User id : {}", id);
+        final UserEntity user = userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("User doesnt exist"));
+        if(user.isConnectedFveSigned()){
+            user.setConnectedFveSigned(false);
+        }else{
+            user.setConnectedFveSigned(true);
+        }
+        log.info("Setting fve signed | User fve connected : {}", user.isConnectedFveSigned());
+    }
+
+    @Override
+    @Transactional
+    public void setContractGenerated(Long id) {
+        log.info("Setting contract generated | User id : {}", id);
+        final UserEntity user = userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("User doesnt exist"));
+        if(user.isEdrContractGenerated()){
+            user.setEdrContractGenerated(false);
+            user.setEdrContractGeneratedDate(LocalDateTime.now());
+        }else{
+            user.setEdrContractGenerated(true);
+            user.setEdrContractGeneratedDate(LocalDateTime.now());
+        }
+        log.info("Setting contract generated | User contract generated  : {}", user.isEdrContractGenerated());
+    }
+
+    @Transactional
+    @Override
+    public void setContractSent(Long id) {
+        log.info("Setting contract sent | User id : {}", id);
+        final UserEntity user = userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("User doesnt exist"));
+        if(user.isEdrContractSent()){
+            user.setEdrContractSent(false);
+            user.setEdrContractSentDate(LocalDateTime.now());
+        }else{
+            user.setEdrContractSent(true);
+            user.setEdrContractSentDate(LocalDateTime.now());
+        }
+        log.info("Setting contract sent | User contract sent  : {}", user.isEdrContractSent());
+    }
+
+    @Transactional
+    @Override
+    public void setContractSigned(Long id) {
+        log.info("Setting contract signed | User id : {}", id);
+        final UserEntity user = userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("User doesnt exist"));
+        if(user.isEdrContractSigned()){
+            user.setEdrContractSigned(false);
+            user.setEdrContractSignedDate(LocalDateTime.now());
+        }else{
+            user.setEdrContractSigned(true);
+            user.setEdrContractSignedDate(LocalDateTime.now());
+        }
+        log.info("Setting contract signed | User contract signed  : {}", user.isEdrContractSigned());
     }
 
     @Override
@@ -121,10 +232,14 @@ public class UserServiceImp implements UserDetailsService, UserService {
     @Override
     @Transactional
     public SalesmanResponseDto saveSalesman(SalesmanRequestDto salesmanRequestDto) {
+        log.info("Saving a new salesman | Request dto {}", salesmanRequestDto);
         UserEntity userEntity = salesmanMapper.toEntity(salesmanRequestDto);
         if (userRepository.existsByUsername(salesmanRequestDto.getUsername())) {
             throw new RuntimeException("Salesman with such username exists");
         }
+        final AreaEntity area = areaRepository.findById(salesmanRequestDto.getAreaId())
+                        .orElseThrow(() -> new EntityNotFoundException("Area doesnt exist"));
+        userEntity.setArea(area);
         userEntity.setPassword(passwordEncoder.encode(salesmanRequestDto.getPassword()));
 
         RoleEntity role = roleService.findByName("SALESMAN");
@@ -132,18 +247,28 @@ public class UserServiceImp implements UserDetailsService, UserService {
         roleSet.add(role);
         userEntity.setRoles(roleSet);
         UserEntity save = userRepository.save(userEntity);
+        final SalesmanResponseDto responseDto = salesmanMapper.toResponse(save);
+        log.info("Saving a new salesman | Response dto: {}", responseDto);
 
-        return salesmanMapper.toResponse(save);
+        return responseDto;
     }
 
     @Override
     @Transactional
     public ContactResponseDto saveContact(ContactRequestDto contactRequestDto) {
+        final UserEntity salesmanEntity = userRepository.findByIdAndRoles_Name(contactRequestDto.getSalesmanId(), "SALESMAN");
+        final AreaEntity area = areaRepository.findById(contactRequestDto.getAreaId())
+                .orElseThrow(() -> new EntityNotFoundException("Area id doesnt exist"));
         UserEntity userEntity = contactMapper.toEntity(contactRequestDto);
         RoleEntity role = roleService.findByName("NEW");
+        if(contactRequestDto.isConcurrentFveInstalled()){
+            role = roleService.findByName("DEFERRED");
+        }
         Set<RoleEntity> roleSet = new HashSet<>();
         roleSet.add(role);
         userEntity.setRoles(roleSet);
+        userEntity.setArea(area);
+        userEntity.setSalesman(salesmanEntity);
         UserEntity save = userRepository.save(userEntity);
         return contactMapper.toResponse(save);
     }
@@ -277,7 +402,6 @@ public class UserServiceImp implements UserDetailsService, UserService {
         return collection;
     }
 
-
     @Override
     public List<EdrResponseDto> getEdr() {
         List<UserEntity> leadEntities = userRepository.findByRoles_Name("EDR");
@@ -299,6 +423,17 @@ public class UserServiceImp implements UserDetailsService, UserService {
         return userMapper.toResponse(save);
     }
 
+    @Override
+    public UserResponseDto changeToApplicant(Long userId) {
+        final UserEntity userEntity = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User doesnt exist"));
+        RoleEntity lead = roleService.findByName("APPLICANT");
+        Set<RoleEntity> roleSet = new HashSet<>();
+        roleSet.add(lead);
+        userEntity.setRoles(roleSet);
+        UserEntity save = userRepository.save(userEntity);
+        return userMapper.toResponse(save);
+    }
 
     @Override
     public UserResponseDto changeToEdr(Long userId) {
@@ -471,6 +606,7 @@ public class UserServiceImp implements UserDetailsService, UserService {
 
         return generatedString;
     }
+
 
 
 }

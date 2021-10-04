@@ -11,6 +11,7 @@ import {createAdmin, createContact, createManager, createSalesman, fetchSalesman
 import {Context} from "../../index";
 import ManagerItem from "../../component/items/ManagerItem";
 import {observer} from "mobx-react-lite";
+import {fetchAreas} from "../../http/areaAPI";
 
 const Registration = observer(() => {
     const history = useHistory()
@@ -19,24 +20,29 @@ const Registration = observer(() => {
     const [surname,setSurname] = useState('')
     const [email,setEmail] = useState('')
     const [phone,setPhone] = useState('')
+    const [concurrentFveName,setConcurrentFveName] = useState('')
+    const [concurrentFveDueDate,setConcurrentFveDueDate] = useState(null)
     const [username,setUsername] = useState(null)
     const [password,setPassword] = useState(null)
     const [ico, setIco] = useState('')
-    const [area, setArea] = useState(null)
-    const [b2b, setB2b] = useState('Fyzická osoba')
-    const [companyName, setCompanyName] = useState(null)
     const [city, setCity] = useState(null)
-    const [jobPosition, setJobPosition] = useState(null)
+    const [areaId, setAreaId] = useState(null)
     const [salesmanId, setSalesmanId] = useState(null)
+    const [gender, setGender] = useState('Male')
+    const [concurrentFveInstalled, setConcurrentFveInstalled] = useState(false)
     const path = location.pathname
     const {salesman} = useContext(Context)
+    const {area} = useContext(Context)
 
     if(path === REGISTRATION_CONTACT_ROUTE){
         useEffect(() => {
             fetchSalesmans().then(data => {
                 salesman.setContacts(data)
                 setSalesmanId(data[0].id)
-                console.log(data)
+            })
+            fetchAreas().then(data => {
+                area.setAreas(data)
+                setAreaId(data[0].id)
             })
         }, [])
     }
@@ -62,7 +68,7 @@ const Registration = observer(() => {
     const registrateSalesman = async () => {
         try {
             let response
-            response = await createSalesman(name, phone, surname, email, username, password, ico, b2b)
+            response = await createSalesman(name, phone, surname, email, username, password, ico)
             history.push(SALESMAN_ROUTE);
         } catch (e) {
             alert(e.response.data.message)
@@ -71,15 +77,33 @@ const Registration = observer(() => {
 
     const registrateContact = async () => {
         try {
+            let male
             let response
-            console.log(name, phone, surname, email, ico, salesmanId, companyName, city, jobPosition)
-            response = await createContact(name, phone, surname, email, ico,  salesmanId, companyName, city, jobPosition)
+            if(gender === "Male"){
+                male = true
+            }else{
+                male = false
+            }
+            response = await createContact(name, phone, surname, email, ico, salesmanId, areaId, concurrentFveInstalled, concurrentFveName, concurrentFveDueDate)
             history.push(CONTACTS_ROUTE);
         } catch (e) {
             alert(e.response.data.message)
         }
     }
 
+    const setInstalled = async () => {
+        if(concurrentFveInstalled === false) {
+            setConcurrentFveInstalled(true)
+            var elements = document.getElementsByClassName("fve_block");
+            elements[0].classList.remove('hidden_style');
+        }else{
+            setConcurrentFveInstalled(false)
+            var elements = document.getElementsByClassName("fve_block");
+            elements[0].classList.add('hidden_style');
+            setConcurrentFveDueDate(null)
+            setConcurrentFveName('')
+        }
+    }
 
     return (
         <div>
@@ -134,7 +158,21 @@ const Registration = observer(() => {
                                                         <input value={email} onChange={e => setEmail(e.target.value)} type="text" className="form-control" id="emailInput"
                                                                placeholder="Email" required />
                                                     </div>
-
+                                                    <div className="mb-3 col-md-6">
+                                                        <label htmlFor="salesmanInput" className="form-label">Pohlaví</label>
+                                                        <select value={gender} onChange={e => setGender(e.target.value)} id="salesmanInput" className="form-select">
+                                                            <option value="Male">Muž</option>
+                                                            <option value="Female">Žena</option>
+                                                        </select>
+                                                    </div>
+                                                    <div className="mb-3 col-md-6">
+                                                        <label htmlFor="salesmanInput" className="form-label">Kraj</label>
+                                                        <select value={areaId} onChange={e => setAreaId(e.target.value)} id="salesmanInput" className="form-select">
+                                                            {area.areas.map(item =>
+                                                                <option value={item.id}>{item.name}</option>
+                                                            )}
+                                                        </select>
+                                                    </div>
                                                     <div className="mb-3 col-md-6">
                                                         <label htmlFor="salesmanInput" className="form-label">Obchodní zástupce</label>
                                                         <select value={salesmanId} onChange={e => setSalesmanId(e.target.value)} id="salesmanInput" className="form-select">
@@ -151,28 +189,32 @@ const Registration = observer(() => {
                                                                readOnly="" value="Nový kontakt" />
                                                     </div>
 
-                                                    <div className="col-md-6 mb-3">
-                                                        <label htmlFor="companyInput" className="form-label">Název společnosti</label>
-                                                        <input value={companyName} onChange={e => setCompanyName(e.target.value)} type="text" className="form-control" id="companyInput"
-                                                               placeholder="Název společnosti" />
-                                                    </div>
-
-                                                    <div className="col-md-6 mb-3">
-                                                        <label htmlFor="jobInput" className="form-label">Pracovní pozice</label>
-                                                        <input value={jobPosition} onChange={e => setJobPosition(e.target.value)} type="text" className="form-control" id="jobInput"
-                                                               placeholder="Pracovní pozice" />
-                                                    </div>
-
 
                                                 </div>
-                                                <div className="row">
-                                                    <div className="mb-3 col-md-8">
-                                                        <label htmlFor="cityInput" className="form-label">Město</label>
-                                                        <input value={city} onChange={e => setCity(e.target.value)} type="text" className="form-control" id="cityInput"/>
+                                                <div className="mb-3 col-md-6">
+                                                    <label htmlFor="icoInput" className="form-label">Psč <span className="text-danger">*</span></label>
+                                                    <input value={ico} onChange={e => setIco(e.target.value)} type="number" className="form-control" id="icoInput" required/>
+                                                </div>
+
+                                                <div className="mb-3 col-md-6">
+                                                    <div className="form-check form-switch">
+                                                        <input onClick={setInstalled} type="checkbox" className="form-check-input"
+                                                               id="customSwitch1"/>
+                                                        <label className="form-check-label" htmlFor="customSwitch1">Konkurentní FVE</label>
                                                     </div>
-                                                    <div className="mb-3 col-md-4">
-                                                        <label htmlFor="icoInput" className="form-label">Psč <span className="text-danger">*</span></label>
-                                                        <input value={ico} onChange={e => setIco(e.target.value)} type="number" className="form-control" id="icoInput" required/>
+                                                </div>
+
+                                                <div className="row fve_block hidden_style mb-3">
+                                                    <div className="col-md-6 mb-6">
+                                                        <label htmlFor="surnameInput" className="form-label">Název konkurentní FVE <span className="text-danger">*</span></label>
+                                                        <input value={concurrentFveName} onChange={e => setConcurrentFveName(e.target.value)} type="text" className="form-control" id="surnameInput"
+                                                               placeholder="Název konkurentní FVE" required/>
+                                                    </div>
+                                                    <div className="col-md-6 mb-6">
+                                                            <label htmlFor="surnameInput" className="form-label">Datum vypršení záruky<span className="text-danger">*</span></label>
+                                                            <input value={concurrentFveDueDate} onChange={e => setConcurrentFveDueDate(e.target.value)} type="date" className="form-control" id="startDate"
+                                                               placeholder="Datum vypršení záruky"/>
+
                                                     </div>
                                                 </div>
 
@@ -256,8 +298,11 @@ const Registration = observer(() => {
 
                                                     <div className="col-md-6 mb-3">
                                                         <label htmlFor="areaInput" className="form-label">Kraj</label>
-                                                        <input value={area} onChange={e => setArea(e.target.value)} type="text" className="form-control" id="areaInput"
-                                                               placeholder="Kraj" />
+                                                        <select value={areaId} onChange={e => setAreaId(e.target.value)} id="salesmanInput" className="form-select">
+                                                            {area.areas.map(item =>
+                                                                <option value={item.id}>{item.name}</option>
+                                                            )}
+                                                        </select>
                                                     </div>
 
                                                     <div className="col-md-6 mb-3">
@@ -270,14 +315,6 @@ const Registration = observer(() => {
                                                                className="form-label">Stav</label>
                                                         <input type="text" id="example-readonly" className="form-control"
                                                                readOnly="" value="Obchodní zástupce" />
-                                                    </div>
-
-                                                    <div className="col-md-6 mb-3">
-                                                        <label htmlFor="b2bInput" className="form-label">FO/PO</label>
-                                                        <select value={b2b} onChange={e => setB2b(e.target.value)} id="b2bInput" className="form-select">
-                                                            <option value="Fyzická osoba">Fyzická osoba</option>
-                                                            <option value="Podnikající osoba">Podnikající osoba</option>
-                                                        </select>
                                                     </div>
 
                                                     <div className="row">

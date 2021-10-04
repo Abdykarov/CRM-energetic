@@ -4,10 +4,11 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.Set;
 
 @Entity
@@ -26,9 +27,12 @@ public class UserEntity {
     String phone;
     String email;
     String password;
-    String city;
     String ico;
-    String area;
+    String contactPerson;
+
+    @ManyToOne
+    @JoinColumn(name = "area_id")
+    AreaEntity area;
 
     @ManyToOne
     @JoinColumn(name = "salesman_id")
@@ -70,7 +74,9 @@ public class UserEntity {
     // CONCURRENT FVE
     boolean concurrentFveInstalled;
     String concurrentFveName;
-    LocalDateTime concurrentFveDueDate;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    LocalDate concurrentFveDueDate;
 
     // FVE SOLID SUN
     boolean connectedFveGenerated;

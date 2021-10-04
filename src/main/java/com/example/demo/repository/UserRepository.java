@@ -10,6 +10,8 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
     UserEntity findByUsername(String username);
 
+    UserEntity findByIdAndRoles_Name(Long id, String rolesName);
+
     List<UserEntity> findByRoles_Name(String name);
 
     List<UserEntity> findByRoles_NameOrderByRoleChangedDateAsc(String name);

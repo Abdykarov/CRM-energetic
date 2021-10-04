@@ -17,7 +17,7 @@ public class ApplicantRequestDto {
     String email;
     String city;
     String ico;
-    String area;
+    Long areaId;
     Long salesmanId;
     Long referalId;
     Long campaign;

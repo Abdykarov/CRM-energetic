@@ -2,21 +2,22 @@
 import React, {useContext, useEffect} from 'react';
 import {fetchAdminCoint} from "../http/contactAPI";
 import {Context} from "../index";
-import {fetchInboxCrm} from "../http/mailAPI";
+import {fetchInbox, fetchInboxCrm} from "../http/mailAPI";
 import {observer} from "mobx-react-lite";
+import EdrItem from "../component/items/EdrItem";
 
 const Inbox = observer(() => {
 
     const {user} = useContext(Context)
     const {mail} = useContext(Context)
 
+
     useEffect(() => {
 
-        if (user.role === "ROLE_ADMIN") {
-            fetchInboxCrm().then(data => mail.setMails(data))
-            console.log(mail.mails)
-        }
-
+        fetchInbox().then(data => {
+            console.log(data)
+            mail.setMails(data)
+        })
     }, [])
 
     return (
@@ -54,64 +55,26 @@ const Inbox = observer(() => {
 
                                             <div className="mt-3">
                                                 <ul className="message-list">
-                                                    <li className="unread">
-                                                        <div className="col-mail col-mail-1">
-                                                            <div className="checkbox-wrapper-mail">
-                                                                <input type="checkbox" id="chk1"/>
-                                                                <label htmlFor="chk1" className="toggle"></label>
-                                                            </div>
-                                                            <span
-                                                                className="star-toggle far fa-star text-warning"></span>
-                                                            <a href="" className="title">Lucas Kriebel (via Twitter)</a>
-                                                        </div>
-                                                        <div className="col-mail col-mail-2">
-                                                            <a href="" className="subject">Lucas Kriebel (@LucasKriebel)
-                                                                has sent
-                                                                you a direct message on Twitter! &nbsp;&ndash;&nbsp;
-                                                                <span className="teaser">@LucasKriebel - Very cool :) Nicklas, You have a new direct message.</span>
-                                                            </a>
-                                                            <div className="date">11:49 am</div>
-                                                        </div>
-                                                    </li>
-
-                                                    <li className="unread">
-                                                        <div className="col-mail col-mail-1">
-                                                            <div className="checkbox-wrapper-mail">
-                                                                <input type="checkbox" id="chk1"/>
-                                                                <label htmlFor="chk1" className="toggle"></label>
-                                                            </div>
-                                                            <span
-                                                                className="star-toggle far fa-star text-warning"></span>
-                                                            <a href="" className="title">Lucas Kriebel (via Twitter)</a>
-                                                        </div>
-                                                        <div className="col-mail col-mail-2">
-                                                            <a href="" className="subject">Lucas Kriebel (@LucasKriebel)
-                                                                has sent
-                                                                you a direct message on Twitter! &nbsp;&ndash;&nbsp;
-                                                                <span className="teaser">@LucasKriebel - Very cool :) Nicklas, You have a new direct message.</span>
-                                                            </a>
-                                                            <div className="date">11:49 am</div>
-                                                        </div>
-                                                    </li>
-                                                    <li className="unread">
-                                                        <div className="col-mail col-mail-1">
-                                                            <div className="checkbox-wrapper-mail">
-                                                                <input type="checkbox" id="chk1"/>
-                                                                <label htmlFor="chk1" className="toggle"></label>
-                                                            </div>
-                                                            <span
-                                                                className="star-toggle far fa-star text-warning"></span>
-                                                            <a href="" className="title">Lucas Kriebel (via Twitter)</a>
-                                                        </div>
-                                                        <div className="col-mail col-mail-2">
-                                                            <a href="" className="subject">Lucas Kriebel (@LucasKriebel)
-                                                                has sent
-                                                                you a direct message on Twitter! &nbsp;&ndash;&nbsp;
-                                                                <span className="teaser">@LucasKriebel - Very cool :) Nicklas, You have a new direct message.</span>
-                                                            </a>
-                                                            <div className="date">11:49 am</div>
-                                                        </div>
-                                                    </li>
+                                                    {
+                                                        mail.mails.length === 0 ?
+                                                            <h3>Prazdné pole</h3>
+                                                            :
+                                                            mail.mails.map(item =>
+                                                                <li className="unread">
+                                                                    <div className="col-mail col-mail-1">
+                                                                <span
+                                                                    className="star-toggle far fa-star text-warning"></span>
+                                                                        <a href="" className="title">{item.emailFrom}</a>
+                                                                    </div>
+                                                                    <div className="col-mail col-mail-2">
+                                                                        <a href="" className="subject">{item.subject}&nbsp;&ndash;&nbsp;
+                                                                            <span className="teaser">{item.body.substring(0, 60)}</span>
+                                                                        </a>
+                                                                        <div className="date">{item.emailDate.substring(0,10)}</div>
+                                                                    </div>
+                                                                </li>
+                                                            )
+                                                    }
                                                 </ul>
                                             </div>
 
@@ -141,24 +104,6 @@ const Inbox = observer(() => {
                     </div>
 
                 </div>
-
-                <footer className="footer">
-                    <div className="container-fluid">
-                        <div className="row">
-                            <div className="col-md-6">
-                                <script>document.write(new Date().getFullYear())</script>
-                                &copy; UBold theme by <a href="">Coderthemes</a>
-                            </div>
-                            <div className="col-md-6">
-                                <div className="text-md-end footer-links d-none d-sm-block">
-                                    <a href="javascript:void(0);">About Us</a>
-                                    <a href="javascript:void(0);">Help</a>
-                                    <a href="javascript:void(0);">Contact Us</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </footer>
 
             </div>
         </div>

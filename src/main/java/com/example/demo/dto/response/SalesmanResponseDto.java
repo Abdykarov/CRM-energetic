@@ -10,7 +10,6 @@ public class SalesmanResponseDto {
     private String surname;
     private String email;
     private String phone;
-    private String B2B;
-    private String area;
+    private AreaResponseDto area;
     private String ico;
 }

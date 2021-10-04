@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
 import javax.persistence.Column;
+import java.util.Date;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -14,5 +15,6 @@ public class EmailResponseDto {
     String emailTo;
     String body;
     String subject;
+    Date emailDate;
     boolean inbox;
 }

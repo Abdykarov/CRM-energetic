@@ -242,5 +242,15 @@ public class MailServiceImp implements MailService {
         return emailRepository.findAllByEmailFromOrEmailToOrderByEmailDateAsc(user.getEmail(), user.getEmail());
     }
 
+    @Override
+    public List<EmailEntity> fetchAllInbox() {
+        return emailRepository.findAllByInboxTrue();
+    }
+
+    @Override
+    public List<EmailEntity> fetchAllOutbox() {
+        return emailRepository.findAllByInboxFalse();
+    }
+
 
 }

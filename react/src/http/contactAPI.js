@@ -56,21 +56,8 @@ export const updateToLead = async (id) =>{
     return data
 }
 
-
-export const updateToPotential = async (id) =>{
-    const {data} = await $authHost.get('edr_api/user/to_potential/' + id)
-    return data
-}
-
-
-export const updateToCurrent = async (id) =>{
-    const {data} = await $authHost.get('edr_api/user/to_current/' + id)
-    return data
-}
-
-
-export const updateToAccepted = async (id) =>{
-    const {data} = await $authHost.get('edr_api/user/to_accepted/' + id)
+export const updateToApplicant = async (id) =>{
+    const {data} = await $authHost.get('edr_api/user/to_applicant/' + id)
     return data
 }
 
@@ -144,9 +131,9 @@ export const createSalesman= async (name, phone, surname, email, username, passw
 }
 
 // management creates new contact
-export const createContact = async (name, phone, surname, email, ico,  salesmanId, companyName, city, jobPosition) => {
+export const createContact = async (name, phone, surname, email, ico, salesmanId, areaId, concurrentFveInstalled, concurrentFveName, concurrentFveDueDate) => {
     const {data} = await $authHost.post('edr_api/user/create/contact/',
-        {name, phone, surname, email, ico,  salesmanId, companyName, city, jobPosition})
+        {name, phone, surname, email, ico, salesmanId, areaId, concurrentFveInstalled, concurrentFveName, concurrentFveDueDate})
     return data
 }
 
@@ -174,3 +161,110 @@ export const fetchReferals = async (id) => {
     const {data} = await $authHost.get('edr_api/edr/referals/' + id)
     return data
 }
+
+export const setFveSigned = async (id) => {
+    const {data} = await $authHost.get('edr_api/user/fve-signed/' + id)
+    return data
+}
+
+export const setEdrContractGenerated = async (id) => {
+    const {data} = await $authHost.get('edr_api/user/contract-generated/' + id)
+    return data
+}
+
+export const setEdrContractSent = async (id) => {
+    const {data} = await $authHost.get('edr_api/user/contract-sent/' + id)
+    return data
+}
+
+export const setEdrContractSigned = async (id) => {
+    const {data} = await $authHost.get('edr_api/user/contract-signed/' + id)
+    return data
+}
+
+// HW
+
+export const setHwDocumentGenerated = async (id) => {
+    const {data} = await $authHost.get('edr_api/user/hw-generated/' + id)
+    return data
+}
+
+export const setHwDocumentSent = async (id) => {
+    const {data} = await $authHost.get('edr_api/user/hw-sent/' + id)
+    return data
+}
+
+export const setHwDocumentSigned = async (id) => {
+    const {data} = await $authHost.get('edr_api/user/hw-signed/' + id)
+    return data
+}
+
+// Sysel
+
+export const setHwDocumentGenerated = async (id) => {
+    const {data} = await $authHost.get('edr_api/user/hw-generated/' + id)
+    return data
+}
+
+export const setHwDocumentSent = async (id) => {
+    const {data} = await $authHost.get('edr_api/user/hw-sent/' + id)
+    return data
+}
+
+export const setHwDocumentSigned = async (id) => {
+    const {data} = await $authHost.get('edr_api/user/hw-signed/' + id)
+    return data
+}
+
+// FVE
+
+export const setHwDocumentGenerated = async (id) => {
+    const {data} = await $authHost.get('edr_api/user/hw-generated/' + id)
+    return data
+}
+
+export const setHwDocumentSent = async (id) => {
+    const {data} = await $authHost.get('edr_api/user/hw-sent/' + id)
+    return data
+}
+
+export const setHwDocumentSigned = async (id) => {
+    const {data} = await $authHost.get('edr_api/user/hw-signed/' + id)
+    return data
+}
+
+// PRIHLASKA
+
+export const setHwDocumentGenerated = async (id) => {
+    const {data} = await $authHost.get('edr_api/user/hw-generated/' + id)
+    return data
+}
+
+export const setHwDocumentSent = async (id) => {
+    const {data} = await $authHost.get('edr_api/user/hw-sent/' + id)
+    return data
+}
+
+export const setHwDocumentSigned = async (id) => {
+    const {data} = await $authHost.get('edr_api/user/hw-signed/' + id)
+    return data
+}
+
+// FAKTURA
+
+
+export const setHwDocumentGenerated = async (id) => {
+    const {data} = await $authHost.get('edr_api/user/hw-generated/' + id)
+    return data
+}
+
+export const setHwDocumentSent = async (id) => {
+    const {data} = await $authHost.get('edr_api/user/hw-sent/' + id)
+    return data
+}
+
+export const setHwDocumentSigned = async (id) => {
+    const {data} = await $authHost.get('edr_api/user/hw-signed/' + id)
+    return data
+}
+

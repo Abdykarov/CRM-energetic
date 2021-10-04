@@ -6,6 +6,12 @@
 .edr_create .navbar-custom{
     position: static;
 }
+.fve_block{
+    transition: all .2s;
+}
+.hidden_style{
+    opacity: 0;
+}
 .referal_registration{
     position: fixed;
     width: 100%;

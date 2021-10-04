@@ -1,0 +1,23 @@
+1) PIPELINE
+   - Kontakty
+   - Leady
+   - Applicants
+   - Edrs
+   - States logic
+
+2) KOMUNIKACE
+   - inbox emails
+   - outgoing emails
+   - popup
+
+3) FILTRY
+    - by attributes
+
+4) NASTENKA
+    - last contracts
+    - last edr
+    - last payments
+
+5) VALIDACE
+    - form validation
+    - state control

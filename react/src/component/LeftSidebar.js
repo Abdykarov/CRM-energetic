@@ -163,25 +163,34 @@ const LeftSidebar = observer(() => {
                                         </li>
                                         : ""
                                 }
+                                {
+                                    user.role === "ROLE_ADMIN" || user.role === "ROLE_MANAGER" ?
+                                        <li className="menu-title">Komunikace</li>
+                                        : ""
+                                }
 
-                                <li className="menu-title">Komunikace</li>
-                                <li>
-                                    <a href="#emailBar" data-bs-toggle="collapse">
-                                        <i className="fe-mail"></i>
-                                        <span> Komunikace </span>
-                                        <span className="menu-arrow"></span>
-                                    </a>
-                                    <div className="collapse" id="emailBar">
-                                        <ul className="nav-second-level">
-                                            <li>
-                                                <a href={INBOX_ROUTE}>Příchozí</a>
-                                            </li>
-                                            <li>
-                                                <a href={OUTBOX_ROUTE}>Odeslané</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </li>
+                                {
+                                    user.role === "ROLE_ADMIN" || user.role === "ROLE_MANAGER" ?
+                                        <li>
+                                            <a href="#emailBar" data-bs-toggle="collapse">
+                                                <i className="fe-mail"></i>
+                                                <span> Komunikace </span>
+                                                <span className="menu-arrow"></span>
+                                            </a>
+                                            <div className="collapse" id="emailBar">
+                                                <ul className="nav-second-level">
+                                                    <li>
+                                                        <a href={INBOX_ROUTE}>Příchozí</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href={OUTBOX_ROUTE}>Odeslané</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </li>
+                                        : ""
+                                }
+
                                 {
                                     user.role === "ROLE_ADMIN" || user.role === "ROLE_MANAGER" ?
                                         <li className="menu-title">Faktury</li>

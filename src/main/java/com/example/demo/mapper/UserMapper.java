@@ -5,7 +5,7 @@ import com.example.demo.dto.request.UserRequestDto;
 import com.example.demo.dto.response.UserResponseDto;
 import org.mapstruct.Mapper;
 
-@Mapper
+@Mapper(uses = {EdrMapper.class, AreaMapper.class, SalesmanMapper.class})
 public interface UserMapper {
 
     UserEntity toEntity(UserRequestDto userRequestDto);
