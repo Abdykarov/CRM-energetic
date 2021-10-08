@@ -3,7 +3,7 @@
 import React, {useEffect, useState} from 'react';
 import {useHistory} from "react-router-dom";
 import {CONTACT_PROFILE_ROUTE} from "../../utils/const";
-import {deleteEdrRequest, fetchContacts, setFveSigned} from "../../http/contactAPI";
+import {deleteEdrRequest, fetchContacts, setFveDocumentSigned} from "../../http/contactAPI";
 
 const ContactItem = ({contact}) => {
     const history = useHistory()
@@ -15,7 +15,7 @@ const ContactItem = ({contact}) => {
         try {
             let response
             let id = contact.id
-            response =  await setFveSigned(id)
+            response =  await setFveDocumentSigned(id)
             setConnectedFveSigned(true)
             window.location.reload()
         } catch (e) {

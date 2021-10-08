@@ -96,7 +96,7 @@ public class UserServiceImp implements UserDetailsService, UserService {
         final SalesmanRequestDto salesmanRequestDto1 = new SalesmanRequestDto()
                 .setUsername("salesman1")
                 .setPassword("123")
-                .setName("Tomas")
+                .setName("Pavel")
                 .setSurname("Pavlivec")
                 .setAreaId(1L);
         saveSalesman(salesmanRequestDto1);
@@ -109,6 +109,15 @@ public class UserServiceImp implements UserDetailsService, UserService {
                 .setAreaId(2L);
         saveSalesman(salesmanRequestDto2);
 
+        final EdrRequestDto edrRequestDto = new EdrRequestDto()
+                .setUsername("edr")
+                .setPassword("123");
+        saveEdr(edrRequestDto);
+
+        final EdrRequestDto edrRequestDto2 = new EdrRequestDto()
+                .setUsername("edr2")
+                .setPassword("123");
+        saveEdr(edrRequestDto2);
         // contacts
         final ContactRequestDto contactRequestDto = new ContactRequestDto()
                 .setName("Ilias")
@@ -434,6 +443,231 @@ public class UserServiceImp implements UserDetailsService, UserService {
         UserEntity save = userRepository.save(userEntity);
         return userMapper.toResponse(save);
     }
+
+    @Override
+    @Transactional
+    public void setHwDocumentGenerated(Long id) {
+        log.info("Setting hw generated | User id : {}", id);
+        final UserEntity user = userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("User doesnt exist"));
+        if(user.isHwsunMonitorGenerated()){
+            user.setHwsunMonitorGenerated(false);
+            user.setHwsunMonitorGeneratedDate(LocalDateTime.now());
+        }else{
+            user.setHwsunMonitorGenerated(true);
+            user.setHwsunMonitorGeneratedDate(LocalDateTime.now());
+        }
+        log.info("Setting hw generated | User hw generated  : {}", user.isHwsunMonitorGenerated());
+    }
+
+    @Override
+    @Transactional
+    public void setHwDocumentSent(Long id) {
+        log.info("Setting hw sent | User id : {}", id);
+        final UserEntity user = userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("User doesnt exist"));
+        if(user.isHwsunMonitorSent()){
+            user.setHwsunMonitorSent(false);
+            user.setHwsunMonitorSentDate(LocalDateTime.now());
+        }else{
+            user.setHwsunMonitorSent(true);
+            user.setHwsunMonitorSentDate(LocalDateTime.now());
+        }
+        log.info("Setting hw sent | User hw generated  : {}", user.isHwsunMonitorSent());
+    }
+
+    @Override
+    @Transactional
+    public void setHwDocumentSigned(Long id) {
+        log.info("Setting hw signed | User id : {}", id);
+        final UserEntity user = userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("User doesnt exist"));
+        if(user.isHwsunMonitorSigned()){
+            user.setHwsunMonitorSigned(false);
+            user.setHwsunMonitorSignedDate(LocalDateTime.now());
+        }else{
+            user.setHwsunMonitorSigned(true);
+            user.setHwsunMonitorSignedDate(LocalDateTime.now());
+        }
+        log.info("Setting hw signed | User hw signed  : {}", user.isHwsunMonitorSigned());
+    }
+
+    @Override
+    @Transactional
+    public void setSyselDocumentGenerated(Long id) {
+        log.info("Setting sysel generated | User id : {}", id);
+        final UserEntity user = userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("User doesnt exist"));
+        if(user.isSyselAgreementGenerated()){
+            user.setSyselAgreementGenerated(false);
+            user.setSyselAgreementGeneratedDate(LocalDateTime.now());
+        }else{
+            user.setSyselAgreementGenerated(true);
+            user.setSyselAgreementGeneratedDate(LocalDateTime.now());
+        }
+        log.info("Setting sysel generated | User sysel generated  : {}", user.isSyselAgreementGenerated());
+    }
+
+    @Override
+    @Transactional
+    public void setSyselDocumentSent(Long id) {
+        log.info("Setting sysel sent | User id : {}", id);
+        final UserEntity user = userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("User doesnt exist"));
+        if(user.isSyselAgreementSent()){
+            user.setSyselAgreementSent(false);
+            user.setSyselAgreementSentDate(LocalDateTime.now());
+        }else{
+            user.setSyselAgreementSent(true);
+            user.setSyselAgreementSentDate(LocalDateTime.now());
+        }
+        log.info("Setting sysel sent | User sysel sent  : {}", user.isSyselAgreementSent());
+    }
+
+    @Override
+    @Transactional
+    public void setSyselDocumentSigned(Long id) {
+        log.info("Setting sysel signed | User id : {}", id);
+        final UserEntity user = userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("User doesnt exist"));
+        if(user.isSyselAgreementSigned()){
+            user.setSyselAgreementSigned(false);
+            user.setSyselAgreementSignedDate(LocalDateTime.now());
+        }else{
+            user.setSyselAgreementSigned(true);
+            user.setSyselAgreementSignedDate(LocalDateTime.now());
+        }
+        log.info("Setting sysel signed | User sysel signed  : {}", user.isSyselAgreementSigned());
+    }
+
+    @Override
+    @Transactional
+    public void setFveDocumentGenerated(Long id) {
+        log.info("Setting fve generated | User id : {}", id);
+        final UserEntity user = userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("User doesnt exist"));
+        if(user.isConnectedFveGenerated()){
+            user.setConnectedFveGenerated(false);
+            user.setConnectedFveGeneratedDate(LocalDateTime.now());
+        }else{
+            user.setConnectedFveGenerated(true);
+            user.setConnectedFveGeneratedDate(LocalDateTime.now());
+        }
+        log.info("Setting fve generated | User fve generated : {}", user.isConnectedFveGenerated());
+    }
+
+    @Override
+    @Transactional
+    public void setFveDocumentSent(Long id) {
+        log.info("Setting fve sent | User id : {}", id);
+        final UserEntity user = userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("User doesnt exist"));
+        if(user.isConnectedFveSent()){
+            user.setConnectedFveSent(false);
+            user.setConnectedFveSentDate(LocalDateTime.now());
+        }else{
+            user.setConnectedFveSent(false);
+            user.setConnectedFveSentDate(LocalDateTime.now());
+        }
+        log.info("Setting fve sent | User fve sent : {}", user.isConnectedFveSent());
+    }
+
+    @Override
+    @Transactional
+    public void setFveDocumentSigned(Long id) {
+        log.info("Setting fve signed | User id : {}", id);
+        final UserEntity user = userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("User doesnt exist"));
+        if(user.isConnectedFveSigned()){
+            user.setConnectedFveSigned(false);
+            user.setConnectedFveSignedDate(LocalDateTime.now());
+        }else{
+            user.setConnectedFveSigned(true);
+            user.setConnectedFveSignedDate(LocalDateTime.now());
+        }
+        log.info("Setting fve signed | User fve signed : {}", user.isConnectedFveSigned());
+    }
+
+    @Override
+    @Transactional
+    public void setFactureDocumentGenerated(Long id) {
+        log.info("Setting facture generated | User id : {}", id);
+        final UserEntity user = userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("User doesnt exist"));
+        if(user.isFactureGenerated()){
+            user.setFactureGenerated(false);
+            user.setFactureGeneratedDate(LocalDateTime.now());
+        }else{
+            user.setFactureGenerated(true);
+            user.setFactureGeneratedDate(LocalDateTime.now());
+        }
+        log.info("Setting facture generated | User facture generated : {}", user.isFactureGenerated());
+    }
+
+    @Override
+    @Transactional
+    public void setFactureDocumentSent(Long id) {
+        log.info("Setting facture sent | User id : {}", id);
+        final UserEntity user = userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("User doesnt exist"));
+        if(user.isFactureSent()){
+            user.setFactureSent(false);
+            user.setFactureSentDate(LocalDateTime.now());
+        }else{
+            user.setFactureSent(true);
+            user.setFactureSentDate(LocalDateTime.now());
+        }
+        log.info("Setting facture sent | User facture sent : {}", user.isFactureGenerated());
+    }
+
+    @Override
+    @Transactional
+    public void setEdrRequestDocumentGenerated(Long id) {
+        log.info("Setting edr request generated | User id : {}", id);
+        final UserEntity user = userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("User doesnt exist"));
+        if(user.isRequestToEdrGenerated()){
+            user.setRequestToEdrGenerated(false);
+            user.setRequestToEdrGeneratedDate(LocalDateTime.now());
+        }else{
+            user.setRequestToEdrGenerated(true);
+            user.setRequestToEdrGeneratedDate(LocalDateTime.now());
+        }
+        log.info("Setting edr request generated | User edr request generated : {}", user.isRequestToEdrGenerated());
+    }
+
+    @Override
+    @Transactional
+    public void setEdrRequestDocumentSent(Long id) {
+        log.info("Setting edr request sent | User id : {}", id);
+        final UserEntity user = userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("User doesnt exist"));
+        if(user.isRequestToEdrSent()){
+            user.setRequestToEdrSent(false);
+            user.setRequestToEdrSentDate(LocalDateTime.now());
+        }else{
+            user.setRequestToEdrSent(true);
+            user.setRequestToEdrSentDate(LocalDateTime.now());
+        }
+        log.info("Setting edr request sent | User edr request sent : {}", user.isRequestToEdrSent());
+    }
+
+    @Override
+    @Transactional
+    public void setEdrRequestDocumentSigned(Long id) {
+        log.info("Setting edr request signed | User id : {}", id);
+        final UserEntity user = userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("User doesnt exist"));
+        if(user.isRequestToEdrSigned()){
+            user.setRequestToEdrSigned(false);
+            user.setRequestToEdrSignedDate(LocalDateTime.now());
+        }else{
+            user.setRequestToEdrSigned(true);
+            user.setRequestToEdrSignedDate(LocalDateTime.now());
+        }
+        log.info("Setting edr request signed | User edr request signed : {}", user.isRequestToEdrSigned());
+    }
+
 
     @Override
     public UserResponseDto changeToEdr(Long userId) {

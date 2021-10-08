@@ -75,6 +75,12 @@ public class FactureServiceImp implements FactureService {
         return HttpStatus.ACCEPTED;
     }
 
+    @Override
+    public void readFactures() {
+        List<FactureEntity> generatedFactures = factureRepository.findAllByFactureStatus(FactureStatus.GENERATED);
+        log.info("Generated factures : {}", generatedFactures);
+    }
+
 //    @Override
 //    public ResponseEntity<?> getFacturePdf(TemplateEngine templateEngine, HttpServletRequest request, HttpServletResponse response, Long factureId) {
 //        /* Do Business Logic*/

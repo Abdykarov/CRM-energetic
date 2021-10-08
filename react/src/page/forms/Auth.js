@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {observer} from "mobx-react-lite";
 import {Button, Form} from "react-bootstrap";
 import {useHistory} from "react-router-dom";
@@ -13,7 +13,8 @@ const Auth = observer(() => {
     const [username,setUsername] = useState('')
     const [password,setPassword] = useState('')
 
-    const click = async () => {
+    const click = async (e) => {
+        e.preventDefault();
         try {
             let data;
             data = await login(username, password);
@@ -53,7 +54,7 @@ const Auth = observer(() => {
                                 </div>
                             </div>
                             <div className="text-center d-grid">
-                                <Button onClick={click} type="submit" className="btn btn-primary">Přihlasit</Button>
+                                <Button onClick={click} type="submit" id="trigger" className="btn btn-primary">Přihlasit</Button>
                             </div>
 
                         </Form>

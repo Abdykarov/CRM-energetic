@@ -69,4 +69,32 @@ public interface UserService {
     void setContractSigned(Long id);
 
     UserResponseDto changeToApplicant(Long id);
+
+    void setHwDocumentGenerated(Long id);
+
+    void setHwDocumentSent(Long id);
+
+    void setHwDocumentSigned(Long id);
+
+    void setSyselDocumentGenerated(Long id);
+
+    void setSyselDocumentSent(Long id);
+
+    void setSyselDocumentSigned(Long id);
+
+    void setFveDocumentGenerated(Long id);
+
+    void setFveDocumentSent(Long id);
+
+    void setFveDocumentSigned(Long id);
+
+    void setFactureDocumentGenerated(Long id);
+
+    void setFactureDocumentSent(Long id);
+
+    void setEdrRequestDocumentSent(Long id);
+
+    void setEdrRequestDocumentSigned(Long id);
+
+    void setEdrRequestDocumentGenerated(Long id);
 }

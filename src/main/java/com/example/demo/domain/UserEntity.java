@@ -65,9 +65,11 @@ public class UserEntity {
 
     // REQUEST TO EDR
     boolean requestToEdrGenerated;
+    boolean requestToEdrSent;
     boolean requestToEdrSigned;
     boolean requestToEdrAccepted;
     LocalDateTime requestToEdrGeneratedDate;
+    LocalDateTime requestToEdrSentDate;
     LocalDateTime requestToEdrSignedDate;
     LocalDateTime requestToEdrAcceptedDate;
 

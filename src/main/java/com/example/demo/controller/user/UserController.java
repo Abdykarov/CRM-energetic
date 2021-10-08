@@ -227,7 +227,7 @@ public class UserController {
     }
 
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_SALESMAN')")
-    @GetMapping("/fve-signed/{id}")
+    @GetMapping("/fve-installed/{id}")
     public void setFveSigned(@PathVariable Long id) {
         userService.setFveSigned(id);
     }
@@ -255,6 +255,94 @@ public class UserController {
     @PostMapping("/create/referal-contact/")
     public ContactResponseDto createReferalContact(@RequestBody ReferalContactRequestDto referalContactRequestDto) {
         return userService.saveReferalContact(referalContactRequestDto);
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_SALESMAN')")
+    @GetMapping("/hw-generated/{id}")
+    public void setHwDocumentGenerated(@PathVariable Long id) {
+        userService.setHwDocumentGenerated(id);
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_SALESMAN')")
+    @GetMapping("/hw-sent/{id}")
+    public void setHwDocumentSent(@PathVariable Long id) {
+        userService.setHwDocumentSent(id);
+    }
+
+
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_SALESMAN')")
+    @GetMapping("/hw-signed/{id}")
+    public void setHwDocumentSigned(@PathVariable Long id) {
+        userService.setHwDocumentSigned(id);
+    }
+
+
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_SALESMAN')")
+    @GetMapping("/sysel-generated/{id}")
+    public void setSyselDocumentGenerated(@PathVariable Long id) {
+        userService.setSyselDocumentGenerated(id);
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_SALESMAN')")
+    @GetMapping("/sysel-sent/{id}")
+    public void setSyselDocumentSent(@PathVariable Long id) {
+        userService.setSyselDocumentSent(id);
+    }
+
+
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_SALESMAN')")
+    @GetMapping("/sysel-signed/{id}")
+    public void setSyselDocumentSigned(@PathVariable Long id) {
+        userService.setSyselDocumentSigned(id);
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_SALESMAN')")
+    @GetMapping("/fve-generated/{id}")
+    public void setFveDocumentGenerated(@PathVariable Long id) {
+        userService.setFveDocumentGenerated(id);
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_SALESMAN')")
+    @GetMapping("/fve-sent/{id}")
+    public void setFveDocumentSent(@PathVariable Long id) {
+        userService.setFveDocumentSent(id);
+    }
+
+
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_SALESMAN')")
+    @GetMapping("/fve-signed/{id}")
+    public void setFveDocumentSigned(@PathVariable Long id) {
+        userService.setFveDocumentSigned(id);
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_SALESMAN')")
+    @GetMapping("/facture-generated/{id}")
+    public void setFactureDocumentGenerated(@PathVariable Long id) {
+        userService.setFactureDocumentGenerated(id);
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_SALESMAN')")
+    @GetMapping("/facture-sent/{id}")
+    public void setFactureDocumentSent(@PathVariable Long id) {
+        userService.setFactureDocumentSent(id);
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_SALESMAN')")
+    @GetMapping("/edr-request-generated/{id}")
+    public void setEdrRequestDocumentGenerated(@PathVariable Long id) {
+        userService.setEdrRequestDocumentGenerated(id);
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_SALESMAN')")
+    @GetMapping("/edr-request-sent/{id}")
+    public void setEdrRequestDocumentSent(@PathVariable Long id) {
+        userService.setEdrRequestDocumentSent(id);
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_SALESMAN')")
+    @GetMapping("/edr-request-signed/{id}")
+    public void setEdrRequestDocumentSigned(@PathVariable Long id) {
+        userService.setEdrRequestDocumentSigned(id);
     }
 
 

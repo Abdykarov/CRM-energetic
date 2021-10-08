@@ -42,6 +42,7 @@ public class ApplicantResponseDto {
     boolean syselAgreementSigned;
     // REQUEST TO EDR
     boolean requestToEdrGenerated;
+    boolean requestToEdrSent;
     boolean requestToEdrSigned;
     boolean requestToEdrAccepted;
     // CONCURRENT FVE

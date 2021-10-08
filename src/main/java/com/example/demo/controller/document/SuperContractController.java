@@ -26,7 +26,7 @@ public class SuperContractController {
 
     SuperContractServiceImpl superContractService;
     private static String UPLOADED_FOLDER = "/home/abdykili/workflow/CRM-energetic/src/main/resources/supercontracts/";
-    private static String APP_FOLDER = "/home/abdykili/workflow/CRM-energetic/src/main/java/com/example/demo/documents/";
+    private static String APP_FOLDER = "/home/abdykili/workflow/CRM-energetic/src/main/recources/documents/";
 
     @RequestMapping(value = "/save/{userId}", method = RequestMethod.POST)
     public String uploadSuperContract(@RequestParam("file") MultipartFile file, @PathVariable Long userId) {

@@ -121,6 +121,8 @@ create table user_entity
     request_to_edr_accepted_date   timestamp,
     request_to_edr_generated       boolean not null,
     request_to_edr_generated_date  timestamp,
+    request_to_edr_sent            boolean not null,
+    request_to_edr_sent_date       timestamp,
     request_to_edr_signed          boolean not null,
     request_to_edr_signed_date     timestamp,
     role_changed_date              timestamp,

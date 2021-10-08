@@ -16,5 +16,7 @@ public interface FactureService {
 
     HttpStatus generateRequestFacture(FactureRequestDto factureRequestDto);
 
+    void readFactures();
+
 //    ResponseEntity<?> getFacturePdf(TemplateEngine templateEngine, HttpServletRequest request, HttpServletResponse response, Long factureId);
 }

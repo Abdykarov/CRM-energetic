@@ -162,10 +162,7 @@ export const fetchReferals = async (id) => {
     return data
 }
 
-export const setFveSigned = async (id) => {
-    const {data} = await $authHost.get('edr_api/user/fve-signed/' + id)
-    return data
-}
+// Supersmlouva
 
 export const setEdrContractGenerated = async (id) => {
     const {data} = await $authHost.get('edr_api/user/contract-generated/' + id)
@@ -201,70 +198,63 @@ export const setHwDocumentSigned = async (id) => {
 
 // Sysel
 
-export const setHwDocumentGenerated = async (id) => {
-    const {data} = await $authHost.get('edr_api/user/hw-generated/' + id)
+export const setSyselDocumentGenerated = async (id) => {
+    const {data} = await $authHost.get('edr_api/user/sysel-generated/' + id)
     return data
 }
 
-export const setHwDocumentSent = async (id) => {
-    const {data} = await $authHost.get('edr_api/user/hw-sent/' + id)
+export const setSyselDocumentSent = async (id) => {
+    const {data} = await $authHost.get('edr_api/user/sysel-sent/' + id)
     return data
 }
 
-export const setHwDocumentSigned = async (id) => {
-    const {data} = await $authHost.get('edr_api/user/hw-signed/' + id)
+export const setSyselDocumentSigned = async (id) => {
+    const {data} = await $authHost.get('edr_api/user/sysel-signed/' + id)
     return data
 }
 
 // FVE
 
-export const setHwDocumentGenerated = async (id) => {
-    const {data} = await $authHost.get('edr_api/user/hw-generated/' + id)
+export const setFveDocumentGenerated = async (id) => {
+    const {data} = await $authHost.get('edr_api/user/fve-generated/' + id)
     return data
 }
 
-export const setHwDocumentSent = async (id) => {
-    const {data} = await $authHost.get('edr_api/user/hw-sent/' + id)
+export const setFveDocumentSent = async (id) => {
+    const {data} = await $authHost.get('edr_api/user/fve-sent/' + id)
     return data
 }
 
-export const setHwDocumentSigned = async (id) => {
-    const {data} = await $authHost.get('edr_api/user/hw-signed/' + id)
+export const setFveDocumentSigned = async (id) => {
+    const {data} = await $authHost.get('edr_api/user/fve-installed/' + id)
     return data
 }
 
 // PRIHLASKA
 
-export const setHwDocumentGenerated = async (id) => {
-    const {data} = await $authHost.get('edr_api/user/hw-generated/' + id)
+export const setEdrRequestDocumentGenerated = async (id) => {
+    const {data} = await $authHost.get('edr_api/user/edr-request-generated/' + id)
     return data
 }
 
-export const setHwDocumentSent = async (id) => {
-    const {data} = await $authHost.get('edr_api/user/hw-sent/' + id)
+export const setEdrRequestDocumentSent = async (id) => {
+    const {data} = await $authHost.get('edr_api/user/edr-request-sent/' + id)
     return data
 }
 
-export const setHwDocumentSigned = async (id) => {
-    const {data} = await $authHost.get('edr_api/user/hw-signed/' + id)
+export const setEdrRequestDocumentSigned = async (id) => {
+    const {data} = await $authHost.get('edr_api/user/edr-request-signed/' + id)
     return data
 }
 
 // FAKTURA
-
-
-export const setHwDocumentGenerated = async (id) => {
-    const {data} = await $authHost.get('edr_api/user/hw-generated/' + id)
+export const setFactureDocumentGenerated = async (id) => {
+    const {data} = await $authHost.get('edr_api/user/facture-generated/' + id)
     return data
 }
 
-export const setHwDocumentSent = async (id) => {
-    const {data} = await $authHost.get('edr_api/user/hw-sent/' + id)
-    return data
-}
-
-export const setHwDocumentSigned = async (id) => {
-    const {data} = await $authHost.get('edr_api/user/hw-signed/' + id)
+export const setFactureDocumentSent = async (id) => {
+    const {data} = await $authHost.get('edr_api/user/facture-sent/' + id)
     return data
 }
 

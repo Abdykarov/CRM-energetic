@@ -643,37 +643,70 @@ const ContactProfile = observer(() => {
                                                                 {
                                                                     (role === "APPLICANT") ?
                                                                         <div className="col-md-6">
-                                                                            <h3>Supersmlouva</h3>
+                                                                            <h4>Faktura</h4>
+
                                                                             <button onClick={generateSupercontract} type="button" className="mb-3 mt-2 btn btn-info waves-effect waves-light"><i
-                                                                                className="mdi mdi-cloud-outline me-1"></i> Vygenerovat supersmlouvu
+                                                                                className="mdi mdi-cloud-outline me-1"></i> Vygenerovat fakturu
                                                                             </button>
                                                                             <button type="button"
                                                                                     className="mb-3 btn btn-dark waves-effect waves-light"><i
-                                                                                className="mdi mdi-cloud-outline me-1"></i> Zaslat supersmlouvu do mailu
+                                                                                className="mdi mdi-cloud-outline me-1"></i> Zaslat fakturu do mailu
                                                                             </button>
                                                                             <br/><br/>
-                                                                            <div className="mb-3">
-                                                                                { (!signedContract) ?
-                                                                                    <div className="mb-3">
-                                                                                        <label htmlFor="example-fileinput" className="form-label">
-                                                                                            Přidat podepsanou smlouvu</label>
-                                                                                        <input type="file" onChange={e => setSelectedContractFile(e.target.files[0])} id="example-fileinput"
-                                                                                               className="form-control"/>
-                                                                                        <button onClick={saveContract} type="button"
-                                                                                                className="mt-3 btn btn-primary waves-effect waves-light">Uložit podepsanou smlouvu
-                                                                                        </button>
-                                                                                    </div>
-                                                                                    :
-                                                                                    <div>
-                                                                                        <button onClick={fetchSupercontract} type="button"
-                                                                                                className="btn btn-success waves-effect waves-light">Stahnout podepsanou smlouvu
-                                                                                        </button>
-                                                                                        <button onClick={deleteSignedContract} type="button"
-                                                                                                className="mt-3 btn btn-danger waves-effect waves-light">Odstranit podepsanou smlouvu
-                                                                                        </button>
-                                                                                    </div>
-                                                                                }
-                                                                            </div>
+                                                                            {/*<div className="mb-3">*/}
+                                                                            {/*    { (!) ?*/}
+                                                                            {/*        <div className="mb-3">*/}
+                                                                            {/*            <label htmlFor="example-fileinput" className="form-label">*/}
+                                                                            {/*                Přidat podepsanou super nebo dilčí smlouvu</label>*/}
+                                                                            {/*            <input type="file" onChange={e => setSelectedContractFile(e.target.files[0])} id="example-fileinput"*/}
+                                                                            {/*                   className="form-control"/>*/}
+                                                                            {/*            <button onClick={saveContract} type="button"*/}
+                                                                            {/*                    className="mt-3 btn btn-primary waves-effect waves-light">Uložit podepsanou smlouvu*/}
+                                                                            {/*            </button>*/}
+                                                                            {/*        </div>*/}
+                                                                            {/*        :*/}
+                                                                            {/*        <div>*/}
+                                                                            {/*            <button onClick={fetchSupercontract} type="button"*/}
+                                                                            {/*                    className="btn btn-success waves-effect waves-light">Stahnout podepsanou smlouvu*/}
+                                                                            {/*            </button>*/}
+                                                                            {/*            <button onClick={deleteSignedContract} type="button"*/}
+                                                                            {/*                    className="mt-3 btn btn-danger waves-effect waves-light">Odstranit podepsanou smlouvu*/}
+                                                                            {/*            </button>*/}
+                                                                            {/*        </div>*/}
+                                                                            {/*    }*/}
+                                                                            {/*</div>*/}
+                                                                            <h4>Příhláška</h4>
+
+                                                                            <button onClick={generateSupercontract} type="button" className="mb-3 mt-2 btn btn-info waves-effect waves-light"><i
+                                                                                className="mdi mdi-cloud-outline me-1"></i> Vygenerovat příhlášku do sýstemu
+                                                                            </button>
+                                                                            <button type="button"
+                                                                                    className="mb-3 btn btn-dark waves-effect waves-light"><i
+                                                                                className="mdi mdi-cloud-outline me-1"></i> Zaslat příhlášku do mailu
+                                                                            </button>
+                                                                            <br/><br/>
+                                                                            {/*<div className="mb-3">*/}
+                                                                            {/*    { (!signedContract) ?*/}
+                                                                            {/*        <div className="mb-3">*/}
+                                                                            {/*            <label htmlFor="example-fileinput" className="form-label">*/}
+                                                                            {/*                Přidat podepsanou super nebo dilčí smlouvu</label>*/}
+                                                                            {/*            <input type="file" onChange={e => setSelectedContractFile(e.target.files[0])} id="example-fileinput"*/}
+                                                                            {/*                   className="form-control"/>*/}
+                                                                            {/*            <button onClick={saveContract} type="button"*/}
+                                                                            {/*                    className="mt-3 btn btn-primary waves-effect waves-light">Uložit podepsanou smlouvu*/}
+                                                                            {/*            </button>*/}
+                                                                            {/*        </div>*/}
+                                                                            {/*        :*/}
+                                                                            {/*        <div>*/}
+                                                                            {/*            <button onClick={fetchSupercontract} type="button"*/}
+                                                                            {/*                    className="btn btn-success waves-effect waves-light">Stahnout podepsanou smlouvu*/}
+                                                                            {/*            </button>*/}
+                                                                            {/*            <button onClick={deleteSignedContract} type="button"*/}
+                                                                            {/*                    className="mt-3 btn btn-danger waves-effect waves-light">Odstranit podepsanou smlouvu*/}
+                                                                            {/*            </button>*/}
+                                                                            {/*        </div>*/}
+                                                                            {/*    }*/}
+                                                                            {/*</div>*/}
                                                                         </div>
                                                                         : <div></div>
                                                                 }
@@ -810,7 +843,7 @@ const ContactProfile = observer(() => {
                                                                                 className="mdi mdi-account-circle me-1"></i> Změna stavu</h5>
                                                                             <div className="col-md-6">
                                                                                 <button onClick={sendEdrRegistration} type="button"
-                                                                                        className="mb-3 btn btn-primary waves-effect waves-light">Změnit stav na EDR a odeslat odkaz na registraci v sýstemu
+                                                                                        className="mb-3 btn btn-primary waves-effect waves-light">Zgenerirovat a odeslat odkaz na registraci v sýstemu
 
                                                                                 </button>
                                                                                 <div className="mb-3 form-check">
