@@ -1,4 +1,4 @@
-package com.example.demo.service.imp.user;
+package com.example.demo.service.imp;
 
 import com.example.demo.domain.EdrLinkEntity;
 import com.example.demo.domain.ReferalLinkEntity;
@@ -12,8 +12,6 @@ import com.example.demo.repository.ReferalLinkRepository;
 import com.example.demo.repository.RoleRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.EdrService;
-import com.example.demo.service.RoleService;
-import com.example.demo.service.imp.user.RoleServiceImp;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;

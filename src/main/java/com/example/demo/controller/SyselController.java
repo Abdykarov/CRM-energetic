@@ -1,6 +1,6 @@
-package com.example.demo.controller.document;
+package com.example.demo.controller;
 
-import com.example.demo.service.imp.HwServiceImp;
+import com.example.demo.service.imp.SyselServiceImp;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -21,29 +21,29 @@ import java.nio.file.Paths;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @RestController
 @AllArgsConstructor
-@RequestMapping("/edr_api/hw")
-public class HwController {
+@RequestMapping("/edr_api/sysel")
+public class SyselController {
 
-    HwServiceImp hwService;
-    private static String UPLOADED_FOLDER = "/home/abdykili/workflow/CRM-energetic/src/main/resources/hw/";
+    SyselServiceImp syselService;
+    private static String UPLOADED_FOLDER = "/home/abdykili/workflow/CRM-energetic/src/main/resources/sysel/";
 
     @RequestMapping(value = "/save/{userId}", method = RequestMethod.POST)
-    public String uploadHw(@RequestParam("file") MultipartFile file, @PathVariable Long userId) {
-        return hwService.uploadHw(file, userId);
+    public String uploadSysel(@RequestParam("file") MultipartFile file, @PathVariable Long userId) {
+        return syselService.uploadSysel(file, userId);
     }
 
     @RequestMapping(value = "/delete/{userId}", method = RequestMethod.GET)
-    public String deleteHw(@PathVariable Long userId) {
-        return hwService.deleteHw(userId);
+    public String deleteSysel(@PathVariable Long userId) {
+        return syselService.deleteSysel(userId);
     }
 
     @GetMapping("/fetch/{userId}")
-    public ResponseEntity<ByteArrayResource> getHw(@PathVariable String userId) throws Exception {
-        File file = new File(UPLOADED_FOLDER + String.format("hw_%s", userId));
+    public ResponseEntity<ByteArrayResource> getSysel(@PathVariable String userId) throws Exception {
+        File file = new File(UPLOADED_FOLDER + String.format("sysel_%s", userId));
         log.info("File path - {}", file);
 
         HttpHeaders header = new HttpHeaders();
-        header.add(HttpHeaders.CONTENT_DISPOSITION, String.format("inline;hw_%s", userId));
+        header.add(HttpHeaders.CONTENT_DISPOSITION, String.format("inline;sysel_%s", userId));
 
         Path path = Paths.get(file.getAbsolutePath());
 

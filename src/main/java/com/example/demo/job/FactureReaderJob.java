@@ -15,5 +15,6 @@ public class FactureReaderJob {
     @Scheduled(cron = "0 */1 * ? * *")
     private void readFactures() throws Exception {
         factureService.readFioFactures();
+        factureService.checkExpiredFactures();
     }
 }

@@ -1,9 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.domain.EmailEntity;
-import com.example.demo.security.TokenProvider;
 import com.example.demo.service.imp.MailServiceImp;
-import com.example.demo.service.imp.user.UserServiceImp;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;

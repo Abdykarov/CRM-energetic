@@ -8,6 +8,7 @@ import com.example.demo.dto.fio.TransactionResponseDto;
 import com.example.demo.dto.request.FactureRequestDto;
 import com.example.demo.mapper.FactureMapper;
 import com.example.demo.repository.FactureRepository;
+import com.example.demo.repository.NoteRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.FactureService;
 import lombok.AllArgsConstructor;
@@ -31,7 +32,9 @@ import java.util.stream.Stream;
 @Slf4j
 public class FactureServiceImp implements FactureService {
 
+    private final MailServiceImp mailService;
     private final UserRepository userRepository;
+    private final NoteRepository noteRepository;
     private final FactureRepository factureRepository;
     private final FactureMapper factureMapper;
 
@@ -43,7 +46,8 @@ public class FactureServiceImp implements FactureService {
 
     @Override
     public List<FactureEntity> findAll() {
-        List<FactureEntity> all = factureRepository.findAll();
+        final LocalDate todayDate = LocalDate.now();
+        List<FactureEntity> all = factureRepository.findAllByFactureStatusAndDueDateGreaterThan(FactureStatus.GENERATED, todayDate);
         return all;
     }
 
@@ -105,6 +109,24 @@ public class FactureServiceImp implements FactureService {
                 log.info("Notification | Facture VS {} is paid!", facture.getVarSymbol());
             }
         }
+    }
+
+    @Override
+    @Transactional
+    public void checkExpiredFactures() {
+        log.info("Checking expired factures");
+        final LocalDate todayDate = LocalDate.now();
+        List<FactureEntity> expiredFactures = factureRepository.findAllByFactureStatusAndDueDateGreaterThan(FactureStatus.GENERATED, todayDate);
+        if(expiredFactures.isEmpty()){
+            log.warn("Expired factures don't exist");
+            return;
+        }
+        log.info("Expired factures : {}", expiredFactures);
+        for ( FactureEntity facture : expiredFactures ) {
+            facture.setFactureStatus(FactureStatus.EXPIRED);
+
+        }
+
     }
 
 //    @Override

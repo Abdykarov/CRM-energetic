@@ -18,5 +18,7 @@ public interface FactureService {
 
     void readFioFactures();
 
+    void checkExpiredFactures();
+
 //    ResponseEntity<?> getFacturePdf(TemplateEngine templateEngine, HttpServletRequest request, HttpServletResponse response, Long factureId);
 }

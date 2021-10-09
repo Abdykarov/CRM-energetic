@@ -1,10 +1,10 @@
-package com.example.demo.controller.user;
+package com.example.demo.controller;
 
 import com.example.demo.dto.request.ReferalContactRequestDto;
 import com.example.demo.dto.request.*;
 import com.example.demo.dto.response.*;
 import com.example.demo.security.TokenProvider;
-import com.example.demo.service.imp.user.UserServiceImp;
+import com.example.demo.service.imp.UserServiceImp;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.SignatureException;
 import lombok.AllArgsConstructor;

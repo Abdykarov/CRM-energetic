@@ -44,6 +44,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/edr_api/user/create/referal-contact",
                         "/edr_api/edr/edr-test/",
                         "/edr_api/edr/edr-test",
+                        "/edr_api/factures/",
+                        "/edr_api/factures",
                         "/edr_api/areas/",
                         "/edr_api/user/login/",
                         "/edr_api/user/login",

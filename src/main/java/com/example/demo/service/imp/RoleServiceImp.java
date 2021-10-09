@@ -1,4 +1,4 @@
-package com.example.demo.service.imp.user;
+package com.example.demo.service.imp;
 
 import com.example.demo.domain.RoleEntity;
 import com.example.demo.repository.RoleRepository;

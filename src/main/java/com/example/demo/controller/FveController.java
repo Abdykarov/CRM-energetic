@@ -1,4 +1,4 @@
-package com.example.demo.controller.document;
+package com.example.demo.controller;
 
 
 import com.example.demo.service.imp.FveServiceImp;

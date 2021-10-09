@@ -1,8 +1,8 @@
-package com.example.demo.controller.user;
+package com.example.demo.controller;
 
 import com.example.demo.dto.request.EdrRequestDto;
 import com.example.demo.dto.response.EdrResponseDto;
-import com.example.demo.service.imp.user.EdrServiceImp;
+import com.example.demo.service.imp.EdrServiceImp;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;

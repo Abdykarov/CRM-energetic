@@ -1,7 +1,7 @@
-package com.example.demo.controller.user;
+package com.example.demo.controller;
 
 
-import com.example.demo.service.imp.user.EdrRequestServiceImp;
+import com.example.demo.service.imp.EdrRequestServiceImp;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
