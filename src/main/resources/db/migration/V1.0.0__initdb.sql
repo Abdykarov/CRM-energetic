@@ -25,8 +25,8 @@ create table email_entity
 create table facture_entity
 (
     id             int8 not null,
-    created_at     timestamp,
-    due_date       timestamp,
+    created_at     date,
+    due_date       date,
     facture_status varchar(255),
     total_price    numeric(19, 2),
     var_symbol     varchar(255),

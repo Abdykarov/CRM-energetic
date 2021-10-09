@@ -3,37 +3,28 @@ package com.example.demo.service.imp;
 import com.example.demo.domain.FactureEntity;
 import com.example.demo.domain.FactureStatus;
 import com.example.demo.domain.UserEntity;
+import com.example.demo.dto.fio.FioResponseDto;
+import com.example.demo.dto.fio.TransactionResponseDto;
 import com.example.demo.dto.request.FactureRequestDto;
 import com.example.demo.mapper.FactureMapper;
 import com.example.demo.repository.FactureRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.FactureService;
-import com.itextpdf.html2pdf.ConverterProperties;
-import com.itextpdf.html2pdf.HtmlConverter;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.WebContext;
+import org.springframework.web.client.RestTemplate;
 
 import javax.persistence.EntityNotFoundException;
 import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
-import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Stream;
 
 @Service
 @AllArgsConstructor
@@ -43,6 +34,9 @@ public class FactureServiceImp implements FactureService {
     private final UserRepository userRepository;
     private final FactureRepository factureRepository;
     private final FactureMapper factureMapper;
+
+    @Autowired
+    private final RestTemplate restTemplate;
 
     @Autowired
     ServletContext servletContext;
@@ -59,8 +53,8 @@ public class FactureServiceImp implements FactureService {
 
         final UserEntity user = userRepository.findById(factureRequestDto.getUserId())
                 .orElseThrow(EntityNotFoundException::new);
-        LocalDateTime currentDate =  LocalDateTime.now();
-        LocalDateTime dueToDate =  LocalDateTime.now().plusDays(14);
+        LocalDate currentDate =  LocalDate.now();
+        LocalDate dueToDate =  LocalDate.now().plusDays(14);
         String varSymbol = String.format("2021%04d", 321);
         final FactureEntity factureEntity = new FactureEntity()
                 .setCreatedAt(currentDate)
@@ -76,9 +70,41 @@ public class FactureServiceImp implements FactureService {
     }
 
     @Override
-    public void readFactures() {
+    @Transactional
+    public void readFioFactures() {
+        String token = "9o3pDrfHYXF7aetxCIwbDGmyvwj62LlADb8tDyubeq7e258wn7XkgmNmzJqyYHsC";
         List<FactureEntity> generatedFactures = factureRepository.findAllByFactureStatus(FactureStatus.GENERATED);
+        if(generatedFactures.isEmpty()){
+            log.warn("Generated factures dont exist");
+            return;
+        }
         log.info("Generated factures : {}", generatedFactures);
+        for(FactureEntity facture : generatedFactures){
+            BigDecimal totalReqestPayments = BigDecimal.ZERO;
+            FioResponseDto fioResponseDto = restTemplate.getForObject(
+                    "https://www.fio.cz/ib_api/rest/periods/" + token +"/"+ facture.getCreatedAt() + "/"
+                            + facture.getDueDate() + "/transactions.json",
+                    FioResponseDto.class);
+            log.info("Fetching fio account | Transaction list : {}", fioResponseDto);
+            final List<TransactionResponseDto> transactions = fioResponseDto.getAccountStatement().getTransactionList().getTransaction();
+            log.info("Transaction list size : {}", transactions.size());
+            for ( TransactionResponseDto transaction : transactions) {
+                if(!(transaction.getColumn5() == null)){
+                    if (transaction.getColumn5().getValue().equals(facture.getVarSymbol())) {
+                        final Double value = transaction.getColumn1().getValue();
+                        totalReqestPayments.add(new BigDecimal(value));
+                        totalReqestPayments = totalReqestPayments.add(new BigDecimal(value));
+                        log.info("Facture required payment {}", value);
+                        log.info("Facture VS {} | Total payment value {}", facture.getVarSymbol(), totalReqestPayments);
+                    }
+                }
+            }
+            log.info("Facture VS {} | Total payments {}", facture.getVarSymbol(), totalReqestPayments);
+            if(totalReqestPayments.compareTo(facture.getTotalPrice()) >= 0){
+                facture.setFactureStatus(FactureStatus.PAID);
+                log.info("Notification | Facture VS {} is paid!", facture.getVarSymbol());
+            }
+        }
     }
 
 //    @Override
