@@ -3,9 +3,9 @@ import React, {useContext, useEffect, useState} from 'react';
 import {observer} from "mobx-react-lite";
 import {Button, Form} from "react-bootstrap";
 import {useHistory} from "react-router-dom";
-import {Context} from "../../index";
-import {login} from "../../http/userAPI";
-import {DASHBOARD_ROUTE} from "../../utils/const";
+import {Context} from "../index";
+import {login} from "../http/userAPI";
+import {DASHBOARD_ROUTE} from "../utils/const";
 
 const Auth = observer(() => {
     const {user} = useContext(Context)

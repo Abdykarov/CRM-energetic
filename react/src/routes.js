@@ -1,4 +1,4 @@
-import Admin from "./page/users/Admin";
+import Admin from "./page/Admin";
 import {
     ADMIN_ROUTE, APPLICANT_ROUTE,
     CONTACT_PROFILE_ROUTE,
@@ -18,23 +18,23 @@ import {
     SALESMAN_ROUTE,
     WATT_ROUTE
 } from "./utils/const";
-import Lead from "./page/users/Lead";
-import Contacts from "./page/users/Contacts";
-import Edr from "./page/users/Edr";
+import Lead from "./page/Lead";
+import Contacts from "./page/Contacts";
+import Edr from "./page/Edr";
 import Watt from "./page/Watt";
-import Auth from "./page/forms/Auth";
+import Auth from "./page/Auth";
 import Dashboard from "./page/Dashboard";
-import Manager from "./page/users/Manager";
-import Salesman from "./page/users/Salesman";
-import ContactProfile from "./page/users/ContactProfile";
+import Manager from "./page/Manager";
+import Salesman from "./page/Salesman";
+import ContactProfile from "./page/ContactProfile";
 import Inbox from "./page/Inbox";
 import Facture from "./page/Facture";
-import Registration from "./page/forms/Registration";
-import Edr_Registration from "./page/forms/EdrRegistration";
-import RegestrationReferal from "./page/forms/RegestrationReferal";
-import EdrRegistration from "./page/forms/EdrRegistration";
+import Registration from "./page/Registration";
+import Edr_Registration from "./page/EdrRegistration";
+import RegestrationReferal from "./page/RegestrationReferal";
+import EdrRegistration from "./page/EdrRegistration";
 import Outbox from "./page/Outbox";
-import Applicant from "./page/users/Applicant";
+import Applicant from "./page/Applicant";
 
 export const authRoutes = [
     {

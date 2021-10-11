@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React, {useContext, useEffect, useState} from 'react';
-import {Context} from "../../index";
+import {Context} from "../index";
 import {
     deleteContract, deleteEdrRequest, deleteFve, deleteSysel,
     fetchUserById, sendEdrRegistrationLink, setEdrContractGenerated, setEdrContractSent, setEdrContractSigned,
@@ -8,14 +8,14 @@ import {
     updateToCurrent, updateToEdr,
     updateToLead,
     updateToPotential, uploadSignedContract
-} from "../../http/contactAPI";
+} from "../http/contactAPI";
 import {useHistory, useParams} from "react-router-dom";
-import {DASHBOARD_ROUTE, LOGIN_ROUTE} from "../../utils/const";
+import {DASHBOARD_ROUTE, LOGIN_ROUTE} from "../utils/const";
 import {observer} from "mobx-react-lite";
 import axios from "axios";
-import {edrRegistrate, login} from "../../http/userAPI";
-import {createEdrNote, fetchCommunicationByUserId, fetchEdrNotesByUserId} from "../../http/mailAPI";
-import Footer from "../../component/Footer";
+import {edrRegistrate, login} from "../http/userAPI";
+import {createEdrNote, fetchCommunicationByUserId, fetchEdrNotesByUserId} from "../http/mailAPI";
+import Footer from "../component/Footer";
 
 const ContactProfile = observer(() => {
     const {user} = useContext(Context)

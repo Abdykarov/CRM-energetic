@@ -1,27 +1,18 @@
 /* eslint-disable */
 import React, {useContext, useEffect} from 'react';
-import {fetchContacts, fetchSalesmanContacts} from "../../http/contactAPI";
-import ContactItem from "../../component/items/ContactItem";
-import {observer} from "mobx-react-lite";
-import {Context} from "../../index";
-import ContactTable from "../../component/tables/ContactTable";
-import Footer from "../../component/Footer";
-import {CONTACT_PROFILE_ROUTE} from "../../utils/const";
+import {Context} from "../index";
+import {fetchContacts, fetchLeads} from "../http/contactAPI";
+import LeadTable from "../component/tables/LeadTable";
+import {CONTACT_PROFILE_ROUTE} from "../utils/const";
 
-const Contacts = observer(() => {
-    const {contact} = useContext(Context)
-    const {user} = useContext(Context)
+const Lead = () => {
+    const {lead} = useContext(Context)
     useEffect(() => {
-        // console.log(user.userId)
-        // if(user.role === "ROLE_SALESMAN"){
-        //     fetchSalesmanContacts().then(data => contact.setContacts(data))
-        // }else{
-            fetchContacts().then(data => {
-                contact.setContacts(data)
-                console.log(data)
-            })
+        fetchLeads().then(data => {
+            lead.setContacts(data)
+            console.log(data)
+        })
     }, [])
-
     return (
         <div>
             <div className="content-page">
@@ -35,10 +26,10 @@ const Contacts = observer(() => {
                                         <ol className="breadcrumb m-0">
                                             <li className="breadcrumb-item"><a href="#">UBold</a></li>
                                             <li className="breadcrumb-item"><a href="#">CRM</a></li>
-                                            <li className="breadcrumb-item active">Kontakty</li>
+                                            <li className="breadcrumb-item active">Customers</li>
                                         </ol>
                                     </div>
-                                    <h4 className="page-title">Kontakty</h4>
+                                    <h4 className="page-title">Leady</h4>
                                 </div>
                             </div>
                         </div>
@@ -49,23 +40,7 @@ const Contacts = observer(() => {
                                 <div className="card">
                                     <div className="card-body">
                                         <div className="row mb-2">
-                                            <div className="col-sm-4">
-                                                <a href="/registration/contact" className="btn btn-danger waves-effect waves-light"><i
-                                                    className="mdi mdi-plus-circle me-1"></i> Vytvořit kontakt
-                                                </a>
-                                            </div>
                                             <div className="col-sm-8">
-                                                <div className="text-sm-end mt-2 mt-sm-0">
-                                                    <button type="button" className="btn btn-success mb-2 me-1"><i
-                                                        className="mdi mdi-cog"></i></button>
-                                                    <button type="button" className="btn btn-light mb-2 me-1">Import
-                                                    </button>
-                                                    <button type="button" className="btn btn-light mb-2">Export</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="row mb-3">
-                                            <div className="col-auto">
                                                 <form className="d-flex flex-wrap align-items-center">
                                                     <label htmlFor="inputPassword2"
                                                            className="visually-hidden">Search</label>
@@ -85,7 +60,17 @@ const Contacts = observer(() => {
                                                     </div>
                                                 </form>
                                             </div>
+                                            <div className="col-sm-4">
+                                                <div className="text-sm-end mt-2 mt-sm-0">
+                                                    <button type="button" className="btn btn-success mb-2 me-1"><i
+                                                        className="mdi mdi-cog"></i></button>
+                                                    <button type="button" className="btn btn-light mb-2 me-1">Import
+                                                    </button>
+                                                    <button type="button" className="btn btn-light mb-2">Export</button>
+                                                </div>
+                                            </div>
                                         </div>
+
 
                                         <div className="table-responsive">
                                             <table className="table table-centered table-nowrap table-striped"
@@ -103,19 +88,19 @@ const Contacts = observer(() => {
                                                     <th>Kontakt</th>
                                                     <th>Jméno</th>
                                                     <th>Příjmení</th>
-                                                    <th>Pohlaví</th>
                                                     <th>Telefon</th>
                                                     <th>Email</th>
                                                     <th>Stav</th>
+                                                    <th>Obchodní zástupce</th>
+                                                    <th>Kontaktní osoba</th>
                                                     <th>Kraj</th>
-                                                    <th>PSČ</th>
                                                     <th>Kampaň</th>
-                                                    <th>Konkurentní FVE</th>
-                                                    <th>FVE Solid Sun</th>
-                                                    <th style={{width: '85px'}}>Osobní stránka</th>
+                                                    <th>Nainstalovaná FVE od Solid Sun</th>
+                                                    <th>Supersmlouva/Dílčí supersmlouva</th>
+                                                    <th style={{width: '85px'}}>Osobní Stranka</th>
                                                 </tr>
                                                 </thead>
-                                                <ContactTable></ContactTable>
+                                                <LeadTable></LeadTable>
                                             </table>
                                         </div>
 
@@ -153,10 +138,18 @@ const Contacts = observer(() => {
 
                 </div>
 
-                <Footer></Footer>
+                <footer className="footer">
+                    <div className="container-fluid">
+                        <div className="row">
+                            <div className="col-md-6">
+                                &copy; Design by <a href="">Karlin It Group</a>
+                            </div>
+                        </div>
+                    </div>
+                </footer>
             </div>
         </div>
     );
-});
+};
 
-export default Contacts;
+export default Lead;

@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.domain.FactureEntity;
 import com.example.demo.dto.request.FactureRequestDto;
+import com.example.demo.dto.response.FactureResponseDto;
 import com.example.demo.repository.FactureRepository;
 import com.example.demo.service.imp.FactureServiceImp;
 import lombok.AllArgsConstructor;
@@ -23,6 +24,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -36,8 +38,18 @@ public class FactureController {
     private AuthenticationManager authenticationManager;
 
     @GetMapping()
-    public List<FactureEntity> findAll() {
+    public List<FactureResponseDto> findAll() {
         return factureService.findAll();
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')")
+    @GetMapping("/generated/{filterAttr}")
+    public List<FactureResponseDto> filterGenerated(
+            @RequestParam(defaultValue = "asc") String orderType,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "3") int size,
+            @PathVariable String filterAttr){
+        return factureService.getAllGenerated(orderType, page, size, filterAttr);
     }
 
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')")
@@ -45,6 +57,7 @@ public class FactureController {
     public HttpStatus generateRequestFacture(@RequestBody FactureRequestDto factureRequestDto){
         return factureService.generateRequestFacture(factureRequestDto);
     }
+
 //
 //    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')")
 //    @GetMapping("/facture-request-pdf/{facture-id}")

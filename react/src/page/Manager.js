@@ -1,9 +1,9 @@
 /* eslint-disable */
 import React, {useContext, useEffect} from 'react';
-import {Context} from "../../index";
-import {fetchAdmins, fetchManagers} from "../../http/contactAPI";
-import AdminTable from "../../component/tables/AdminTable";
-import ManagerTable from "../../component/tables/ManagerTable";
+import {Context} from "../index";
+import {fetchAdmins, fetchManagers} from "../http/contactAPI";
+import AdminTable from "../component/tables/AdminTable";
+import ManagerTable from "../component/tables/ManagerTable";
 
 const Manager = () => {
     const {user} = useContext(Context)

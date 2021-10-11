@@ -1,18 +1,27 @@
 /* eslint-disable */
 import React, {useContext, useEffect} from 'react';
-import {Context} from "../../index";
-import {fetchEdr, fetchLeads} from "../../http/contactAPI";
-import EdrTable from "../../component/tables/EdrTable";
-import {CONTACT_PROFILE_ROUTE} from "../../utils/const";
+import {fetchContacts, fetchSalesmanContacts} from "../http/contactAPI";
+import ContactItem from "../component/items/ContactItem";
+import {observer} from "mobx-react-lite";
+import {Context} from "../index";
+import ContactTable from "../component/tables/ContactTable";
+import Footer from "../component/Footer";
+import {CONTACT_PROFILE_ROUTE} from "../utils/const";
 
-const Edr = () => {
-    const {edr} = useContext(Context)
+const Contacts = observer(() => {
+    const {contact} = useContext(Context)
+    const {user} = useContext(Context)
     useEffect(() => {
-        fetchEdr().then(data => {
-            edr.setContacts(data)
-            console.log(data)
-        })
+        // console.log(user.userId)
+        // if(user.role === "ROLE_SALESMAN"){
+        //     fetchSalesmanContacts().then(data => contact.setContacts(data))
+        // }else{
+            fetchContacts().then(data => {
+                contact.setContacts(data)
+                console.log(data)
+            })
     }, [])
+
     return (
         <div>
             <div className="content-page">
@@ -26,10 +35,10 @@ const Edr = () => {
                                         <ol className="breadcrumb m-0">
                                             <li className="breadcrumb-item"><a href="#">UBold</a></li>
                                             <li className="breadcrumb-item"><a href="#">CRM</a></li>
-                                            <li className="breadcrumb-item active">EDR členy</li>
+                                            <li className="breadcrumb-item active">Kontakty</li>
                                         </ol>
                                     </div>
-                                    <h4 className="page-title">EDR členy</h4>
+                                    <h4 className="page-title">Kontakty</h4>
                                 </div>
                             </div>
                         </div>
@@ -40,7 +49,23 @@ const Edr = () => {
                                 <div className="card">
                                     <div className="card-body">
                                         <div className="row mb-2">
+                                            <div className="col-sm-4">
+                                                <a href="/registration/contact" className="btn btn-danger waves-effect waves-light"><i
+                                                    className="mdi mdi-plus-circle me-1"></i> Vytvořit kontakt
+                                                </a>
+                                            </div>
                                             <div className="col-sm-8">
+                                                <div className="text-sm-end mt-2 mt-sm-0">
+                                                    <button type="button" className="btn btn-success mb-2 me-1"><i
+                                                        className="mdi mdi-cog"></i></button>
+                                                    <button type="button" className="btn btn-light mb-2 me-1">Import
+                                                    </button>
+                                                    <button type="button" className="btn btn-light mb-2">Export</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="row mb-3">
+                                            <div className="col-auto">
                                                 <form className="d-flex flex-wrap align-items-center">
                                                     <label htmlFor="inputPassword2"
                                                            className="visually-hidden">Search</label>
@@ -60,15 +85,6 @@ const Edr = () => {
                                                     </div>
                                                 </form>
                                             </div>
-                                            <div className="col-sm-4">
-                                                <div className="text-sm-end mt-2 mt-sm-0">
-                                                    <button type="button" className="btn btn-success mb-2 me-1"><i
-                                                        className="mdi mdi-cog"></i></button>
-                                                    <button type="button" className="btn btn-light mb-2 me-1">Import
-                                                    </button>
-                                                    <button type="button" className="btn btn-light mb-2">Export</button>
-                                                </div>
-                                            </div>
                                         </div>
 
                                         <div className="table-responsive">
@@ -87,63 +103,19 @@ const Edr = () => {
                                                     <th>Kontakt</th>
                                                     <th>Jméno</th>
                                                     <th>Příjmení</th>
+                                                    <th>Pohlaví</th>
                                                     <th>Telefon</th>
                                                     <th>Email</th>
                                                     <th>Stav</th>
-                                                    <th>Kontaktní osoba</th>
-                                                    <th>Město</th>
+                                                    <th>Kraj</th>
                                                     <th>PSČ</th>
-                                                    <th>Počet bodů</th>
-                                                    <th style={{width: '85px'}}>Osobní Stranka</th>
+                                                    <th>Kampaň</th>
+                                                    <th>Konkurentní FVE</th>
+                                                    <th>FVE Solid Sun</th>
+                                                    <th style={{width: '85px'}}>Osobní stránka</th>
                                                 </tr>
                                                 </thead>
-                                                <tbody>
-                                                <tr>
-                                                    <td>
-                                                        <div className="form-check">
-                                                            <input type="checkbox" className="form-check-input"
-                                                                   id="customCheck2" />
-                                                            <label className="form-check-label"
-                                                                   htmlFor="customCheck2">&nbsp;</label>
-                                                        </div>
-                                                    </td>
-                                                    <td className="table-user">
-                                                        <a href={CONTACT_PROFILE_ROUTE + '/' + 1} className="text-body fw-semibold">Ilias</a>
-                                                    </td>
-                                                    <td>
-                                                        Ilias
-                                                    </td>
-                                                    <td>
-                                                        Abdykarov
-                                                    </td>
-                                                    <td>
-                                                        123232323
-                                                    </td>
-                                                    <td>
-                                                        n13wka@gmail.com
-                                                    </td>
-                                                    <td>
-                                                        <span className="badge bg-soft-success text-success">ČLEN EDR</span>
-                                                    </td>
-                                                    <td>
-                                                        <a href={CONTACT_PROFILE_ROUTE + '/' + 1} className="text-body fw-semibold">Vladimir Sykora</a>
-                                                    </td>
-                                                    <td>
-                                                        Praha
-                                                    </td>
-                                                    <td>
-                                                        133200
-                                                    </td>
-                                                    <td>
-                                                        <b>5000</b>
-                                                    </td>
-                                                    <td>
-                                                        <a href={CONTACT_PROFILE_ROUTE + '/'+ 1} className="action-icon">
-                                                            <img width="35px" src="https://cdn.pixabay.com/photo/2020/07/14/13/07/icon-5404125_1280.png" alt=""/></a>
-                                                    </td>
-                                                </tr>
-                                                </tbody>
-                                                <EdrTable></EdrTable>
+                                                <ContactTable></ContactTable>
                                             </table>
                                         </div>
 
@@ -181,18 +153,10 @@ const Edr = () => {
 
                 </div>
 
-                <footer className="footer">
-                    <div className="container-fluid">
-                        <div className="row">
-                            <div className="col-md-6">
-                                &copy; Design by <a href="">Karlin It Group</a>
-                            </div>
-                        </div>
-                    </div>
-                </footer>
+                <Footer></Footer>
             </div>
         </div>
     );
-};
+});
 
-export default Edr;
+export default Contacts;

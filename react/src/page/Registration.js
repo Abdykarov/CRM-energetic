@@ -6,12 +6,12 @@ import {
     REGISTRATION_CONTACT_ROUTE, REGISTRATION_MANAGER_ROUTE,
     REGISTRATION_REFERAL_ROUTE,
     REGISTRATION_SALESMAN_ROUTE, SALESMAN_ROUTE
-} from "../../utils/const";
-import {createAdmin, createContact, createManager, createSalesman, fetchSalesmans} from "../../http/contactAPI";
-import {Context} from "../../index";
-import ManagerItem from "../../component/items/ManagerItem";
+} from "../utils/const";
+import {createAdmin, createContact, createManager, createSalesman, fetchSalesmans} from "../http/contactAPI";
+import {Context} from "../index";
+import ManagerItem from "../component/items/ManagerItem";
 import {observer} from "mobx-react-lite";
-import {fetchAreas} from "../../http/areaAPI";
+import {fetchAreas} from "../http/areaAPI";
 
 const Registration = observer(() => {
     const history = useHistory()

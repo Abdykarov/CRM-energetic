@@ -12,7 +12,7 @@ public class FactureReaderJob {
 
     private final FactureServiceImp factureService;
 
-    @Scheduled(cron = "0 */1 * ? * *")
+    @Scheduled(cron = "0 0 */3 ? * *")
     private void readFactures() throws Exception {
         factureService.readFioFactures();
         factureService.checkExpiredFactures();

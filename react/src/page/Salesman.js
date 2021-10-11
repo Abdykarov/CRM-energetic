@@ -1,8 +1,8 @@
 /* eslint-disable */
 import React, {useContext, useEffect} from 'react';
-import {Context} from "../../index";
-import {fetchAdmins, fetchSalesmans} from "../../http/contactAPI";
-import SalesmanTable from "../../component/tables/SalesmanTable";
+import {Context} from "../index";
+import {fetchAdmins, fetchSalesmans} from "../http/contactAPI";
+import SalesmanTable from "../component/tables/SalesmanTable";
 
 const Salesman = () => {
     const {salesman} = useContext(Context)

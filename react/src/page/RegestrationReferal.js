@@ -1,9 +1,9 @@
 import React, {useState} from 'react';
 import {useHistory, useParams} from "react-router-dom";
 import {observer} from "mobx-react-lite";
-import {edrRegistrate} from "../../http/userAPI";
-import {LOGIN_ROUTE, MANAGER_ROUTE} from "../../utils/const";
-import {createManager, createReferalContact} from "../../http/contactAPI";
+import {edrRegistrate} from "../http/userAPI";
+import {LOGIN_ROUTE, MANAGER_ROUTE} from "../utils/const";
+import {createManager, createReferalContact} from "../http/contactAPI";
 
 const RegestrationReferal = observer(() => {
     const [name,setName] = useState('')

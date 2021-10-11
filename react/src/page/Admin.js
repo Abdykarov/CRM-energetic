@@ -1,8 +1,8 @@
 import React, {useContext, useEffect} from 'react';
-import AdminTable from "../../component/tables/AdminTable";
-import {Context} from "../../index";
-import {fetchAdmins, fetchLeads} from "../../http/contactAPI";
-import Footer from "../../component/Footer";
+import AdminTable from "../component/tables/AdminTable";
+import {Context} from "../index";
+import {fetchAdmins, fetchLeads} from "../http/contactAPI";
+import Footer from "../component/Footer";
 
 const Admin = () => {
     const {admin} = useContext(Context)

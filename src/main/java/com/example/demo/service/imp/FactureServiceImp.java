@@ -6,6 +6,7 @@ import com.example.demo.domain.UserEntity;
 import com.example.demo.dto.fio.FioResponseDto;
 import com.example.demo.dto.fio.TransactionResponseDto;
 import com.example.demo.dto.request.FactureRequestDto;
+import com.example.demo.dto.response.FactureResponseDto;
 import com.example.demo.mapper.FactureMapper;
 import com.example.demo.repository.FactureRepository;
 import com.example.demo.repository.NoteRepository;
@@ -14,6 +15,9 @@ import com.example.demo.service.FactureService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -23,8 +27,10 @@ import javax.servlet.ServletContext;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
@@ -45,10 +51,13 @@ public class FactureServiceImp implements FactureService {
     ServletContext servletContext;
 
     @Override
-    public List<FactureEntity> findAll() {
-        final LocalDate todayDate = LocalDate.now();
-        List<FactureEntity> all = factureRepository.findAllByFactureStatusAndDueDateGreaterThan(FactureStatus.GENERATED, todayDate);
-        return all;
+    public List<FactureResponseDto> findAll() {
+        List<FactureEntity> all = factureRepository.findAll();
+        final List<FactureResponseDto> responseDtos = all.stream()
+                .map(factureMapper::toResponse).collect(Collectors.toList());
+        log.info("Fetching all factures | Outgoing list {}", responseDtos);
+
+        return responseDtos;
     }
 
     @Override
@@ -104,9 +113,11 @@ public class FactureServiceImp implements FactureService {
                 }
             }
             log.info("Facture VS {} | Total payments {}", facture.getVarSymbol(), totalReqestPayments);
-            if(totalReqestPayments.compareTo(facture.getTotalPrice()) >= 0){
-                facture.setFactureStatus(FactureStatus.PAID);
-                log.info("Notification | Facture VS {} is paid!", facture.getVarSymbol());
+            if(!(facture.getTotalPrice() == null)){
+                if(totalReqestPayments.compareTo(facture.getTotalPrice()) >= 0){
+                    facture.setFactureStatus(FactureStatus.PAID);
+                    log.info("Notification | Facture VS {} is paid!", facture.getVarSymbol());
+                }
             }
         }
     }
@@ -128,6 +139,45 @@ public class FactureServiceImp implements FactureService {
         }
 
     }
+
+    @Override
+    public List<FactureResponseDto> getAllGenerated(String orderType, int page, int size, String filterAttr) {
+
+        List<FactureEntity> factures = new ArrayList<FactureEntity>();
+        Pageable paging = PageRequest.of(page, size);
+
+        Page<FactureEntity> pageFactures;
+        if(filterAttr.equals("all") && orderType.equals("asc")){
+            pageFactures = factureRepository.findAllByFactureStatusOrderByIdAsc(FactureStatus.GENERATED, paging);
+        } else if (filterAttr.equals("all") && orderType.equals("desc")){
+            pageFactures = factureRepository.findAllByFactureStatusOrderByIdAsc(FactureStatus.GENERATED, paging);
+        }
+        else if(filterAttr.equals("var-symbol") && orderType.equals("asc")){
+            pageFactures = factureRepository.findByFactureStatusOrderByVarSymbolAsc(FactureStatus.GENERATED, paging);
+        }
+        else if(filterAttr.equals("var-symbol") && orderType.equals("desc")){
+            pageFactures = factureRepository.findByFactureStatusOrderByVarSymbolDesc(FactureStatus.GENERATED, paging);
+        }
+        else if(filterAttr.equals("created-at") && orderType.equals("asc")){
+            pageFactures = factureRepository.findByFactureStatusOrderByCreatedAtAsc(FactureStatus.GENERATED, paging);
+        }
+        else if(filterAttr.equals("created-at") && orderType.equals("desc")){
+            pageFactures = factureRepository.findByFactureStatusOrderByCreatedAtDesc(FactureStatus.GENERATED, paging);
+        }
+        else if(filterAttr.equals("due-date") && orderType.equals("asc")){
+            pageFactures = factureRepository.findByFactureStatusOrderByDueDateAsc(FactureStatus.GENERATED, paging);
+        }
+        else if(filterAttr.equals("due-date") && orderType.equals("desc")){
+            pageFactures = factureRepository.findByFactureStatusOrderByDueDateDesc(FactureStatus.GENERATED, paging);
+        }
+        else{
+            pageFactures = factureRepository.findAllByFactureStatusOrderByIdAsc(FactureStatus.GENERATED, paging);
+        }
+        factures = pageFactures.getContent();
+
+        return factures.stream().map(factureMapper::toResponse).collect(Collectors.toList());
+    }
+
 
 //    @Override
 //    public ResponseEntity<?> getFacturePdf(TemplateEngine templateEngine, HttpServletRequest request, HttpServletResponse response, Long factureId) {

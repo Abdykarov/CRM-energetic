@@ -1,15 +1,16 @@
 /* eslint-disable */
 import React, {useContext, useEffect} from 'react';
-import {Context} from "../../index";
-import {fetchContacts, fetchLeads} from "../../http/contactAPI";
-import LeadTable from "../../component/tables/LeadTable";
-import {CONTACT_PROFILE_ROUTE} from "../../utils/const";
+import {Context} from "../index";
+import {fetchApplicants, fetchContacts, fetchLeads} from "../http/contactAPI";
+import LeadTable from "../component/tables/LeadTable";
+import ApplicantTable from "../component/tables/ApplicantTable";
+import {CONTACT_PROFILE_ROUTE} from "../utils/const";
 
-const Lead = () => {
-    const {lead} = useContext(Context)
+const Applicant = () => {
+    const {applicant} = useContext(Context)
     useEffect(() => {
-        fetchLeads().then(data => {
-            lead.setContacts(data)
+        fetchApplicants().then(data => {
+            applicant.setContacts(data)
             console.log(data)
         })
     }, [])
@@ -26,10 +27,10 @@ const Lead = () => {
                                         <ol className="breadcrumb m-0">
                                             <li className="breadcrumb-item"><a href="#">UBold</a></li>
                                             <li className="breadcrumb-item"><a href="#">CRM</a></li>
-                                            <li className="breadcrumb-item active">Customers</li>
+                                            <li className="breadcrumb-item active">Uchazeči</li>
                                         </ol>
                                     </div>
-                                    <h4 className="page-title">Leady</h4>
+                                    <h4 className="page-title">Uchazeči</h4>
                                 </div>
                             </div>
                         </div>
@@ -71,7 +72,6 @@ const Lead = () => {
                                             </div>
                                         </div>
 
-
                                         <div className="table-responsive">
                                             <table className="table table-centered table-nowrap table-striped"
                                                    id="products-datatable">
@@ -94,13 +94,17 @@ const Lead = () => {
                                                     <th>Obchodní zástupce</th>
                                                     <th>Kontaktní osoba</th>
                                                     <th>Kraj</th>
+                                                    <th>PSČ</th>
                                                     <th>Kampaň</th>
-                                                    <th>Nainstalovaná FVE od Solid Sun</th>
-                                                    <th>Supersmlouva/Dílčí supersmlouva</th>
-                                                    <th style={{width: '85px'}}>Osobní Stranka</th>
+                                                    <th>HW Sun Monitor</th>
+                                                    <th>Smlouva Sysel</th>
+                                                    <th>Zapojená FVE</th>
+                                                    <th>Přihláška</th>
+                                                    <th>Faktura</th>
+                                                    <th>Osobní Stranka</th>
                                                 </tr>
                                                 </thead>
-                                                <LeadTable></LeadTable>
+                                                <ApplicantTable></ApplicantTable>
                                             </table>
                                         </div>
 
@@ -152,4 +156,4 @@ const Lead = () => {
     );
 };
 
-export default Lead;
+export default Applicant;

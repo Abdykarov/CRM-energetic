@@ -1,16 +1,15 @@
 /* eslint-disable */
 import React, {useContext, useEffect} from 'react';
-import {Context} from "../../index";
-import {fetchApplicants, fetchContacts, fetchLeads} from "../../http/contactAPI";
-import LeadTable from "../../component/tables/LeadTable";
-import ApplicantTable from "../../component/tables/ApplicantTable";
-import {CONTACT_PROFILE_ROUTE} from "../../utils/const";
+import {Context} from "../index";
+import {fetchEdr, fetchLeads} from "../http/contactAPI";
+import EdrTable from "../component/tables/EdrTable";
+import {CONTACT_PROFILE_ROUTE} from "../utils/const";
 
-const Applicant = () => {
-    const {applicant} = useContext(Context)
+const Edr = () => {
+    const {edr} = useContext(Context)
     useEffect(() => {
-        fetchApplicants().then(data => {
-            applicant.setContacts(data)
+        fetchEdr().then(data => {
+            edr.setContacts(data)
             console.log(data)
         })
     }, [])
@@ -27,10 +26,10 @@ const Applicant = () => {
                                         <ol className="breadcrumb m-0">
                                             <li className="breadcrumb-item"><a href="#">UBold</a></li>
                                             <li className="breadcrumb-item"><a href="#">CRM</a></li>
-                                            <li className="breadcrumb-item active">Uchazeči</li>
+                                            <li className="breadcrumb-item active">EDR členy</li>
                                         </ol>
                                     </div>
-                                    <h4 className="page-title">Uchazeči</h4>
+                                    <h4 className="page-title">EDR členy</h4>
                                 </div>
                             </div>
                         </div>
@@ -91,20 +90,60 @@ const Applicant = () => {
                                                     <th>Telefon</th>
                                                     <th>Email</th>
                                                     <th>Stav</th>
-                                                    <th>Obchodní zástupce</th>
                                                     <th>Kontaktní osoba</th>
-                                                    <th>Kraj</th>
+                                                    <th>Město</th>
                                                     <th>PSČ</th>
-                                                    <th>Kampaň</th>
-                                                    <th>HW Sun Monitor</th>
-                                                    <th>Smlouva Sysel</th>
-                                                    <th>Zapojená FVE</th>
-                                                    <th>Přihláška</th>
-                                                    <th>Faktura</th>
-                                                    <th>Osobní Stranka</th>
+                                                    <th>Počet bodů</th>
+                                                    <th style={{width: '85px'}}>Osobní Stranka</th>
                                                 </tr>
                                                 </thead>
-                                                <ApplicantTable></ApplicantTable>
+                                                <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <div className="form-check">
+                                                            <input type="checkbox" className="form-check-input"
+                                                                   id="customCheck2" />
+                                                            <label className="form-check-label"
+                                                                   htmlFor="customCheck2">&nbsp;</label>
+                                                        </div>
+                                                    </td>
+                                                    <td className="table-user">
+                                                        <a href={CONTACT_PROFILE_ROUTE + '/' + 1} className="text-body fw-semibold">Ilias</a>
+                                                    </td>
+                                                    <td>
+                                                        Ilias
+                                                    </td>
+                                                    <td>
+                                                        Abdykarov
+                                                    </td>
+                                                    <td>
+                                                        123232323
+                                                    </td>
+                                                    <td>
+                                                        n13wka@gmail.com
+                                                    </td>
+                                                    <td>
+                                                        <span className="badge bg-soft-success text-success">ČLEN EDR</span>
+                                                    </td>
+                                                    <td>
+                                                        <a href={CONTACT_PROFILE_ROUTE + '/' + 1} className="text-body fw-semibold">Vladimir Sykora</a>
+                                                    </td>
+                                                    <td>
+                                                        Praha
+                                                    </td>
+                                                    <td>
+                                                        133200
+                                                    </td>
+                                                    <td>
+                                                        <b>5000</b>
+                                                    </td>
+                                                    <td>
+                                                        <a href={CONTACT_PROFILE_ROUTE + '/'+ 1} className="action-icon">
+                                                            <img width="35px" src="https://cdn.pixabay.com/photo/2020/07/14/13/07/icon-5404125_1280.png" alt=""/></a>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                                <EdrTable></EdrTable>
                                             </table>
                                         </div>
 
@@ -156,4 +195,4 @@ const Applicant = () => {
     );
 };
 
-export default Applicant;
+export default Edr;
