@@ -97,4 +97,8 @@ public interface UserService {
     void setEdrRequestDocumentSigned(Long id);
 
     void setEdrRequestDocumentGenerated(Long id);
+
+    String getDocumentState(Long id, String document);
+
+    void setDocumentState(Long id, String document, String status);
 }

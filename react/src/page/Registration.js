@@ -7,11 +7,13 @@ import {
     REGISTRATION_REFERAL_ROUTE,
     REGISTRATION_SALESMAN_ROUTE, SALESMAN_ROUTE
 } from "../utils/const";
-import {createAdmin, createContact, createManager, createSalesman, fetchSalesmans} from "../http/contactAPI";
+import {createAdmin, createContact, createManager, createSalesman, fetchEdr, fetchSalesmans} from "../http/contactAPI";
 import {Context} from "../index";
 import ManagerItem from "../component/items/ManagerItem";
 import {observer} from "mobx-react-lite";
 import {fetchAreas} from "../http/areaAPI";
+import Footer from "../component/Footer";
+import HeaderItem from "../component/items/HeaderItem";
 
 const Registration = observer(() => {
     const history = useHistory()
@@ -25,13 +27,15 @@ const Registration = observer(() => {
     const [username,setUsername] = useState(null)
     const [password,setPassword] = useState(null)
     const [ico, setIco] = useState('')
-    const [city, setCity] = useState(null)
     const [areaId, setAreaId] = useState(null)
     const [salesmanId, setSalesmanId] = useState(null)
+    const [contactPerson, setContactPerson] = useState('')
+    const [edrId, setEdrId] = useState(null)
     const [gender, setGender] = useState('Male')
     const [concurrentFveInstalled, setConcurrentFveInstalled] = useState(false)
     const path = location.pathname
     const {salesman} = useContext(Context)
+    const {edr} = useContext(Context)
     const {area} = useContext(Context)
 
     if(path === REGISTRATION_CONTACT_ROUTE){
@@ -43,6 +47,10 @@ const Registration = observer(() => {
             fetchAreas().then(data => {
                 area.setAreas(data)
                 setAreaId(data[0].id)
+            })
+            fetchEdr().then(data => {
+                edr.setContacts(data)
+                setEdrId(data[0].id)
             })
         }, [])
     }
@@ -79,12 +87,12 @@ const Registration = observer(() => {
         try {
             let male
             let response
-            if(gender === "Male"){
+            if(gender == "Male"){
                 male = true
             }else{
                 male = false
             }
-            response = await createContact(name, phone, surname, email, ico, salesmanId, areaId, concurrentFveInstalled, concurrentFveName, concurrentFveDueDate)
+            response = await createContact(name, male, phone, surname, email, ico, contactPerson, edrId, salesmanId, areaId, concurrentFveInstalled, concurrentFveName, concurrentFveDueDate)
             history.push(CONTACTS_ROUTE);
         } catch (e) {
             alert(e.response.data.message)
@@ -112,20 +120,7 @@ const Registration = observer(() => {
                     <div className="content">
                         <div className="container-fluid">
 
-                            <div className="row">
-                                <div className="col-12">
-                                    <div className="page-title-box">
-                                        <div className="page-title-right">
-                                            <ol className="breadcrumb m-0">
-                                                <li className="breadcrumb-item"><a href="#">UBold</a></li>
-                                                <li className="breadcrumb-item"><a href="#">CRM</a></li>
-                                                <li className="breadcrumb-item active">Vytvořit klienta</li>
-                                            </ol>
-                                        </div>
-                                        <h4 className="page-title">Vytvořit klienta</h4>
-                                    </div>
-                                </div>
-                            </div>
+                            <HeaderItem title="Vytvořit klienta"></HeaderItem>
 
 
                             <div className="row">
@@ -191,16 +186,37 @@ const Registration = observer(() => {
 
 
                                                 </div>
-                                                <div className="mb-3 col-md-6">
-                                                    <label htmlFor="icoInput" className="form-label">Psč <span className="text-danger">*</span></label>
-                                                    <input value={ico} onChange={e => setIco(e.target.value)} type="number" className="form-control" id="icoInput" required/>
+                                                <div className="row">
+                                                    <div className="mb-3 col-md-4">
+                                                        <label htmlFor="icoInput" className="form-label">Psč <span className="text-danger">*</span></label>
+                                                        <input value={ico} onChange={e => setIco(e.target.value)} type="number" className="form-control" id="icoInput" required/>
+                                                    </div>
+
+                                                    <div className="mb-3 col-md-8">
+                                                        <label htmlFor="salesmanInput" className="form-label">EDR kampaň</label>
+                                                        <select value={edrId} onChange={e => setEdrId(e.target.value)} className="form-select">
+                                                            <option value="6666">Žadné</option>
+                                                            {edr.contacts.map(contact =>
+                                                                <option value={contact.id}>{contact.name} {contact.surname}</option>
+                                                            )}
+                                                        </select>
+                                                    </div>
                                                 </div>
 
-                                                <div className="mb-3 col-md-6">
-                                                    <div className="form-check form-switch">
-                                                        <input onClick={setInstalled} type="checkbox" className="form-check-input"
-                                                               id="customSwitch1"/>
-                                                        <label className="form-check-label" htmlFor="customSwitch1">Konkurentní FVE</label>
+                                                <div className="row">
+                                                    <div className="mb-3 col-md-6">
+                                                        <label htmlFor="salesmanInput" className="form-label">Kontaktní osoba</label>
+                                                        <input value={contactPerson} onChange={e => setContactPerson(e.target.value)} type="text" className="form-control" id="surnameInput"
+                                                               required placeholder="Jméno a příjmení"/>
+                                                    </div>
+
+
+                                                    <div className="mb-3 col-md-6 mt-3">
+                                                        <div className="form-check form-switch">
+                                                            <input onClick={setInstalled} type="checkbox" className="form-check-input"
+                                                                   id="customSwitch1"/>
+                                                            <label className="form-check-label" htmlFor="customSwitch1">Konkurentní FVE</label>
+                                                        </div>
                                                     </div>
                                                 </div>
 
@@ -232,15 +248,7 @@ const Registration = observer(() => {
 
                     </div>
 
-                    <footer className="footer">
-                        <div className="container-fluid">
-                            <div className="row">
-                                <div className="col-md-6">
-                                    &copy; Design by <a href="">Karlin It Group</a>
-                                </div>
-                            </div>
-                        </div>
-                    </footer>
+                 <Footer></Footer>
                 </div>
 
                 : ""}

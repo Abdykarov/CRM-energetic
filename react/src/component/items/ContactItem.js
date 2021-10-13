@@ -94,7 +94,14 @@ const ContactItem = ({contact}) => {
                 {contact.ico}
             </td>
             <td>
-                { contact.referal === null ? "Nemá kampan" : contact.referal.name}
+                {contact.contactPerson}
+            </td>
+            <td>
+                <a href={CONTACT_PROFILE_ROUTE + '/' + contact.salesman.id} className="text-body fw-semibold">{contact.salesman.name} {contact.salesman.surname}</a>
+            </td>
+            <td>
+                { contact.referal === null ? "Nemá kampan" : <a href={CONTACT_PROFILE_ROUTE + '/' + contact.referal.id} className="text-body fw-semibold">{contact.referal.name} {contact.referal.surname}</a>
+                }
             </td>
             <td>
                 { (contact.concurrentFveInstalled !== false) ?

@@ -51,6 +51,8 @@ public class UserEntity {
     boolean hwsunMonitorGenerated;
     boolean hwsunMonitorSent;
     boolean hwsunMonitorSigned;
+    @Enumerated(EnumType.STRING)
+    DocumentStatus hwsunMonitorStatus;
     LocalDateTime hwsunMonitorGeneratedDate;
     LocalDateTime hwsunMonitorSentDate;
     LocalDateTime hwsunMonitorSignedDate;
@@ -59,6 +61,8 @@ public class UserEntity {
     boolean syselAgreementGenerated;
     boolean syselAgreementSent;
     boolean syselAgreementSigned;
+    @Enumerated(EnumType.STRING)
+    DocumentStatus syselAgreementStatus;
     LocalDateTime syselAgreementGeneratedDate;
     LocalDateTime syselAgreementSentDate;
     LocalDateTime syselAgreementSignedDate;
@@ -68,6 +72,8 @@ public class UserEntity {
     boolean requestToEdrSent;
     boolean requestToEdrSigned;
     boolean requestToEdrAccepted;
+    @Enumerated(EnumType.STRING)
+    DocumentStatus requestToEdrStatus;
     LocalDateTime requestToEdrGeneratedDate;
     LocalDateTime requestToEdrSentDate;
     LocalDateTime requestToEdrSignedDate;
@@ -84,6 +90,8 @@ public class UserEntity {
     boolean connectedFveGenerated;
     boolean connectedFveSent;
     boolean connectedFveSigned;
+    @Enumerated(EnumType.STRING)
+    DocumentStatus connectedFveStatus;
     LocalDateTime connectedFveGeneratedDate;
     LocalDateTime connectedFveSentDate;
     LocalDateTime connectedFveSignedDate;
@@ -92,6 +100,8 @@ public class UserEntity {
     boolean edrContractGenerated;
     boolean edrContractSent;
     boolean edrContractSigned;
+    @Enumerated(EnumType.STRING)
+    DocumentStatus edrContractStatus;
     LocalDateTime edrContractGeneratedDate;
     LocalDateTime edrContractSentDate;
     LocalDateTime edrContractSignedDate;
@@ -100,6 +110,8 @@ public class UserEntity {
     boolean factureGenerated;
     boolean factureSent;
     boolean facturePaid;
+    @Enumerated(EnumType.STRING)
+    DocumentStatus factureStatus;
     LocalDateTime factureGeneratedDate;
     LocalDateTime factureSentDate;
     LocalDateTime facturePaidDate;

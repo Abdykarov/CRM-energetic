@@ -1,5 +1,6 @@
 package com.example.demo.service.imp;
 
+import com.example.demo.domain.DocumentStatus;
 import com.example.demo.domain.UserEntity;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.SuperContractService;
@@ -62,6 +63,8 @@ public class SuperContractServiceImpl implements SuperContractService {
             final UserEntity userEntity = userRepository.findById(userId)
                     .orElseThrow(() -> new EntityNotFoundException("User doesnt exist"));
             userEntity.setEdrContractSigned(true);
+            userEntity.setEdrContractStatus(DocumentStatus.SIGNED);
+            userRepository.save(userEntity);
             return "success";
 
         } catch (IOException e) {

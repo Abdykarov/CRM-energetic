@@ -22,7 +22,9 @@ public interface FactureService {
 
     void checkExpiredFactures();
 
-    List<FactureResponseDto> getAllGenerated(String orderType, int page, int size, String filterAttr);
+    List<FactureResponseDto> getAllGenerated(String orderType, String name,  int page, int size, String filterAttr);
+
+    FactureResponseDto findById(Long userId);
 
 //    ResponseEntity<?> getFacturePdf(TemplateEngine templateEngine, HttpServletRequest request, HttpServletResponse response, Long factureId);
 }

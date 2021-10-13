@@ -4,6 +4,7 @@ import {Context} from "../index";
 import {fetchContacts, fetchLeads} from "../http/contactAPI";
 import LeadTable from "../component/tables/LeadTable";
 import {CONTACT_PROFILE_ROUTE} from "../utils/const";
+import HeaderItem from "../component/items/HeaderItem";
 
 const Lead = () => {
     const {lead} = useContext(Context)
@@ -19,20 +20,8 @@ const Lead = () => {
                 <div className="content">
                     <div className="container-fluid">
 
-                        <div className="row">
-                            <div className="col-12">
-                                <div className="page-title-box">
-                                    <div className="page-title-right">
-                                        <ol className="breadcrumb m-0">
-                                            <li className="breadcrumb-item"><a href="#">UBold</a></li>
-                                            <li className="breadcrumb-item"><a href="#">CRM</a></li>
-                                            <li className="breadcrumb-item active">Customers</li>
-                                        </ol>
-                                    </div>
-                                    <h4 className="page-title">Leady</h4>
-                                </div>
-                            </div>
-                        </div>
+                        <HeaderItem title="Leady"></HeaderItem>
+
 
 
                         <div className="row">
@@ -40,34 +29,72 @@ const Lead = () => {
                                 <div className="card">
                                     <div className="card-body">
                                         <div className="row mb-2">
-                                            <div className="col-sm-8">
-                                                <form className="d-flex flex-wrap align-items-center">
-                                                    <label htmlFor="inputPassword2"
-                                                           className="visually-hidden">Search</label>
-                                                    <div className="me-3">
-                                                        <input type="search" className="form-control my-1 my-lg-0"
-                                                               id="inputPassword2" placeholder="Search..." />
-                                                    </div>
-                                                    <label htmlFor="status-select" className="me-2">Sort By</label>
-                                                    <div className="me-sm-3">
-                                                        <select className="form-select my-1 my-lg-0" id="status-select">
-                                                            <option selected="">All</option>
-                                                            <option value="1">Popular</option>
-                                                            <option value="2">Price Low</option>
-                                                            <option value="3">Price High</option>
-                                                            <option value="4">Sold Out</option>
-                                                        </select>
-                                                    </div>
-                                                </form>
-                                            </div>
                                             <div className="col-sm-4">
+                                                <a href="/registration/contact" className="btn btn-danger waves-effect waves-light"><i
+                                                    className="mdi mdi-plus-circle me-1"></i> Vytvořit kontakt
+                                                </a>
+                                            </div>
+                                            <div className="col-sm-8">
                                                 <div className="text-sm-end mt-2 mt-sm-0">
-                                                    <button type="button" className="btn btn-success mb-2 me-1"><i
-                                                        className="mdi mdi-cog"></i></button>
                                                     <button type="button" className="btn btn-light mb-2 me-1">Import
                                                     </button>
                                                     <button type="button" className="btn btn-light mb-2">Export</button>
                                                 </div>
+                                            </div>
+                                        </div>
+                                        <div className="row mb-2">
+                                            <div className="col-sm-3">
+                                                <label htmlFor="inputPassword2">Vyhledat podle jména nebo příjmení</label>
+                                                <div className="me-3 mt-2">
+                                                    <input type="search" className="form-control my-1 my-md-0"
+                                                           id="inputPassword2" placeholder="Vyhledat..."/>
+                                                </div>
+                                            </div>
+                                            <div className="col-sm-3">
+                                                <label htmlFor="status-select" className="me-2">Filtrovat podle</label>
+                                                <div className="me-sm-3 mt-2">
+                                                    <select className="form-select my-1 my-md-0" id="status-select">
+                                                        <option value="id">Id</option>
+                                                        <option value="name">Jméno</option>
+                                                        <option value="surname">Příjmení</option>
+                                                        <option value="gender">Pohlaví</option>
+                                                        <option value="email">Email</option>
+                                                        <option value="area">Kraj</option>
+                                                        <option value="ico">Psč</option>
+                                                        <option value="salesman">Obchodní zástupce</option>
+                                                        <option value="edr">Kampaň</option>
+                                                        <option value="concurrent-fve">FVE solid sun</option>
+                                                        <option value="contract">Supersmlouva/Dílčí supersmlouva</option>
+
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div className="col-sm-3">
+                                                <label htmlFor="status-select" className="me-2">Stav dodatku</label>
+                                                <div className="me-sm-3 mt-2">
+                                                    <select className="form-select my-1 my-md-0" id="status-select">
+                                                        <option value="generated">Vygenerovaný</option>
+                                                        <option value="sent">Odeslaný</option>
+                                                        <option value="confirmed">Podepsaný</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div className="col-sm-3">
+                                                <label htmlFor="status-select" className="me-2">Sortovat</label>
+                                                <div className="me-sm-3 mt-2">
+                                                    <select className="form-select my-1 my-md-0">
+                                                        <option value="asc">Vzestupně</option>
+                                                        <option value="desc">Sestupně</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="row">
+                                            <div className="col-sm-9">
+
+                                            </div>
+                                            <div className="text-sm-end mt-2 mb-2 col-sm-3">
+                                                <button type="button" className="btn btn-success waves-effect waves-light">Filtrovat</button>
                                             </div>
                                         </div>
 
@@ -88,12 +115,14 @@ const Lead = () => {
                                                     <th>Kontakt</th>
                                                     <th>Jméno</th>
                                                     <th>Příjmení</th>
+                                                    <th>Pohlaví</th>
                                                     <th>Telefon</th>
                                                     <th>Email</th>
                                                     <th>Stav</th>
                                                     <th>Obchodní zástupce</th>
                                                     <th>Kontaktní osoba</th>
                                                     <th>Kraj</th>
+                                                    <th>PSČ</th>
                                                     <th>Kampaň</th>
                                                     <th>Nainstalovaná FVE od Solid Sun</th>
                                                     <th>Supersmlouva/Dílčí supersmlouva</th>

@@ -27,7 +27,7 @@ public class EdrRequestController {
 
     private final EdrRequestServiceImp edrRequestService;
     private static String UPLOADED_FOLDER = "/home/abdykili/workflow/CRM-energetic/src/main/resources/edr_request/";
-    private static String APP_FOLDER = "/home/abdykili/workflow/CRM-energetic/src/main/java/com/example/demo/documents/";
+    private static String APP_FOLDER = "/home/abdykili/workflow/CRM-energetic/src/main/resources/documents/";
 
     @RequestMapping(value = "/save/{userId}", method = RequestMethod.POST)
     public String uploadRequest(@RequestParam("file") MultipartFile file, @PathVariable Long userId) {

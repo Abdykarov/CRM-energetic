@@ -131,9 +131,9 @@ export const createSalesman= async (name, phone, surname, email, username, passw
 }
 
 // management creates new contact
-export const createContact = async (name, phone, surname, email, ico, salesmanId, areaId, concurrentFveInstalled, concurrentFveName, concurrentFveDueDate) => {
+export const createContact = async (name, male, phone, surname, email, ico, contactPerson, edrId, salesmanId, areaId, concurrentFveInstalled, concurrentFveName, concurrentFveDueDate) => {
     const {data} = await $authHost.post('edr_api/user/create/contact/',
-        {name, phone, surname, email, ico, salesmanId, areaId, concurrentFveInstalled, concurrentFveName, concurrentFveDueDate})
+        {name, male, phone, surname, email, ico, contactPerson, edrId, salesmanId, areaId, concurrentFveInstalled, concurrentFveName, concurrentFveDueDate})
     return data
 }
 
@@ -258,3 +258,12 @@ export const setFactureDocumentSent = async (id) => {
     return data
 }
 
+export const getDocumentState = async (id, document) => {
+    const {data} = await $authHost.get('edr_api/user/document-state/' + id + '/' + document)
+    return data
+}
+
+export const setDocumentState = async (id, document, status) => {
+    const {data} = await $authHost.get('edr_api/user/document-state/' + id + '/' + document + '/' + status)
+    return data
+}

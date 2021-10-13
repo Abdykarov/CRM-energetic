@@ -3,6 +3,9 @@ import AdminTable from "../component/tables/AdminTable";
 import {Context} from "../index";
 import {fetchAdmins, fetchLeads} from "../http/contactAPI";
 import Footer from "../component/Footer";
+import FactureItem from "../component/items/FactureItem";
+import HeaderItem from "../component/items/HeaderItem";
+import PaginationItem from "../component/items/PaginationItem";
 
 const Admin = () => {
     const {admin} = useContext(Context)
@@ -18,20 +21,7 @@ const Admin = () => {
 
                 <div className="container-fluid">
 
-                    <div className="row">
-                        <div className="col-12">
-                            <div className="page-title-box">
-                                <div className="page-title-right">
-                                    <ol className="breadcrumb m-0">
-                                        <li className="breadcrumb-item"><a href="#">UBold</a></li>
-                                        <li className="breadcrumb-item"><a href="#">Apps</a></li>
-                                        <li className="breadcrumb-item active">Adminy</li>
-                                    </ol>
-                                </div>
-                                <h4 className="page-title">Adminy</h4>
-                            </div>
-                        </div>
-                    </div>
+                    <HeaderItem title="Adminy"/>
 
                     <div className="row">
                         <div className="col-12">
@@ -76,38 +66,7 @@ const Admin = () => {
 
                     <AdminTable></AdminTable>
 
-
-                    <div className="row">
-                        <div className="col-12">
-                            <div className="text-end">
-                                <ul className="pagination pagination-rounded justify-content-end">
-                                    <li className="page-item">
-                                        <a className="page-link" href="#" aria-label="Previous">
-                                            <span aria-hidden="true">«</span>
-                                            <span className="visually-hidden">Previous</span>
-                                        </a>
-                                    </li>
-                                    <li className="page-item active"><a className="page-link"
-                                                                        href="#">1</a></li>
-                                    <li className="page-item"><a className="page-link" href="#">2</a>
-                                    </li>
-                                    <li className="page-item"><a className="page-link" href="#">3</a>
-                                    </li>
-                                    <li className="page-item"><a className="page-link" href="#">4</a>
-                                    </li>
-                                    <li className="page-item"><a className="page-link" href="#">5</a>
-                                    </li>
-                                    <li className="page-item">
-                                        <a className="page-link" href="#" aria-label="Next">
-                                            <span aria-hidden="true">»</span>
-                                            <span className="visually-hidden">Next</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-
+                    <PaginationItem></PaginationItem>
 
                 </div>
 

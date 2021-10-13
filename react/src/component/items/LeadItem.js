@@ -3,54 +3,44 @@
 import React, {useEffect, useState} from 'react';
 import {useHistory} from "react-router-dom";
 import {CONTACT_PROFILE_ROUTE} from "../../utils/const";
-import {setEdrContractGenerated, setEdrContractSent, setEdrContractSigned, setFveSigned} from "../../http/contactAPI";
+import {
+    fetchUserById,
+    getDocumentState, setDocumentState,
+    setEdrContractGenerated,
+    setEdrContractSent,
+    setEdrContractSigned,
+    setFveSigned,
+    updateToLead
+} from "../../http/contactAPI";
 
 const LeadItem = ({contact}) => {
     const history = useHistory()
-    const [contractGenerated, setContractGenerated] = useState(null)
-    const [contractSent, setContractSent] = useState(null)
-    const [contractSigned, setContractSigned] = useState(null)
-    useEffect(() => {
-        setContractSigned(contact.edrContractSigned)
-        setContractSent(contact.edrContractSent)
-        setContractGenerated(contact.edrContractGenerated)
-    }, [])
-    const setGenerated = async (e) => {
-        try {
-            let response
-            let id = contact.id
-            response =  await setEdrContractGenerated(id)
-            setContractGenerated(true)
-            window.location.reload()
-        } catch (e) {
-            alert(e.response.data.message)
-        }
-    }
-
-    const setSent = async (e) => {
-        try {
-            let response
-            let id = contact.id
-            response =  await setEdrContractSent(id)
-            setContractSent(true)
-            window.location.reload()
-        } catch (e) {
-            alert(e.response.data.message)
-        }
-    }
-
-    const setSigned = async (e) => {
-        try {
-            let response
-            let id = contact.id
-            response =  await setEdrContractSigned(id)
-            setContractSigned(true)
-            window.location.reload()
-        } catch (e) {
-            alert(e.response.data.message)
-        }
-    }
     console.log(contact)
+    const [contractStatus, setContractStatus] = useState(contact.edrContractStatus)
+
+    useEffect(() => {
+        fetchContractStatus().then(data => {
+            setContractStatus(data)
+            console.log(contractStatus)
+        })
+    }, [])
+
+    const fetchContractStatus = async () => {
+        return contact.edrContractStatus
+    }
+
+    const setContract = async (status) => {
+        try {
+            let response
+            let id = contact.id
+            let document = "edrContract"
+            response =  await setDocumentState(id, document, status)
+            window.location.reload()
+        } catch (e) {
+            alert(e.response.data.message)
+        }
+    }
+
     return (
         <tr>
             <td>
@@ -71,33 +61,34 @@ const LeadItem = ({contact}) => {
                 {contact.surname}
             </td>
             <td>
+                {
+                    contact.male ?
+                        "Muž"
+                        :
+                        "Žena"
+                }
+            </td>
+            <td>
                 {contact.phone}
             </td>
             <td>{contact.email}</td>
             <td>
-                <span className="badge bg-soft-success text-success">{contact.roles[0].name}</span>
-            </td>
-            <td>
-                <a href={CONTACT_PROFILE_ROUTE + '/' + contact.salesman.id} className="text-body fw-semibold">{contact.salesman.name} {contact.salesman.surname}</a>
-            </td>
-            <td>
-                {
-                    contact.contactPerson === null ?
-                        "Nemá"
-                        :
-                        contact.contactPerson
-                }
+                <span className='badge bg-soft-success text-success'>{contact.roles[0].name}</span>
             </td>
             <td>
                 {contact.area.name}
             </td>
             <td>
-                {
-                    contact.referal === null ?
-                        "Nemá"
-                        :
-                        <a href={CONTACT_PROFILE_ROUTE + '/' + contact.referal.id} className="text-body fw-semibold">{contact.referal.name} {contact.referal.surname}</a>
-
+                {contact.ico}
+            </td>
+            <td>
+                {contact.contactPerson}
+            </td>
+            <td>
+                <a href={CONTACT_PROFILE_ROUTE + '/' + contact.salesman.id} className="text-body fw-semibold">{contact.salesman.name} {contact.salesman.surname}</a>
+            </td>
+            <td>
+                { contact.referal === null ? "Nemá kampan" : <a href={CONTACT_PROFILE_ROUTE + '/' + contact.referal.id} className="text-body fw-semibold">{contact.referal.name} {contact.referal.surname}</a>
                 }
             </td>
             <td>
@@ -109,85 +100,55 @@ const LeadItem = ({contact}) => {
                 }
             </td>
             <td>
-                {
-                    contact.connectedFveSigned === false ?
-                        <div>
-                            <div className="form-check">
-                                {(contact.edrContractGenerated === false) ?
-                                    <input type="checkbox" onChange={setGenerated} className="form-check-input"
-                                    />
-                                    :
-                                    <input checked disabled type="checkbox" className="form-check-input"
-                                    />
-                                }
-                                <label className="form-check-label"
-                                       htmlFor="customCheck1">vygenerovaná supersmlouva</label>
-                            </div>
-                            <div className="form-check">
-                                {(contact.edrContractSent === false) ?
-                                    <input type="checkbox" onChange={setSent} className="form-check-input"
-                                    />
-                                    :
-                                    <input checked disabled type="checkbox" className="form-check-input"
-                                    />
-                                }
-                                <label className="form-check-label"
-                                       htmlFor="customCheck2">odeslaná supersmlouva</label>
-                            </div>
-                            <div className="form-check">
-                                {(contact.edrContractSigned === false) ?
-                                    <input type="checkbox" onChange={setSigned} className="form-check-input"
-                                    />
-                                    :
-                                    <input checked disabled type="checkbox" className="form-check-input"
-                                    />
-                                }
-                                <label className="form-check-label"
-                                       htmlFor="customCheck2">podepsaná supersmlouva</label>
-                            </div>
-                        </div>
-                        :
-                        <div>
-                            <div className="form-check">
-                                {(contact.edrContractGenerated === false) ?
-                                    <input type="checkbox" onChange={setGenerated} className="form-check-input"
-                                    />
-                                    :
-                                    <input checked disabled type="checkbox" className="form-check-input"
-                                    />
-                                }
-                                <label className="form-check-label"
-                                       htmlFor="customCheck1">vygenerovaná dilčí smlouva</label>
-                            </div>
-                            <div className="form-check">
-                                {(contact.edrContractSent === false) ?
-                                    <input type="checkbox" onChange={setSent} className="form-check-input"
-                                    />
-                                    :
-                                    <input checked disabled type="checkbox" className="form-check-input"
-                                    />
-                                }
-                                <label className="form-check-label"
-                                       htmlFor="customCheck2">odeslaná dilčí smlouva</label>
-                            </div>
-                            <div className="form-check">
-                                {(contact.edrContractSigned === false) ?
-                                    <input type="checkbox" onChange={setSigned} className="form-check-input"
-                                    />
-                                    :
-                                    <input checked disabled type="checkbox" className="form-check-input"
-                                    />
-                                }
-                                <label className="form-check-label"
-                                       htmlFor="customCheck2">podepsaná dilčí smlouva</label>
-                            </div>
-                        </div>
-                }
+                    {
+                        (contractStatus === "GENERATED") ?
+                            <select value={contractStatus} onChange={e => setContract(e.target.value)} className="form-select my-1 my-md-0" id="status-select">
+                                <option value="GENERATED" selected>Vygenerovaný</option>
+                                <option value="SENT">Odeslaný</option>
+                                <option value="SIGNED">Podepsaný</option>
+                                <option value="NONE">Žádný</option>
+                            </select>
+                            :
+                            ""
+                    }
+                    {
+                        (contractStatus === "SENT") ?
+                            <select value={contractStatus} onChange={e => setContract(e.target.value)} className="form-select my-1 my-md-0" id="status-select">
+                                <option value="GENERATED">Vygenerovaný</option>
+                                <option value="SENT" selected>Odeslaný</option>
+                                <option value="SIGNED">Podepsaný</option>
+                                <option value="NONE">Žádný</option>
+                            </select>
+                            :
+                            ""
+                    }
+                    {
+                        (contractStatus === "SIGNED") ?
+                            <select value={contractStatus} onChange={e => setContract(e.target.value)} className="form-select my-1 my-md-0" id="status-select">
+                                <option value="GENERATED">Vygenerovaný</option>
+                                <option value="SENT">Odeslaný</option>
+                                <option value="SIGNED" selected>Podepsaný</option>
+                                <option value="NONE">Žádný</option>
+                            </select>
+                            :
+                            ""
+                    }
+                    {
+                        (contractStatus === "NONE") ?
+                            <select value={contractStatus} onChange={e => setContract(e.target.value)} className="form-select my-1 my-md-0" id="status-select">
+                                <option value="GENERATED">Vygenerovaný</option>
+                                <option value="SENT">Odeslaný</option>
+                                <option value="SIGNED">Podepsaný</option>
+                                <option value="NONE" selected={true}>Žádný</option>
+                            </select>
+                            :
+                            ""
+                    }
+
             </td>
-            <td>
-                <a href={CONTACT_PROFILE_ROUTE + '/'+ contact.id} className="action-icon"> <i
-                    className="mdi mdi-square-edit-outline"></i></a>
-            </td>
+            <td><a href={CONTACT_PROFILE_ROUTE + '/'+ contact.id} className="action-icon">
+                <img src="https://cdn.pixabay.com/photo/2020/07/14/13/07/icon-5404125_1280.png" alt="" width="35px"/>
+            </a></td>
         </tr>
     );
 };

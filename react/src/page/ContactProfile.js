@@ -10,12 +10,14 @@ import {
     updateToPotential, uploadSignedContract
 } from "../http/contactAPI";
 import {useHistory, useParams} from "react-router-dom";
-import {DASHBOARD_ROUTE, LOGIN_ROUTE} from "../utils/const";
+import {CONTACT_PROFILE_ROUTE, DASHBOARD_ROUTE, LEAD_ROUTE, LOGIN_ROUTE} from "../utils/const";
 import {observer} from "mobx-react-lite";
 import axios from "axios";
 import {edrRegistrate, login} from "../http/userAPI";
 import {createEdrNote, fetchCommunicationByUserId, fetchEdrNotesByUserId} from "../http/mailAPI";
 import Footer from "../component/Footer";
+import {fetchFactureByUserId, generateFacture} from "../http/factureAPI";
+import FactureTable from "../component/tables/FactureTable";
 
 const ContactProfile = observer(() => {
     const {user} = useContext(Context)
@@ -24,11 +26,18 @@ const ContactProfile = observer(() => {
     const [contact, setContact] = useState({info: []})
     const [selectedContractFile, setSelectedContractFile] = useState(null)
     const [role,setRole] = useState('')
-    const [signedContract, setSignedContract] = useState('')
-    const [hwsunMonitor, setHwSunMonitor] = useState('')
-    const [connectedFVE, setConnectedFVE] = useState('')
-    const [syselAgreement, setSyselAgreement] = useState('')
-    const [edrRequest, setEdrRequest] = useState('')
+    const [facture,setFacture] = useState(null)
+    const [generatedFacture, setGeneratedFacture] = useState('')
+    const [areaName,setAreaName] = useState('')
+    const [referalName,setReferalName] = useState('')
+    const [referalSurname,setReferalSurname] = useState('')
+    const [salesmanName,setSalesmanName] = useState('')
+    const [salesmanSurname,setSalesmanSurname] = useState('')
+    const [signedContract, setSignedContract] = useState(null)
+    const [hwsunMonitor, setHwSunMonitor] = useState(null)
+    const [connectedFVE, setConnectedFVE] = useState(null)
+    const [syselAgreement, setSyselAgreement] = useState(null)
+    const [edrRequest, setEdrRequest] = useState(null)
     const [selectedHWFile, setSelectedHWFile] = useState(null)
     const [selectedConnectedFveFile, setSelectedConnectedFVE] = useState(null)
     const [selectedSyselAgreementFile, setSelectedSyselAgreementFile] = useState(null)
@@ -48,14 +57,19 @@ const ContactProfile = observer(() => {
             setContractSigned(data.edrContractSigned)
             setContractSent(data.edrContractSent)
             setContractGenerated(data.edrContractGenerated)
-            setSignedContract(data.signedContract)
-            setHwSunMonitor(data.hwsunMonitor)
-            setConnectedFVE(data.connectedFVE)
-            setSyselAgreement(data.syselAgreement)
-            setEdrRequest(data.signedRequestToEdr)
+            setSignedContract(data.edrContractSigned)
+            setConnectedFVE(data.connectedFveSigned)
             setRole(data.roles[0].name)
+            if(data.factureGenerated){
+                let userId = id;
+                fetchFactureByUserId(userId).then(data => {
+                    setFacture(data);
+                    console.log(data)
+                })
+            }
             console.log(data)
         })
+
         fetchEdrNotesByUserId(id).then(data => {
             notes.setNotes(data)
             console.log(data)
@@ -66,42 +80,31 @@ const ContactProfile = observer(() => {
         })
     }, [])
 
-    const setGenerated = async (e) => {
-        try {
-            let response
-            let id = contact.id
-            response =  await setEdrContractGenerated(id)
-            setContractGenerated(true)
-            window.location.reload()
-        } catch (e) {
-            alert(e.response.data.message)
+    function roleClassSwitch(param) {
+        switch(param) {
+            case 'PAID':
+                return 'badge bg-soft-success text-success';
+            case 'GENERATED':
+                return 'badge bg-soft-primary text-primary';
+            case 'EXPIRED':
+                return 'badge bg-soft-danger text-danger';
+            default:
+                return 'badge bg-soft-success text-success';
         }
     }
 
-    const setSent = async (e) => {
-        try {
-            let response
-            let id = contact.id
-            response =  await setEdrContractSent(id)
-            setContractSent(true)
-            window.location.reload()
-        } catch (e) {
-            alert(e.response.data.message)
+    function roleTextSwitch(param) {
+        switch(param) {
+            case 'GENERATED':
+                return 'ZGENEROVANÝ';
+            case 'PAID':
+                return 'ZAPLACENÝ';
+            case 'EXPIRED':
+                return 'VYPRŠENÍ';
+            default:
+                return 'ZGENEROVANÝ';
         }
     }
-
-    const setSigned = async (e) => {
-        try {
-            let response
-            let id = contact.id
-            response =  await setEdrContractSigned(id)
-            setContractSigned(true)
-            window.location.reload()
-        } catch (e) {
-            alert(e.response.data.message)
-        }
-    }
-
     // REQEUST TO EDR
 
     const generateEdrRequest= async () => {
@@ -420,7 +423,7 @@ const ContactProfile = observer(() => {
         try {
             let response
             response = await updateToLead(id)
-            window.location.reload();
+            history.push(LEAD_ROUTE)
         } catch (e) {
             alert(e.response.data.message)
         }
@@ -472,9 +475,114 @@ const ContactProfile = observer(() => {
         }
     }
 
+    const confirmLead = async () => {
+        document.getElementById("lead-modal").classList.add("show");
+    }
+
+    const closeLead = async () => {
+        document.getElementById("lead-modal").classList.remove("show");
+    }
+
+    const confirmApplicant = async () => {
+        document.getElementById("applicant-modal").classList.add("show");
+    }
+
+    const closeApplicant = async () => {
+        document.getElementById("applicant-modal").classList.remove("show");
+    }
+
+    const createFacture = async () => {
+        try {
+            let data;
+            let userId = contact.id;
+            data = await generateFacture(userId);
+            setGeneratedFacture(true);
+        } catch (e) {
+            alert(e.response.data.message)
+        }
+    }
+
+    const showFacturePopup = async () => {
+        try {
+            let data;
+            let userId = contact.id;
+            data = await generateFacture(userId);
+            document.getElementById("facture-modal").classList.add("show");
+        } catch (e) {
+            alert(e.response.data.message)
+        }
+    }
+
+    const closeFacturePopup = async () => {
+        document.getElementById("facture-modal").classList.remove("show");
+    }
+
+
+
+
 
     return (
         <div>
+            <div id="facture-modal" className="modal fade" tabIndex="-1" role="dialog" aria-modal="true">
+                <div className="modal-dialog modal-sm">
+                    <div className="modal-content modal-filled bg-success">
+                        <div className="modal-body p-4">
+                            <div className="text-center">
+                                <i className="dripicons-checkmark h1 text-white"></i>
+                                <h4 className="mt-2 text-white">Děkuji!</h4>
+                                <p className="mt-3 text-white">Faktura byla uspěšně vygenerovaná.</p>
+                                <button onClick={closeFacturePopup} type="button" className="btn btn-light my-2" data-bs-dismiss="modal">Continue
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div className="modal fade" id="lead-modal" tabIndex="-1" aria-labelledby="scrollableModalTitle" aria-modal="true" role="dialog">
+                <div className="modal-dialog modal-dialog-scrollable" role="document">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h5 className="modal-title" id="scrollableModalTitle">Potvrzení přechodu</h5>
+                            <button onClick={closeLead} type="button" className="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                        </div>
+                        <div className="modal-body">
+                            <p>
+                                Opravdu chcete změnit stav na Lead?
+                            </p>
+                            <button onClick={changeToLead} type="button"
+                                    className="mb-3 btn btn-primary waves-effect waves-light">Změnit stav na Lead
+                            </button>
+                        </div>
+                        <div className="modal-footer">
+                            <button onClick={closeLead} type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="modal fade" id="applicant-modal" tabIndex="-1" aria-labelledby="scrollableModalTitle" aria-modal="true" role="dialog">
+                <div className="modal-dialog modal-dialog-scrollable" role="document">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h5 className="modal-title" id="scrollableModalTitle">Potvrzení přechodu</h5>
+                            <button onClick={closeApplicant} type="button" className="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                        </div>
+                        <div className="modal-body">
+                            <p>
+                                Opravdu chcete změnit stav na Ucházeč?
+                            </p>
+                            <button onClick={changeToApplicant} type="button"
+                                    className="mb-3 btn btn-primary waves-effect waves-light">Změnit stav na Ucházeč
+                            </button>
+                        </div>
+                        <div className="modal-footer">
+                            <button onClick={closeApplicant} type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
                 <div className="content-page">
                     <div className="content">
 
@@ -507,9 +615,6 @@ const ContactProfile = observer(() => {
                                             <p className="text-muted">@ {role}</p>
 
                                             <button type="button"
-                                                    className="btn btn-success btn-xs waves-effect mb-2 waves-light">Zavolat
-                                            </button>
-                                            <button type="button"
                                                     className="btn btn-danger btn-xs waves-effect mb-2 waves-light">Odeslat email
                                             </button>
 
@@ -525,35 +630,39 @@ const ContactProfile = observer(() => {
                                                 <p className="text-muted mb-2 font-13"><strong>Email :</strong> <span
                                                     className="ms-2">{contact.email}</span></p>
 
-                                                <p className="text-muted mb-1 font-13"><strong>Město :</strong> <span
-                                                    className="ms-2">{contact.city}</span></p>
+                                                {contact.contactPerson !== null
+                                                    ?
+                                                    <p className="text-muted mb-2 font-13"><strong>Kontaktní osoba :</strong> <span
+                                                        className="ms-2">{contact.contactPerson}</span></p>
+                                                    : ""
+                                                }
+                                                <p className="text-muted mb-2 font-13"><strong>Obchodní zástupce :</strong> <span
+                                                    className="ms-2">{salesmanName} {salesmanSurname}</span></p>
+                                                <p className="text-muted mb-1 font-13"><strong>Kraj :</strong> <span
+                                                    className="ms-2">{areaName}</span></p>
                                                 <p className="text-muted mb-1 font-13"><strong>Psč :</strong> <span
                                                     className="ms-2">{contact.ico}</span></p>
+                                                <p className="text-muted mb-1 font-13"><strong>Poslední změna role :</strong> <span
+                                                    className="ms-2">{contact.roleChangedDate}</span></p>
+                                                <p className="text-muted mb-1 font-13"><strong>Kampan :</strong> <span
+                                                    className="ms-2">{referalName} {referalSurname}</span></p>
+                                                <p className="text-muted mb-1 font-13"><strong>Poslední změna role :</strong> <span
+                                                    className="ms-2">{contact.roleChangedDate}</span></p>
                                                 {
                                                     (role === "LEAD") ?
                                                         <div>
                                                             <p className="text-muted mb-1 font-13"><strong>Vygenerovaná smlouva :</strong> <span
-                                                                className="ms-2">{ contact.generatedContract ? 'Ano' : 'Ne'}</span></p>
+                                                                className="ms-2">{ contact.edrContractGenerated ? 'Ano' : 'Ne'}</span></p>
                                                             <p className="text-muted mb-1 font-13"><strong>Podepsaná smlouva :</strong> <span
-                                                                className="ms-2">{ contact.signedContract ? 'Ano' : 'Ne'}</span></p>
+                                                                className="ms-2">{ contact.edrContractSigned ? 'Ano' : 'Ne'}</span></p>
                                                         </div>
                                                         : <div></div>
                                                 }
                                                 {
                                                     (role === "APPLICANT") ?
                                                         <div>
-                                                            <p className="text-muted mb-1 font-13"><strong>Vygenerovaná smlouva :</strong> <span
-                                                                className="ms-2">{ contact.generatedContract ? 'Ano' : 'Ne'}</span></p>
-                                                            <p className="text-muted mb-1 font-13"><strong>Podepsaná smlouva :</strong> <span
-                                                                className="ms-2">{ contact.signedContract ? 'Ano' : 'Ne'}</span></p>
-                                                            <p className="text-muted mb-1 font-13"><strong>Hardware Sun monitor :</strong> <span
-                                                                className="ms-2">{ contact.hwsunMonitor ? 'Ano' : 'Ne'}</span></p>
-                                                            <p className="text-muted mb-1 font-13"><strong>Smlouva sysel :</strong> <span
-                                                                className="ms-2">{ contact.syselAgreement ? 'Ano' : 'Ne'}</span></p>
-                                                            <p className="text-muted mb-1 font-13"><strong>Fve dokument :</strong> <span
-                                                                className="ms-2">{ contact.connectedFVE ? 'Ano' : 'Ne'}</span></p>
-                                                            <p className="text-muted mb-1 font-13"><strong>Podepsaná přihláška :</strong> <span
-                                                                className="ms-2">{ contact.signedRequestToEdr ? 'Ano' : 'Ne'}</span></p>
+                                                            <p className="text-muted mb-1 font-13"><strong>Vygenerovaná faktura :</strong> <span
+                                                                className="ms-2">{ contact.factureGenerated ? 'Ano' : 'Ne'}</span></p>
                                                         </div>
                                                         : <div></div>
                                                 }
@@ -606,7 +715,7 @@ const ContactProfile = observer(() => {
                                                             <div className="col-md-12">
                                                                 {
                                                                     (role === "LEAD") ?
-                                                                        <div className="col-md-6">
+                                                                        <div className="col-md-12">
                                                                             <h3>Supersmlouva</h3>
                                                                             <button onClick={generateSupercontract} type="button" className="mb-3 mt-2 btn btn-info waves-effect waves-light"><i
                                                                                 className="mdi mdi-cloud-outline me-1"></i> Vygenerovat supersmlouvu
@@ -616,12 +725,12 @@ const ContactProfile = observer(() => {
                                                                             </button>
                                                                             <br/><br/>
                                                                             <div className="mb-3">
-                                                                                { (!signedContract) ?
+                                                                                { (contact.edrContractSigned !== true) ?
                                                                                     <div className="mb-3">
                                                                                         <label htmlFor="example-fileinput" className="form-label">
                                                                                             Přidat podepsanou super nebo dilčí smlouvu</label>
                                                                                         <input type="file" onChange={e => setSelectedContractFile(e.target.files[0])} id="example-fileinput"
-                                                                                               className="form-control"/>
+                                                                                               className="form-control"/> <br/>
                                                                                         <button onClick={saveContract} type="button"
                                                                                                 className="mt-3 btn btn-primary waves-effect waves-light">Uložit podepsanou smlouvu
                                                                                         </button>
@@ -630,7 +739,7 @@ const ContactProfile = observer(() => {
                                                                                     <div>
                                                                                         <button onClick={fetchSupercontract} type="button"
                                                                                                 className="btn btn-success waves-effect waves-light">Stahnout podepsanou smlouvu
-                                                                                        </button>
+                                                                                        </button> <br/>
                                                                                         <button onClick={deleteSignedContract} type="button"
                                                                                                 className="mt-3 btn btn-danger waves-effect waves-light">Odstranit podepsanou smlouvu
                                                                                         </button>
@@ -642,71 +751,104 @@ const ContactProfile = observer(() => {
                                                                 }
                                                                 {
                                                                     (role === "APPLICANT") ?
-                                                                        <div className="col-md-6">
+                                                                        <div className="col-md-12">
                                                                             <h4>Faktura</h4>
-
-                                                                            <button onClick={generateSupercontract} type="button" className="mb-3 mt-2 btn btn-info waves-effect waves-light"><i
-                                                                                className="mdi mdi-cloud-outline me-1"></i> Vygenerovat fakturu
-                                                                            </button>
+                                                                            {
+                                                                                (contact.factureGenerated === false) ?
+                                                                                    <button onClick={createFacture} type="button" className="mb-3 mt-2 btn btn-info waves-effect waves-light"><i
+                                                                                        className="mdi mdi-cloud-outline me-1"></i> Vygenerovat fakturu
+                                                                                    </button>
+                                                                                    :
+                                                                                    facture !== null ?
+                                                                                        <div className="table-responsive">
+                                                                                            <table className="table table-centered table-nowrap table-striped"
+                                                                                                   id="products-datatable">
+                                                                                                <thead>
+                                                                                                <tr>
+                                                                                                    <th>Jméno</th>
+                                                                                                    <th>Příjmení</th>
+                                                                                                    <th>Datum vytvoření</th>
+                                                                                                    <th>Datum splatností</th>
+                                                                                                    <th>Variabilní symbol</th>
+                                                                                                    <th>Částka</th>
+                                                                                                    <th>Stav faktury</th>
+                                                                                                    <th>Stahnout</th>
+                                                                                                    <th>Odstranit</th>
+                                                                                                </tr>
+                                                                                                </thead>
+                                                                                                <tbody>
+                                                                                                <tr>
+                                                                                                    <td className="table-user">
+                                                                                                        <a href={CONTACT_PROFILE_ROUTE + '/' + facture.user.id} className="text-body fw-semibold">{facture.user.name}</a>
+                                                                                                    </td>
+                                                                                                    <td>
+                                                                                                        {facture.user.surname}
+                                                                                                    </td>
+                                                                                                    <td>
+                                                                                                        {facture.createdAt}
+                                                                                                    </td>
+                                                                                                    <td>
+                                                                                                        {facture.dueDate}
+                                                                                                    </td>
+                                                                                                    <td>
+                                                                                                        {facture.varSymbol}
+                                                                                                    </td>
+                                                                                                    <td>
+                                                                                                        {facture.totalPrice}
+                                                                                                    </td>
+                                                                                                    <td>
+                                                                                                        <span className={roleClassSwitch(facture.factureStatus)}>{roleTextSwitch(facture.factureStatus)}</span>
+                                                                                                    </td>
+                                                                                                    <td>
+                                                                                                        <button type="button" className="btn btn-success waves-effect waves-light"><i
+                                                                                                            className="mdi mdi-download"></i></button>
+                                                                                                    </td>
+                                                                                                    <td>
+                                                                                                        <button type="button" className="btn btn-danger waves-effect waves-light"><i
+                                                                                                            className="mdi mdi-close"></i></button>
+                                                                                                    </td>
+                                                                                                </tr>
+                                                                                                </tbody>
+                                                                                            </table>
+                                                                                        </div> : ""
+                                                                            }
                                                                             <button type="button"
                                                                                     className="mb-3 btn btn-dark waves-effect waves-light"><i
                                                                                 className="mdi mdi-cloud-outline me-1"></i> Zaslat fakturu do mailu
                                                                             </button>
                                                                             <br/><br/>
-                                                                            {/*<div className="mb-3">*/}
-                                                                            {/*    { (!) ?*/}
-                                                                            {/*        <div className="mb-3">*/}
-                                                                            {/*            <label htmlFor="example-fileinput" className="form-label">*/}
-                                                                            {/*                Přidat podepsanou super nebo dilčí smlouvu</label>*/}
-                                                                            {/*            <input type="file" onChange={e => setSelectedContractFile(e.target.files[0])} id="example-fileinput"*/}
-                                                                            {/*                   className="form-control"/>*/}
-                                                                            {/*            <button onClick={saveContract} type="button"*/}
-                                                                            {/*                    className="mt-3 btn btn-primary waves-effect waves-light">Uložit podepsanou smlouvu*/}
-                                                                            {/*            </button>*/}
-                                                                            {/*        </div>*/}
-                                                                            {/*        :*/}
-                                                                            {/*        <div>*/}
-                                                                            {/*            <button onClick={fetchSupercontract} type="button"*/}
-                                                                            {/*                    className="btn btn-success waves-effect waves-light">Stahnout podepsanou smlouvu*/}
-                                                                            {/*            </button>*/}
-                                                                            {/*            <button onClick={deleteSignedContract} type="button"*/}
-                                                                            {/*                    className="mt-3 btn btn-danger waves-effect waves-light">Odstranit podepsanou smlouvu*/}
-                                                                            {/*            </button>*/}
-                                                                            {/*        </div>*/}
-                                                                            {/*    }*/}
-                                                                            {/*</div>*/}
                                                                             <h4>Příhláška</h4>
 
-                                                                            <button onClick={generateSupercontract} type="button" className="mb-3 mt-2 btn btn-info waves-effect waves-light"><i
+                                                                            <button onClick={generateEdrRequest} type="button" className="mb-3 mt-2 btn btn-info waves-effect waves-light"><i
                                                                                 className="mdi mdi-cloud-outline me-1"></i> Vygenerovat příhlášku do sýstemu
-                                                                            </button>
+                                                                            </button> <br/>
                                                                             <button type="button"
                                                                                     className="mb-3 btn btn-dark waves-effect waves-light"><i
                                                                                 className="mdi mdi-cloud-outline me-1"></i> Zaslat příhlášku do mailu
                                                                             </button>
                                                                             <br/><br/>
-                                                                            {/*<div className="mb-3">*/}
-                                                                            {/*    { (!signedContract) ?*/}
-                                                                            {/*        <div className="mb-3">*/}
-                                                                            {/*            <label htmlFor="example-fileinput" className="form-label">*/}
-                                                                            {/*                Přidat podepsanou super nebo dilčí smlouvu</label>*/}
-                                                                            {/*            <input type="file" onChange={e => setSelectedContractFile(e.target.files[0])} id="example-fileinput"*/}
-                                                                            {/*                   className="form-control"/>*/}
-                                                                            {/*            <button onClick={saveContract} type="button"*/}
-                                                                            {/*                    className="mt-3 btn btn-primary waves-effect waves-light">Uložit podepsanou smlouvu*/}
-                                                                            {/*            </button>*/}
-                                                                            {/*        </div>*/}
-                                                                            {/*        :*/}
-                                                                            {/*        <div>*/}
-                                                                            {/*            <button onClick={fetchSupercontract} type="button"*/}
-                                                                            {/*                    className="btn btn-success waves-effect waves-light">Stahnout podepsanou smlouvu*/}
-                                                                            {/*            </button>*/}
-                                                                            {/*            <button onClick={deleteSignedContract} type="button"*/}
-                                                                            {/*                    className="mt-3 btn btn-danger waves-effect waves-light">Odstranit podepsanou smlouvu*/}
-                                                                            {/*            </button>*/}
-                                                                            {/*        </div>*/}
-                                                                            {/*    }*/}
-                                                                            {/*</div>*/}
+                                                                            <div className="mb-3">
+                                                                                { (!signedContract) ?
+                                                                                    <div className="mb-3">
+                                                                                        <label htmlFor="example-fileinput" className="form-label">
+                                                                                            Přidat podepsanou přihlášku</label>
+                                                                                        <input type="file" onChange={e => setSelectedEdrRequest(e.target.files[0])} id="example-fileinput"
+                                                                                               className="form-control"/> <br/>
+                                                                                        <button onClick={saveRequest} type="button"
+                                                                                                className="mt-3 btn btn-primary waves-effect waves-light">Uložit podepsanou přihlášku
+                                                                                        </button>
+                                                                                    </div>
+                                                                                    :
+                                                                                    <div>
+                                                                                        <button onClick={fetchEdrRequest} type="button"
+                                                                                                className="btn btn-success waves-effect waves-light">Stahnout podepsanou přihlášku
+                                                                                        </button> <br/>
+                                                                                        <button onClick={deleteEdrRequest} type="button"
+                                                                                                className="mt-3 btn btn-danger waves-effect waves-light">Odstranit podepsanou přihlášku
+                                                                                        </button>
+                                                                                    </div>
+                                                                                }
+                                                                            </div>
                                                                         </div>
                                                                         : <div></div>
                                                                 }
@@ -794,21 +936,9 @@ const ContactProfile = observer(() => {
                                                                         <div className="row">
                                                                             <h5 className="mb-4 text-uppercase"><i
                                                                                 className="mdi mdi-account-circle me-1"></i> Změna stavu</h5>
-                                                                            <div className="col-md-6">
-                                                                                <button onClick={changeToLead} type="button"
+                                                                            <div className="col-md-12">
+                                                                                <button onClick={confirmLead} type="button"
                                                                                         className="mb-3 btn btn-primary waves-effect waves-light">Změnit stav na Lead
-
-                                                                                </button>
-                                                                                <div className="mb-3 form-check">
-                                                                                    <input type="checkbox" className="form-check-input"
-                                                                                           id="customCheck1"/>
-                                                                                    <label className="form-check-label"
-                                                                                           htmlFor="customCheck1">Potvrdit</label>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div className="col-md-6">
-                                                                                <button type="button"
-                                                                                        className="btn btn-info waves-effect waves-light">Kontrola přechodu
                                                                                 </button>
                                                                             </div>
                                                                         </div> : <div></div>
@@ -818,20 +948,9 @@ const ContactProfile = observer(() => {
                                                                         <div className="row">
                                                                             <h5 className="mb-4 text-uppercase"><i
                                                                                 className="mdi mdi-account-circle me-1"></i> Změna stavu</h5>
-                                                                            <div className="col-md-6">
-                                                                                <button onClick={changeToApplicant} type="button"
+                                                                            <div className="col-md-12">
+                                                                                <button onClick={confirmApplicant} type="button"
                                                                                         className="mb-3 btn btn-primary waves-effect waves-light">Změnit stav na úchazeče
-                                                                                </button>
-                                                                                <div className="mb-3 form-check">
-                                                                                    <input type="checkbox" className="form-check-input"
-                                                                                           id="customCheck1"/>
-                                                                                    <label className="form-check-label"
-                                                                                           htmlFor="customCheck1">Potvrdit</label>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div className="col-md-6">
-                                                                                <button type="button"
-                                                                                        className="btn btn-info waves-effect waves-light">Kontrola přechodu
                                                                                 </button>
                                                                             </div>
                                                                         </div> : <div></div>
@@ -841,7 +960,7 @@ const ContactProfile = observer(() => {
                                                                         <div className="row">
                                                                             <h5 className="mb-4 text-uppercase"><i
                                                                                 className="mdi mdi-account-circle me-1"></i> Změna stavu</h5>
-                                                                            <div className="col-md-6">
+                                                                            <div className="col-md-12">
                                                                                 <button onClick={sendEdrRegistration} type="button"
                                                                                         className="mb-3 btn btn-primary waves-effect waves-light">Zgenerirovat a odeslat odkaz na registraci v sýstemu
 
@@ -853,64 +972,11 @@ const ContactProfile = observer(() => {
                                                                                            htmlFor="customCheck1">Potvrdit</label>
                                                                                 </div>
                                                                             </div>
-                                                                            <div className="col-md-6">
-                                                                                <button type="button"
-                                                                                        className="btn btn-info waves-effect waves-light">Kontrola přechodu
-                                                                                </button>
-                                                                            </div>
                                                                         </div> : <div></div>
                                                                 }
                                                             </div>
                                                         </div>
-                                                        <div className="row mb-3">
-                                                            <h5 className="mb-4 text-uppercase"><i
-                                                                className="mdi mdi-account-circle me-1"></i> Podminky přechodu</h5>                                                            <div className="col-md-6">
-                                                                {
-                                                                    contact.connectedFveSigned === false ?
-                                                                        <div>
-                                                                            <div className="form-check">
-                                                                                <input type="checkbox" onChange={setGenerated} className="form-check-input"
-                                                                                />
-                                                                                <label className="form-check-label"
-                                                                                       htmlFor="customCheck1">vygenerovaná supersmlouva</label>
-                                                                            </div>
-                                                                            <div className="form-check">
-                                                                                <input type="checkbox" onChange={setSent} className="form-check-input"
-                                                                                />
-                                                                                <label className="form-check-label"
-                                                                                       htmlFor="customCheck2">odeslaná supersmlouva</label>
-                                                                            </div>
-                                                                            <div className="form-check">
-                                                                                <input type="checkbox" onChange={setSigned} className="form-check-input"
-                                                                                />
-                                                                                <label className="form-check-label"
-                                                                                       htmlFor="customCheck2">podepsaná supersmlouva</label>
-                                                                            </div>
-                                                                        </div>
-                                                                        :
-                                                                        <div>
-                                                                            <div className="form-check">
-                                                                                <input type="checkbox" onChange={setGenerated} className="form-check-input"
-                                                                                />
-                                                                                <label className="form-check-label"
-                                                                                       htmlFor="customCheck1">vygenerovaná dilčí smlouva</label>
-                                                                            </div>
-                                                                            <div className="form-check">
-                                                                                <input type="checkbox" onChange={setSent} className="form-check-input"
-                                                                                />
-                                                                                <label className="form-check-label"
-                                                                                       htmlFor="customCheck2">odeslaná dilčí smlouva</label>
-                                                                            </div>
-                                                                            <div className="form-check">
-                                                                                <input type="checkbox" onChange={setSigned} className="form-check-input"
-                                                                                />
-                                                                                <label className="form-check-label"
-                                                                                       htmlFor="customCheck2">podepsaná dilčí smlouva</label>
-                                                                            </div>
-                                                                        </div>
-                                                                }
-                                                            </div>
-                                                        </div>
+
                                                         <form>
                                                             <h5 className="mb-4 text-uppercase"><i
                                                                 className="mdi mdi-account-circle me-1"></i> Osobní informace</h5>
@@ -1066,7 +1132,7 @@ const ContactProfile = observer(() => {
                                                         <textarea  value={noteMessage} onChange={e => setNoteMessage(e.target.value)} rows="3" className="form-control border-0 resize-none"
                                                                    placeholder="Váší poznámka...."></textarea>
                                                                 <div
-                                                                    className="p-2 bg-light d-flex justify-content-between align-items-center">
+                                                                    className="note-button p-2 bg-light d-flex justify-content-between align-items-center">
 
                                                                     <button onClick={createNote} type="button" className="btn btn-sm btn-success"><i
                                                                         className="mdi mdi-send me-1"></i>Přidat poznámku

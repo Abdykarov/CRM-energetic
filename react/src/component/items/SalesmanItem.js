@@ -18,11 +18,7 @@ const SalesmanItem = ({salesman}) => {
                                                                                     className="text-pink">{salesman.email}</a> </span>
                         </p>
 
-                        <a href={"tel:+" + salesman.phone}
-                                className="btn btn-primary btn-sm waves-effect waves-light">Zpráva
-                        </a>
-
-                        <a href={CONTACT_PROFILE_ROUTE + '/' + salesman.id} className="btn btn-light btn-sm waves-effect">Profil
+                        <a href={CONTACT_PROFILE_ROUTE + '/' + salesman.id} className="btn btn-success btn-sm waves-effect">Profil
                         </a>
                         <div className="row mt-4">
                             <div className="col-4">

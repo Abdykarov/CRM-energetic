@@ -27,6 +27,7 @@ import javax.servlet.ServletContext;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
@@ -78,7 +79,8 @@ public class FactureServiceImp implements FactureService {
                 .setUser(user);
 
         factureRepository.save(factureEntity);
-
+        user.setFactureGenerated(true);
+        user.setFactureGeneratedDate(LocalDateTime.now());
         return HttpStatus.ACCEPTED;
     }
 
@@ -141,7 +143,7 @@ public class FactureServiceImp implements FactureService {
     }
 
     @Override
-    public List<FactureResponseDto> getAllGenerated(String orderType, int page, int size, String filterAttr) {
+    public List<FactureResponseDto> getAllGenerated(String orderType, String name, int page, int size, String filterAttr) {
 
         List<FactureEntity> factures = new ArrayList<FactureEntity>();
         Pageable paging = PageRequest.of(page, size);
@@ -151,6 +153,9 @@ public class FactureServiceImp implements FactureService {
             pageFactures = factureRepository.findAllByFactureStatusOrderByIdAsc(FactureStatus.GENERATED, paging);
         } else if (filterAttr.equals("all") && orderType.equals("desc")){
             pageFactures = factureRepository.findAllByFactureStatusOrderByIdAsc(FactureStatus.GENERATED, paging);
+        }
+        else if( name != null){
+            pageFactures = factureRepository.findAllByFactureStatusAndUserNameContainingIgnoreCaseOrFactureStatusAndUserSurnameContainingIgnoreCaseOrderByIdAsc(FactureStatus.GENERATED, name, FactureStatus.GENERATED, name, paging);
         }
         else if(filterAttr.equals("var-symbol") && orderType.equals("asc")){
             pageFactures = factureRepository.findByFactureStatusOrderByVarSymbolAsc(FactureStatus.GENERATED, paging);
@@ -176,6 +181,12 @@ public class FactureServiceImp implements FactureService {
         factures = pageFactures.getContent();
 
         return factures.stream().map(factureMapper::toResponse).collect(Collectors.toList());
+    }
+
+    @Override
+    public FactureResponseDto findById(Long userId) {
+        final FactureEntity facture = factureRepository.findByUserId(userId);
+        return factureMapper.toResponse(facture);
     }
 
 

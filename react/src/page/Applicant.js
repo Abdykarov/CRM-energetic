@@ -91,10 +91,10 @@ const Applicant = () => {
                                                     <th>Telefon</th>
                                                     <th>Email</th>
                                                     <th>Stav</th>
-                                                    <th>Obchodní zástupce</th>
-                                                    <th>Kontaktní osoba</th>
                                                     <th>Kraj</th>
                                                     <th>PSČ</th>
+                                                    <th>Kontaktní osoba</th>
+                                                    <th>Obchodní zástupce</th>
                                                     <th>Kampaň</th>
                                                     <th>HW Sun Monitor</th>
                                                     <th>Smlouva Sysel</th>

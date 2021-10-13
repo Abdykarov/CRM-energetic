@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
@@ -94,7 +95,7 @@ public class UserServiceImp implements UserDetailsService, UserService {
 
         // salesman
         final SalesmanRequestDto salesmanRequestDto1 = new SalesmanRequestDto()
-                .setUsername("salesman1")
+                .setUsername("salesman")
                 .setPassword("123")
                 .setName("Pavel")
                 .setSurname("Pavlivec")
@@ -102,7 +103,7 @@ public class UserServiceImp implements UserDetailsService, UserService {
         saveSalesman(salesmanRequestDto1);
 
         final SalesmanRequestDto salesmanRequestDto2 = new SalesmanRequestDto()
-                .setUsername("salesman2")
+                .setUsername("salesman1")
                 .setPassword("123")
                 .setName("Tomas")
                 .setSurname("Pavlivec")
@@ -115,18 +116,9 @@ public class UserServiceImp implements UserDetailsService, UserService {
         saveEdr(edrRequestDto);
 
         final EdrRequestDto edrRequestDto2 = new EdrRequestDto()
-                .setUsername("edr2")
+                .setUsername("edr1")
                 .setPassword("123");
         saveEdr(edrRequestDto2);
-        // contacts
-        final ContactRequestDto contactRequestDto = new ContactRequestDto()
-                .setName("Ilias")
-                .setSurname("Abdykarov")
-                .setEmail("ilias.abdykarov@gmail.com")
-                .setPhone("+420792254131")
-                .setSalesmanId(4L)
-                .setAreaId(1L);
-        saveContact(contactRequestDto);
     }
 
     @Override
@@ -137,8 +129,10 @@ public class UserServiceImp implements UserDetailsService, UserService {
                 .orElseThrow(() -> new EntityNotFoundException("User doesnt exist"));
         if(user.isConnectedFveSigned()){
             user.setConnectedFveSigned(false);
+            user.setConnectedFveStatus(DocumentStatus.NONE);
         }else{
             user.setConnectedFveSigned(true);
+            user.setConnectedFveStatus(DocumentStatus.SIGNED);
         }
         log.info("Setting fve signed | User fve connected : {}", user.isConnectedFveSigned());
     }
@@ -266,6 +260,10 @@ public class UserServiceImp implements UserDetailsService, UserService {
     @Transactional
     public ContactResponseDto saveContact(ContactRequestDto contactRequestDto) {
         final UserEntity salesmanEntity = userRepository.findByIdAndRoles_Name(contactRequestDto.getSalesmanId(), "SALESMAN");
+        UserEntity edrEntity = null;
+        if(!(contactRequestDto.getEdrId() == 6666L)){
+            edrEntity = userRepository.findByIdAndRoles_Name(contactRequestDto.getEdrId(), "EDR");
+        }
         final AreaEntity area = areaRepository.findById(contactRequestDto.getAreaId())
                 .orElseThrow(() -> new EntityNotFoundException("Area id doesnt exist"));
         UserEntity userEntity = contactMapper.toEntity(contactRequestDto);
@@ -276,8 +274,16 @@ public class UserServiceImp implements UserDetailsService, UserService {
         Set<RoleEntity> roleSet = new HashSet<>();
         roleSet.add(role);
         userEntity.setRoles(roleSet);
+        userEntity.setEdrContractStatus(DocumentStatus.NONE);
+        userEntity.setConnectedFveStatus(DocumentStatus.NONE);
+        userEntity.setHwsunMonitorStatus(DocumentStatus.NONE);
+        userEntity.setRequestToEdrStatus(DocumentStatus.NONE);
+        userEntity.setSyselAgreementStatus(DocumentStatus.NONE);
+        userEntity.setFactureStatus(DocumentStatus.NONE);
         userEntity.setArea(area);
+        userEntity.setRoleChangedDate(LocalDateTime.now());
         userEntity.setSalesman(salesmanEntity);
+        userEntity.setReferal(edrEntity);
         UserEntity save = userRepository.save(userEntity);
         return contactMapper.toResponse(save);
     }
@@ -428,6 +434,7 @@ public class UserServiceImp implements UserDetailsService, UserService {
         Set<RoleEntity> roleSet = new HashSet<>();
         roleSet.add(lead);
         userEntity.setRoles(roleSet);
+        userEntity.setRoleChangedDate(LocalDateTime.now());
         UserEntity save = userRepository.save(userEntity);
         return userMapper.toResponse(save);
     }
@@ -436,6 +443,10 @@ public class UserServiceImp implements UserDetailsService, UserService {
     public UserResponseDto changeToApplicant(Long userId) {
         final UserEntity userEntity = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User doesnt exist"));
+        if(!userEntity.isEdrContractSigned()){
+            throw new RuntimeException("Musíte na začatku podepsat smlouvu");
+        }
+        log.info("Updating status to applicant, id {}", userId);
         RoleEntity lead = roleService.findByName("APPLICANT");
         Set<RoleEntity> roleSet = new HashSet<>();
         roleSet.add(lead);
@@ -634,6 +645,135 @@ public class UserServiceImp implements UserDetailsService, UserService {
             user.setRequestToEdrGeneratedDate(LocalDateTime.now());
         }
         log.info("Setting edr request generated | User edr request generated : {}", user.isRequestToEdrGenerated());
+    }
+
+    @Override
+    public String getDocumentState(Long id, String document) {
+        log.info("Fetching document state | User id : {}", id);
+        final UserEntity user = userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("User doesnt exist"));
+        if(document.equals("edrContract")){
+            return user.getEdrContractStatus().name();
+        }
+        return "";
+    }
+
+    @Transactional
+    public void changeEdrContractState(UserEntity user, String status){
+        if(status.equals("GENERATED")){
+            user.setEdrContractStatus(DocumentStatus.GENERATED);
+        }else if (status.equals("SENT")){
+            user.setEdrContractStatus(DocumentStatus.SENT);
+        }else if (status.equals("SIGNED")){
+            user.setEdrContractStatus(DocumentStatus.SIGNED);
+        }else if (status.equals("NONE")){
+            user.setEdrContractStatus(DocumentStatus.NONE);
+        }
+    }
+
+    @Override
+    @Transactional
+    public void setDocumentState(Long id, String document, String status) {
+        log.info("Changing document state | User id : {}", id);
+        final UserEntity user = userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("User doesnt exist"));
+        if(document.equals("edrContract")){
+            changeEdrContractState(user, status);
+        } else if (document.equals("hwSunMonitor")){
+            changeHwSunMonitorState(user, status);
+        } else if (document.equals("syselAgreement")){
+            changeSyselAgreementState(user, status);
+        } else if (document.equals("connectedFve")){
+            changeConnectedFveState(user, status);
+        } else if (document.equals("requestToEdr")){
+            changeReqestToEdrState(user, status);
+        } else if (document.equals("facture")){
+            changeFactureState(user, status);
+        }
+    }
+    @Transactional
+    public void changeSyselAgreementState(UserEntity user, String status) {
+        if(status.equals("GENERATED")){
+            user.setSyselAgreementStatus(DocumentStatus.GENERATED);
+        }else if (status.equals("SENT")){
+            user.setSyselAgreementStatus(DocumentStatus.SENT);
+        }else if (status.equals("SIGNED")){
+            user.setSyselAgreementSigned(true);
+            user.setSyselAgreementSignedDate(LocalDateTime.now());
+            user.setSyselAgreementStatus(DocumentStatus.SIGNED);
+        }else if (status.equals("NONE")){
+            user.setSyselAgreementStatus(DocumentStatus.NONE);
+        }
+    }
+    @Transactional
+    public void changeReqestToEdrState(UserEntity user, String status) {
+        if(status.equals("GENERATED")){
+            user.setRequestToEdrGenerated(true);
+            user.setRequestToEdrSigned(false);
+            user.setRequestToEdrGeneratedDate(LocalDateTime.now());
+            user.setRequestToEdrStatus(DocumentStatus.GENERATED);
+        }else if (status.equals("SENT")){
+            user.setRequestToEdrSigned(false);
+            user.setRequestToEdrSent(true);
+            user.setRequestToEdrSentDate(LocalDateTime.now());
+            user.setRequestToEdrStatus(DocumentStatus.SENT);
+        }else if (status.equals("SIGNED")){
+            user.setRequestToEdrSigned(true);
+            user.setRequestToEdrSignedDate(LocalDateTime.now());
+            user.setRequestToEdrStatus(DocumentStatus.SIGNED);
+        }else if (status.equals("NONE")){
+            user.setRequestToEdrStatus(DocumentStatus.NONE);
+        }else if (status.equals("ACCEPTED")){
+            log.info("Changing edr request state to accepted!");
+                if(user.isHwsunMonitorSigned() && user.isFacturePaid() && user.isSyselAgreementSigned() && user.isConnectedFveSigned()){
+                user.setRequestToEdrStatus(DocumentStatus.ACCEPTED);
+                user.setRequestToEdrAcceptedDate(LocalDateTime.now());
+            }else{
+                throw new RuntimeException("Nesplneny všechny podminky!");
+            }
+        }
+    }
+    @Transactional
+    public void changeHwSunMonitorState(UserEntity user, String status) {
+        if(status.equals("GENERATED")){
+            user.setHwsunMonitorStatus(DocumentStatus.GENERATED);
+        }else if (status.equals("SENT")){
+            user.setHwsunMonitorStatus(DocumentStatus.SENT);
+        }else if (status.equals("SIGNED")){
+            user.setHwsunMonitorSigned(true);
+            user.setHwsunMonitorSignedDate(LocalDateTime.now());
+            user.setHwsunMonitorStatus(DocumentStatus.SIGNED);
+        }else if (status.equals("NONE")){
+            user.setHwsunMonitorStatus(DocumentStatus.NONE);
+        }
+    }
+    @Transactional
+    public void changeConnectedFveState(UserEntity user, String status) {
+        if(status.equals("GENERATED")){
+            user.setConnectedFveStatus(DocumentStatus.GENERATED);
+        }else if (status.equals("SENT")){
+            user.setConnectedFveStatus(DocumentStatus.SENT);
+        }else if (status.equals("SIGNED")){
+            user.setConnectedFveSigned(true);
+            user.setConnectedFveSignedDate(LocalDateTime.now());
+            user.setConnectedFveStatus(DocumentStatus.SIGNED);
+        }else if (status.equals("NONE")){
+            user.setConnectedFveStatus(DocumentStatus.NONE);
+        }
+    }
+    @Transactional
+    public void changeFactureState(UserEntity user, String status) {
+        if(status.equals("GENERATED")){
+            user.setFactureStatus(DocumentStatus.GENERATED);
+        }else if (status.equals("SENT")){
+            user.setFactureStatus(DocumentStatus.SENT);
+        }else if (status.equals("PAID")){
+            user.setFacturePaid(true);
+            user.setFacturePaidDate(LocalDateTime.now());
+            user.setFactureStatus(DocumentStatus.PAID);
+        }else if (status.equals("NONE")){
+            user.setFactureStatus(DocumentStatus.NONE);
+        }
     }
 
     @Override

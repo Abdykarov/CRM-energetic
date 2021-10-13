@@ -23,13 +23,13 @@ public class LeadResponseDto {
     String email;
     String contactPerson;
     Set<RoleEntity> roles;
-    String city;
     String ico;
     AreaResponseDto area;
     SalesmanResponseDto salesman;
     LocalDateTime roleChangedDate;
     EdrResponseDto referal;
     boolean male;
+    String edrContractStatus;
     boolean connectedFveSigned;
     boolean edrContractGenerated;
     boolean edrContractSent;

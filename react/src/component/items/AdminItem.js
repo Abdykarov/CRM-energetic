@@ -20,10 +20,7 @@ const AdminItem = ({admin}) => {
                                                                                       className="text-pink">{admin.email}</a> </span>
                         </p>
 
-                        <button type="button"
-                                className="btn btn-primary btn-sm waves-effect waves-light">Zpráva
-                        </button>
-                        <a href={CONTACT_PROFILE_ROUTE + '/' + admin.id} className="btn btn-light btn-sm waves-effect">Profil
+                        <a href={CONTACT_PROFILE_ROUTE + '/' + admin.id} className="btn btn-success btn-sm waves-effect">Profil
                         </a>
 
                     </div>

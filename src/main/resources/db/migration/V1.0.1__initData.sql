@@ -8,8 +8,6 @@ VALUES ('SALESMAN');
 INSERT INTO role_entity (name)
 VALUES ('NEW');
 INSERT INTO role_entity (name)
-VALUES ('OLD');
-INSERT INTO role_entity (name)
 VALUES ('LEAD');
 INSERT INTO role_entity (name)
 VALUES ('LOST');

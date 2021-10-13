@@ -27,6 +27,7 @@ public class ContactResponseDto {
     AreaResponseDto area;
     String ico;
     EdrResponseDto referal;
+    SalesmanResponseDto salesman;
     boolean male;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     LocalDate concurrentFveDueDate;

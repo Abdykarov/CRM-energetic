@@ -37,19 +37,28 @@ public class FactureController {
     private final FactureRepository factureRepository;
     private AuthenticationManager authenticationManager;
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')")
     @GetMapping()
     public List<FactureResponseDto> findAll() {
         return factureService.findAll();
     }
 
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')")
+    @GetMapping("{userId}")
+    public FactureResponseDto findById(@PathVariable Long userId) {
+        return factureService.findById(userId);
+    }
+
+
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')")
     @GetMapping("/generated/{filterAttr}")
     public List<FactureResponseDto> filterGenerated(
             @RequestParam(defaultValue = "asc") String orderType,
+            @RequestParam(required = false) String name,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "3") int size,
             @PathVariable String filterAttr){
-        return factureService.getAllGenerated(orderType, page, size, filterAttr);
+        return factureService.getAllGenerated(orderType, name, page, size, filterAttr);
     }
 
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')")

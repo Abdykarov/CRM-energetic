@@ -1,27 +1,45 @@
 /* eslint-disable */
-import React from 'react';
+import React, {useContext, useEffect, useState} from 'react';
+import FactureTable from "../component/tables/FactureTable";
+import {Context} from "../index";
+import {createAdmin, fetchLeads} from "../http/contactAPI";
+import {fetchAllFactures, getFilteredFactures} from "../http/factureAPI";
+import {ADMIN_ROUTE} from "../utils/const";
+import HeaderItem from "../component/items/HeaderItem";
+import Footer from "../component/Footer";
+import PaginationItem from "../component/items/PaginationItem";
 
 const Facture = () => {
+    const {facture} = useContext(Context)
+    const [search,setSearch] = useState('')
+    const [factureState, setFactureState] = useState('all')
+    const [filterAttr,setFilterAttr] = useState('id')
+    const [sortAttr,setSortAttr] = useState('asc')
+    useEffect(() => {
+        fetchAllFactures().then(data => {
+            facture.setFactures(data)
+            console.log(data)
+        })
+    }, [])
+
+    const filterFactures = async () => {
+        try {
+            let response
+            response = await getFilteredFactures(search, factureState, filterAttr, sortAttr)
+            facture.setFactures(response)
+            console.log(response)
+        } catch (e) {
+            alert(e.response.data.message)
+        }
+    }
+
     return (
         <div>
             <div className="content-page">
                 <div className="content">
                     <div className="container-fluid">
 
-                        <div className="row">
-                            <div className="col-12">
-                                <div className="page-title-box">
-                                    <div className="page-title-right">
-                                        <ol className="breadcrumb m-0">
-                                            <li className="breadcrumb-item"><a href="#">UBold</a></li>
-                                            <li className="breadcrumb-item"><a href="#">CRM</a></li>
-                                            <li className="breadcrumb-item active">Faktury</li>
-                                        </ol>
-                                    </div>
-                                    <h4 className="page-title">Faktury</h4>
-                                </div>
-                            </div>
-                        </div>
+                        <HeaderItem title="Faktury"/>
 
 
                         <div className="row">
@@ -29,20 +47,53 @@ const Facture = () => {
                                 <div className="card">
                                     <div className="card-body">
                                         <div className="row mb-2">
-                                            <div className="col-sm-4">
-                                                <button type="button" className="btn btn-danger waves-effect waves-light"
-                                                        data-bs-toggle="modal" data-bs-target="#custom-modal"><i
-                                                    className="mdi mdi-plus-circle me-1"></i> Vygenerovat fakturu
-                                                </button>
-                                            </div>
-                                            <div className="col-sm-8">
-                                                <div className="text-sm-end mt-2 mt-sm-0">
-                                                    <button type="button" className="btn btn-success mb-2 me-1"><i
-                                                        className="mdi mdi-cog"></i></button>
-                                                    <button type="button" className="btn btn-light mb-2 me-1">Import
-                                                    </button>
-                                                    <button type="button" className="btn btn-light mb-2">Export</button>
+                                            <div className="col-sm-3">
+                                                <label htmlFor="inputPassword2">Vyhledat podle jména nebo příjmení</label>
+                                                <div className="me-3 mt-2">
+                                                    <input value={search} onChange={e => setSearch(e.target.value)} type="search" className="form-control my-1 my-md-0"
+                                                           id="inputPassword2" placeholder="Vyhledat..."/>
                                                 </div>
+                                            </div>
+                                            <div className="col-sm-3">
+                                                <label htmlFor="status-select" className="me-2">Stav faktury</label>
+                                                <div className="me-sm-3 mt-2">
+                                                    <select value={factureState} onChange={e => setFactureState(e.target.value)} className="form-select my-1 my-md-0" id="status-select">
+                                                        <option value="all">Všechno</option>
+                                                        <option value="generated">Generovaný</option>
+                                                        <option value="paid">Zaplacený</option>
+                                                        <option value="expired">Vypršení</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div className="col-sm-3">
+                                                <label htmlFor="status-select" className="me-2">Filtrovat podle</label>
+                                                <div className="me-sm-3 mt-2">
+                                                    <select value={filterAttr} onChange={e => setFilterAttr(e.target.value)} className="form-select my-1 my-md-0" id="status-select">
+                                                        <option value="id">Id</option>
+                                                        <option value="name">Jméno</option>
+                                                        <option value="surname">Příjmení</option>
+                                                        <option value="var-symbol">Variabilní symbol</option>
+                                                        <option value="created-at">Datum vytvoření</option>
+                                                        <option value="due-date">Datum splatností</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div className="col-sm-3">
+                                                <label htmlFor="status-select" className="me-2">Sortovat</label>
+                                                <div className="me-sm-3 mt-2">
+                                                    <select value={sortAttr} onChange={e => setSortAttr(e.target.value)} className="form-select my-1 my-md-0">
+                                                        <option value="asc">Vzestupně</option>
+                                                        <option value="desc">Sestupně</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="row">
+                                            <div className="col-sm-9">
+
+                                            </div>
+                                            <div className="text-sm-end mt-2 mb-2 col-sm-3">
+                                                <button type="button" onClick={filterFactures} className="btn btn-success waves-effect waves-light">Filtrovat</button>
                                             </div>
                                         </div>
 
@@ -51,298 +102,22 @@ const Facture = () => {
                                                    id="products-datatable">
                                                 <thead>
                                                 <tr>
-                                                    <th style={{width : '20px'}}>
-                                                        <div className="form-check">
-                                                            <input type="checkbox" className="form-check-input"
-                                                                   id="customCheck1" />
-                                                            <label className="form-check-label"
-                                                                   htmlFor="customCheck1">&nbsp;</label>
-                                                        </div>
-                                                    </th>
                                                     <th>Jméno</th>
                                                     <th>Příjmení</th>
-                                                    <th>Adresa</th>
-                                                    <th>Datum vydání</th>
+                                                    <th>Datum vytvoření</th>
                                                     <th>Datum splatností</th>
-                                                    <th>Čas</th>
                                                     <th>Variabilní symbol</th>
-                                                    <th>Položka</th>
                                                     <th>Částka</th>
-                                                    <th>Celkem</th>
-                                                    <th>Vygenerovaná faktura</th>
-                                                    <th>Zaslaná faktura</th>
-                                                    <th>Zaplacená faktura</th>
-                                                    <th>Vygenerované potvrzení o platbě</th>
-                                                    <th>Zaslané potvrzení o platbě</th>
-                                                    <th style={{width: '85px'}}>Action</th>
+                                                    <th>Stav faktury</th>
+                                                    <th>Stahnout</th>
+                                                    <th>Odstranit</th>
                                                 </tr>
                                                 </thead>
-                                                <tbody>
-                                                <tr>
-                                                    <td>
-                                                        <div className="form-check">
-                                                            <input type="checkbox" className="form-check-input"
-                                                                   id="customCheck2" />
-                                                            <label className="form-check-label"
-                                                                   htmlFor="customCheck2">&nbsp;</label>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        Simon
-                                                    </td>
-                                                    <td>
-                                                        Blumel
-                                                    </td>
-                                                    <td>
-                                                        Karlovo Namesti
-                                                    </td>
-                                                    <td>20.08.2021</td>
-                                                    <td>04.09.2021</td>
-                                                    <td>
-                                                        16:00
-                                                    </td>
-                                                    <td>
-                                                        VS00112222
-                                                    </td>
-                                                    <td>
-                                                        Položka
-                                                    </td>
-                                                    <td>
-                                                        5
-                                                    </td>
-                                                    <td>
-                                                        0
-                                                    </td>
-                                                    <td>Ano</td>
-                                                    <td>Ano</td>
-                                                    <td>Ne</td>
-                                                    <td>Ne</td>
-                                                    <td>Ne</td>
-                                                    <td>
-                                                        <a href="javascript:void(0);" className="action-icon"> <i
-                                                            className="mdi mdi-square-edit-outline"></i></a>
-                                                        <a href="javascript:void(0);" className="action-icon"> <i
-                                                            className="mdi mdi-delete"></i></a>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <div className="form-check">
-                                                            <input type="checkbox" className="form-check-input"
-                                                                   id="customCheck2" />
-                                                            <label className="form-check-label"
-                                                                   htmlFor="customCheck2">&nbsp;</label>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        Simon
-                                                    </td>
-                                                    <td>
-                                                        Blumel
-                                                    </td>
-                                                    <td>
-                                                        Karlovo Namesti
-                                                    </td>
-                                                    <td>20.08.2021</td>
-                                                    <td>04.09.2021</td>
-                                                    <td>
-                                                        16:00
-                                                    </td>
-                                                    <td>
-                                                        VS00112222
-                                                    </td>
-                                                    <td>
-                                                        Položka
-                                                    </td>
-                                                    <td>
-                                                        5
-                                                    </td>
-                                                    <td>
-                                                        0
-                                                    </td>
-                                                    <td>Ano</td>
-                                                    <td>Ano</td>
-                                                    <td>Ne</td>
-                                                    <td>Ne</td>
-                                                    <td>Ne</td>
-                                                    <td>
-                                                        <a href="javascript:void(0);" className="action-icon"> <i
-                                                            className="mdi mdi-square-edit-outline"></i></a>
-                                                        <a href="javascript:void(0);" className="action-icon"> <i
-                                                            className="mdi mdi-delete"></i></a>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <div className="form-check">
-                                                            <input type="checkbox" className="form-check-input"
-                                                                   id="customCheck2" />
-                                                            <label className="form-check-label"
-                                                                   htmlFor="customCheck2">&nbsp;</label>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        Simon
-                                                    </td>
-                                                    <td>
-                                                        Blumel
-                                                    </td>
-                                                    <td>
-                                                        Karlovo Namesti
-                                                    </td>
-                                                    <td>20.08.2021</td>
-                                                    <td>04.09.2021</td>
-                                                    <td>
-                                                        16:00
-                                                    </td>
-                                                    <td>
-                                                        VS00112222
-                                                    </td>
-                                                    <td>
-                                                        Položka
-                                                    </td>
-                                                    <td>
-                                                        5
-                                                    </td>
-                                                    <td>
-                                                        0
-                                                    </td>
-                                                    <td>Ano</td>
-                                                    <td>Ano</td>
-                                                    <td>Ne</td>
-                                                    <td>Ne</td>
-                                                    <td>Ne</td>
-                                                    <td>
-                                                        <a href="javascript:void(0);" className="action-icon"> <i
-                                                            className="mdi mdi-square-edit-outline"></i></a>
-                                                        <a href="javascript:void(0);" className="action-icon"> <i
-                                                            className="mdi mdi-delete"></i></a>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <div className="form-check">
-                                                            <input type="checkbox" className="form-check-input"
-                                                                   id="customCheck2" />
-                                                            <label className="form-check-label"
-                                                                   htmlFor="customCheck2">&nbsp;</label>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        Simon
-                                                    </td>
-                                                    <td>
-                                                        Blumel
-                                                    </td>
-                                                    <td>
-                                                        Karlovo Namesti
-                                                    </td>
-                                                    <td>20.08.2021</td>
-                                                    <td>04.09.2021</td>
-                                                    <td>
-                                                        16:00
-                                                    </td>
-                                                    <td>
-                                                        VS00112222
-                                                    </td>
-                                                    <td>
-                                                        Položka
-                                                    </td>
-                                                    <td>
-                                                        5
-                                                    </td>
-                                                    <td>
-                                                        0
-                                                    </td>
-                                                    <td>Ano</td>
-                                                    <td>Ano</td>
-                                                    <td>Ne</td>
-                                                    <td>Ne</td>
-                                                    <td>Ne</td>
-                                                    <td>
-                                                        <a href="javascript:void(0);" className="action-icon"> <i
-                                                            className="mdi mdi-square-edit-outline"></i></a>
-                                                        <a href="javascript:void(0);" className="action-icon"> <i
-                                                            className="mdi mdi-delete"></i></a>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <div className="form-check">
-                                                            <input type="checkbox" className="form-check-input"
-                                                                   id="customCheck2" />
-                                                            <label className="form-check-label"
-                                                                   htmlFor="customCheck2">&nbsp;</label>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        Simon
-                                                    </td>
-                                                    <td>
-                                                        Blumel
-                                                    </td>
-                                                    <td>
-                                                        Karlovo Namesti
-                                                    </td>
-                                                    <td>20.08.2021</td>
-                                                    <td>04.09.2021</td>
-                                                    <td>
-                                                        16:00
-                                                    </td>
-                                                    <td>
-                                                        VS00112222
-                                                    </td>
-                                                    <td>
-                                                        Položka
-                                                    </td>
-                                                    <td>
-                                                        5
-                                                    </td>
-                                                    <td>
-                                                        0
-                                                    </td>
-                                                    <td>Ano</td>
-                                                    <td>Ano</td>
-                                                    <td>Ne</td>
-                                                    <td>Ne</td>
-                                                    <td>Ne</td>
-                                                    <td>
-                                                        <a href="javascript:void(0);" className="action-icon"> <i
-                                                            className="mdi mdi-square-edit-outline"></i></a>
-                                                        <a href="javascript:void(0);" className="action-icon"> <i
-                                                            className="mdi mdi-delete"></i></a>
-                                                    </td>
-                                                </tr>
-
-
-                                                </tbody>
+                                                <FactureTable></FactureTable>
                                             </table>
                                         </div>
 
-                                        <ul className="pagination pagination-rounded justify-content-end mb-0">
-                                            <li className="page-item">
-                                                <a className="page-link" href="#" aria-label="Previous">
-                                                    <span aria-hidden="true">«</span>
-                                                    <span className="visually-hidden">Previous</span>
-                                                </a>
-                                            </li>
-                                            <li className="page-item active"><a className="page-link"
-                                                                                href="#">1</a></li>
-                                            <li className="page-item"><a className="page-link"
-                                                                         href="#">2</a></li>
-                                            <li className="page-item"><a className="page-link"
-                                                                         href="#">3</a></li>
-                                            <li className="page-item"><a className="page-link"
-                                                                         href="#">4</a></li>
-                                            <li className="page-item"><a className="page-link"
-                                                                         href="#">5</a></li>
-                                            <li className="page-item">
-                                                <a className="page-link" href="#" aria-label="Next">
-                                                    <span aria-hidden="true">»</span>
-                                                    <span className="visually-hidden">Next</span>
-                                                </a>
-                                            </li>
-                                        </ul>
+                                        <PaginationItem></PaginationItem>
 
                                     </div>
                                 </div>
@@ -353,23 +128,7 @@ const Facture = () => {
 
                 </div>
 
-                <footer className="footer">
-                    <div className="container-fluid">
-                        <div className="row">
-                            <div className="col-md-6">
-                                <script>document.write(new Date().getFullYear())</script>
-                                &copy; UBold theme by <a href="">Coderthemes</a>
-                            </div>
-                            <div className="col-md-6">
-                                <div className="text-md-end footer-links d-none d-sm-block">
-                                    <a href="javascript:void(0);">About Us</a>
-                                    <a href="javascript:void(0);">Help</a>
-                                    <a href="javascript:void(0);">Contact Us</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </footer>
+                <Footer></Footer>
             </div>
         </div>
     );

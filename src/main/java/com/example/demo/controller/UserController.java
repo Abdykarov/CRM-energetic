@@ -345,6 +345,19 @@ public class UserController {
         userService.setEdrRequestDocumentSigned(id);
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_SALESMAN')")
+    @GetMapping("/document-state/{id}/{document}")
+    public String getDocumentState(@PathVariable Long id, @PathVariable String document) {
+        return userService.getDocumentState(id, document);
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_SALESMAN')")
+    @GetMapping("/document-state/{id}/{document}/{status}")
+    public void setDocumentState(@PathVariable Long id, @PathVariable String document, @PathVariable String status) {
+        userService.setDocumentState(id, document, status);
+    }
+
+
 
 
 }

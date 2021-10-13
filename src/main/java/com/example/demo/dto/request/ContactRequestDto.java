@@ -22,6 +22,7 @@ public class ContactRequestDto {
     @NotBlank
     String email;
     Long salesmanId;
+    Long edrId;
     Long areaId;
     String ico;
     String contactPerson;

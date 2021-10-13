@@ -14,6 +14,7 @@ import ApplicantStore from "./store/ApplicantStore";
 import CommunicationStore from "./store/CommunicationStore";
 import NotesStore from "./store/NotesStore";
 import AreaStore from "./store/AreaStore";
+import FactureStore from "./store/FactureStore";
 
 export const Context = createContext(null)
 ReactDOM.render(
@@ -30,6 +31,7 @@ ReactDOM.render(
         communication: new CommunicationStore(),
         applicant: new ApplicantStore(),
         notes: new NotesStore(),
+        facture: new FactureStore(),
         area: new AreaStore()
     }}>
         <App />
