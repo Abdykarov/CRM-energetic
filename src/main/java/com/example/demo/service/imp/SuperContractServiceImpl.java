@@ -5,7 +5,9 @@ import com.example.demo.domain.UserEntity;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.SuperContractService;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,14 +17,16 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 
 @Service
 @Slf4j
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class SuperContractServiceImpl implements SuperContractService {
 
-    private static String UPLOADED_FOLDER = "/home/abdykili/workflow/CRM-energetic/src/main/resources/supercontracts/";
-    private UserRepository userRepository;
+    @Value("${file.upload.contracts}")
+    private String UPLOADED_FOLDER;
+    private final UserRepository userRepository;
 
     @Override
     @Transactional
@@ -63,6 +67,7 @@ public class SuperContractServiceImpl implements SuperContractService {
             final UserEntity userEntity = userRepository.findById(userId)
                     .orElseThrow(() -> new EntityNotFoundException("User doesnt exist"));
             userEntity.setEdrContractSigned(true);
+            userEntity.setEdrContractSignedDate(LocalDateTime.now());
             userEntity.setEdrContractStatus(DocumentStatus.SIGNED);
             userRepository.save(userEntity);
             return "success";

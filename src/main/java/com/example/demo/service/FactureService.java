@@ -26,5 +26,7 @@ public interface FactureService {
 
     FactureResponseDto findById(Long userId);
 
-//    ResponseEntity<?> getFacturePdf(TemplateEngine templateEngine, HttpServletRequest request, HttpServletResponse response, Long factureId);
+    HttpStatus deleteFacture(Long userId);
+
+    ResponseEntity<ByteArrayResource> getFacturePdf(Long factureId);
 }

@@ -4,11 +4,16 @@ import com.example.demo.domain.*;
 import com.example.demo.dto.request.ReferalContactRequestDto;
 import com.example.demo.dto.request.*;
 import com.example.demo.dto.response.*;
+import com.example.demo.exception.UserStateControlException;
 import com.example.demo.mapper.*;
 import com.example.demo.repository.*;
 import com.example.demo.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,13 +23,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.mail.*;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -33,6 +38,7 @@ import java.util.stream.Stream;
 @Slf4j
 public class UserServiceImp implements UserDetailsService, UserService {
 
+    private final JsonExporterImpl jsonExporter;
     private final ManagerMapper managerMapper;
     private final AreaMapper areaMapper;
     private final UserMapper userMapper;
@@ -50,6 +56,7 @@ public class UserServiceImp implements UserDetailsService, UserService {
     private final RoleServiceImp roleService;
     private final RoleRepository roleRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final CallCentrumServiceImpl callCentrumService;
 
     @Override
     @Transactional
@@ -109,6 +116,15 @@ public class UserServiceImp implements UserDetailsService, UserService {
                 .setSurname("Pavlivec")
                 .setAreaId(2L);
         saveSalesman(salesmanRequestDto2);
+
+        // call centrum
+        final CallCentrumRequestDto callCentrumRequestDto = new CallCentrumRequestDto()
+                .setUsername("cc")
+                .setPassword("123")
+                .setName("Pavel")
+                .setSurname("Pavlivec")
+                .setAreaId(1L);
+        callCentrumService.createCallCentrum(callCentrumRequestDto);
 
         final EdrRequestDto edrRequestDto = new EdrRequestDto()
                 .setUsername("edr")
@@ -407,6 +423,41 @@ public class UserServiceImp implements UserDetailsService, UserService {
         return collection;
     }
 
+    @Override
+    public List<LeadResponseDto> getLastLeads() {
+        List<UserEntity> leadEntities = userRepository.findByRoles_NameOrderByRoleChangedDateDesc("LEAD");
+        List<LeadResponseDto> collection = leadEntities.stream()
+                .map(user -> leadMapper.toResponse(user))
+                .collect(Collectors.toList());
+        return collection;
+    }
+
+    @Override
+    public List<LeadResponseDto> getLastContracts() {
+        List<UserEntity> leadEntities = userRepository.findByRoles_NameOrderByRoleChangedDateDesc("LEAD");
+        List<LeadResponseDto> collection = leadEntities.stream()
+                .map(user -> leadMapper.toResponse(user))
+                .collect(Collectors.toList());
+        return collection;
+    }
+
+    @Override
+    public ResponseEntity<byte[]> exportJsonFile() {
+        List<UserEntity> users = userRepository.findAll();
+
+        String customerJsonString = jsonExporter.export(users);
+        HttpHeaders header = new HttpHeaders();
+        header.add(HttpHeaders.CONTENT_DISPOSITION, "inline;filename=users.json");
+
+        byte[] customerJsonBytes = customerJsonString.getBytes();
+
+        return ResponseEntity
+                .ok()
+                .headers(header)
+                .contentType(MediaType.parseMediaType("application/json"))
+                .contentLength(customerJsonBytes.length)
+                .body(customerJsonBytes);
+    }
 
     @Override
     public List<ApplicantResponseDto> getApplicants() {
@@ -661,11 +712,35 @@ public class UserServiceImp implements UserDetailsService, UserService {
     @Transactional
     public void changeEdrContractState(UserEntity user, String status){
         if(status.equals("GENERATED")){
-            user.setEdrContractStatus(DocumentStatus.GENERATED);
+            if(user.isEdrContractGenerated()){
+                user.setEdrContractStatus(DocumentStatus.GENERATED);
+            }else{
+                throw new UserStateControlException("Na začatku vygenerujte smlouvu prosím", HttpStatus.CONFLICT);
+            }
         }else if (status.equals("SENT")){
-            user.setEdrContractStatus(DocumentStatus.SENT);
+            if(user.isEdrContractGenerated()){
+                user.setEdrContractSent(true);
+                user.setEdrContractSentDate(LocalDateTime.now());
+                user.setEdrContractStatus(DocumentStatus.SENT);
+            }else{
+                throw new UserStateControlException("Na začatku vygenerujte smlouvu prosím", HttpStatus.CONFLICT);
+            }
         }else if (status.equals("SIGNED")){
-            user.setEdrContractStatus(DocumentStatus.SIGNED);
+            try {
+                if(!user.isEdrContractGenerated()){
+                    throw new UserStateControlException("Na začatku vygenerujte smlouvu prosím", HttpStatus.CONFLICT);
+                }else if (!user.isEdrContractSent()){
+                    throw new UserStateControlException("Na začatku odešlete smlouvu prosím", HttpStatus.CONFLICT);
+                } else if (!user.isEdrContractSigned()){
+                    throw new UserStateControlException("Na začatku uložite podepsanou smlouvu prosím", HttpStatus.CONFLICT);
+                }else {
+                    user.setEdrContractSigned(true);
+                    user.setEdrContractSignedDate(LocalDateTime.now());
+                    user.setEdrContractStatus(DocumentStatus.SIGNED);
+                }
+            } catch (RuntimeException e){
+                throw e;
+            }
         }else if (status.equals("NONE")){
             user.setEdrContractStatus(DocumentStatus.NONE);
         }
@@ -691,11 +766,27 @@ public class UserServiceImp implements UserDetailsService, UserService {
             changeFactureState(user, status);
         }
     }
+
+    @Override
+    @Transactional
+    public UserResponseDto updateUser(UserUpdatedRequestDto userUpdatedRequestDto) {
+        final UserEntity user = userRepository.findById(userUpdatedRequestDto.getUserId())
+                .orElseThrow(() -> new EntityNotFoundException("User doesnt exist"));
+        userMapper.mapToExistingEntity(user, userUpdatedRequestDto);
+        final UserResponseDto userResponseDto = userMapper.toResponse(user);
+        log.debug("Returning updated user {}", userResponseDto);
+        return userResponseDto;
+    }
+
     @Transactional
     public void changeSyselAgreementState(UserEntity user, String status) {
         if(status.equals("GENERATED")){
+            user.setSyselAgreementGenerated(true);
+            user.setSyselAgreementGeneratedDate(LocalDateTime.now());
             user.setSyselAgreementStatus(DocumentStatus.GENERATED);
         }else if (status.equals("SENT")){
+            user.setSyselAgreementSent(true);
+            user.setSyselAgreementSentDate(LocalDateTime.now());
             user.setSyselAgreementStatus(DocumentStatus.SENT);
         }else if (status.equals("SIGNED")){
             user.setSyselAgreementSigned(true);
@@ -707,6 +798,9 @@ public class UserServiceImp implements UserDetailsService, UserService {
     }
     @Transactional
     public void changeReqestToEdrState(UserEntity user, String status) {
+        if(user.isRequestToEdrAccepted()){
+            throw new UserStateControlException("Člen je už schvalený, změnit rozhodnutí už nelze", HttpStatus.CONFLICT);
+        }
         if(status.equals("GENERATED")){
             user.setRequestToEdrGenerated(true);
             user.setRequestToEdrSigned(false);
@@ -725,19 +819,58 @@ public class UserServiceImp implements UserDetailsService, UserService {
             user.setRequestToEdrStatus(DocumentStatus.NONE);
         }else if (status.equals("ACCEPTED")){
             log.info("Changing edr request state to accepted!");
-                if(user.isHwsunMonitorSigned() && user.isFacturePaid() && user.isSyselAgreementSigned() && user.isConnectedFveSigned()){
+            if(user.isRequestToEdrSigned() && user.isHwsunMonitorSigned() && user.isFacturePaid() && user.isSyselAgreementSigned() && user.isConnectedFveSigned()){
                 user.setRequestToEdrStatus(DocumentStatus.ACCEPTED);
                 user.setRequestToEdrAcceptedDate(LocalDateTime.now());
+                user.setRequestToEdrAccepted(true);
+
+                final String username = "crm@energetickedruzstvo.cz";  // like yourname@outlook.com
+                final String password = "Foy37364";   // password here
+
+                Properties props = new Properties();
+                props.put("mail.smtp.auth", "true");
+                props.put("mail.smtp.starttls.enable", "true");
+                props.put("mail.smtp.host", "smtp-mail.outlook.com");
+                props.put("mail.smtp.port", "587");
+
+                Session session = Session.getInstance(props,
+                        new javax.mail.Authenticator() {
+                            @Override
+                            protected PasswordAuthentication getPasswordAuthentication() {
+                                return new PasswordAuthentication(username, password);
+                            }
+                        });
+                session.setDebug(true);
+
+                try {
+
+                    Message message = new MimeMessage(session);
+                    message.setFrom(new InternetAddress(username));
+                    message.setRecipients(Message.RecipientType.TO,
+                            InternetAddress.parse(user.getEmail()));   // like inzi769@gmail.com
+                    message.setSubject("CRM | Mailové upozornění");
+                    message.setText("Dobrý den, byli jste schváleni, nyní jste členem edr, gratulujeme!");
+
+                    Transport.send(message);
+
+                    log.info("Upozorněné bylo odeslano");
+                } catch (MessagingException e) {
+                    throw new RuntimeException(e);
+                }
             }else{
-                throw new RuntimeException("Nesplneny všechny podminky!");
+                throw new UserStateControlException("Nesplneny všechny podminky!", HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
     }
     @Transactional
     public void changeHwSunMonitorState(UserEntity user, String status) {
         if(status.equals("GENERATED")){
+            user.setHwsunMonitorGenerated(true);
+            user.setHwsunMonitorGeneratedDate(LocalDateTime.now());
             user.setHwsunMonitorStatus(DocumentStatus.GENERATED);
         }else if (status.equals("SENT")){
+            user.setHwsunMonitorSent(true);
+            user.setHwsunMonitorSentDate(LocalDateTime.now());
             user.setHwsunMonitorStatus(DocumentStatus.SENT);
         }else if (status.equals("SIGNED")){
             user.setHwsunMonitorSigned(true);
@@ -750,8 +883,12 @@ public class UserServiceImp implements UserDetailsService, UserService {
     @Transactional
     public void changeConnectedFveState(UserEntity user, String status) {
         if(status.equals("GENERATED")){
+            user.setConnectedFveGenerated(true);
+            user.setConnectedFveGeneratedDate(LocalDateTime.now());
             user.setConnectedFveStatus(DocumentStatus.GENERATED);
         }else if (status.equals("SENT")){
+            user.setConnectedFveSent(true);
+            user.setConnectedFveSentDate(LocalDateTime.now());
             user.setConnectedFveStatus(DocumentStatus.SENT);
         }else if (status.equals("SIGNED")){
             user.setConnectedFveSigned(true);

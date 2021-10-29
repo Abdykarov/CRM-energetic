@@ -1,6 +1,7 @@
 package com.example.demo.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -41,14 +42,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/edr_api/user/refresh",
                         "/edr_api/user/create/referal-contact/",
+                        "/css/main.css",
                         "/edr_api/user/create/referal-contact",
                         "/edr_api/edr/edr-test/",
+                        "/edr_api/factures/facture-request-pdf/**",
                         "/edr_api/edr/edr-test",
                         "/edr_api/areas/",
                         "/edr_api/user/login/",
                         "/edr_api/user/login",
-                        "/edr_api/user/edr/registrate/",
-                        "/edr_api/user/edr/registrate",
+                        "/edr_api/edr/registrate/",
+                        "/edr_api/user/export-json",
+                        "/edr_api/edr/registrate",
                         "/edr_api/user/admin",
                         "/edr_api/user/admin/",
                         "/swagger-ui.html/**",
@@ -58,6 +62,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/api-docs",
                         "/api-docs/**",
                         "/v2/api-docs").permitAll()
+                .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedEntryPoint).and()
@@ -65,7 +70,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
     }
-
     @Override
     @Bean
     public AuthenticationManager authenticationManagerBean() throws Exception {

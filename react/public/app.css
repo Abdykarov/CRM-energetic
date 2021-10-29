@@ -3,6 +3,94 @@
     padding: 0;
     margin: 0;
 }
+.watt_main{
+    margin-top: 70px;
+}
+.watt_container{
+    margin: 0 auto;
+    width: 95%;
+}
+.watt_header h3{
+    text-transform: uppercase;
+    color: #fff;
+    font-size: 17px;
+    font-weight: lighter;
+}
+.watt_header h1{
+    color: #fff;
+    font-weight: 400;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+.watt_header h1 span{
+    display: block;
+    font-weight: bold;
+    margin-top: 5px;
+}
+.watt_header{
+    padding: 25px 0px;
+    background: url("images/bg-watt.jpg") center -40px;
+    background-repeat: no-repeat;
+    margin-bottom: 25px;
+}
+.embed{
+    width: 700px;
+    height: 400px;
+    margin-left: 200px;
+}
+.watt_points_block{
+    background: #41c0bd;
+    display: inline-block;
+    padding: 15px 25px;
+    border-radius: 5px;
+}
+.watt_points_text{
+    max-width: 500px;
+}
+.watt_points_title{
+    color: #fff;
+    font-size: 20px;
+}
+.watt_points_title b{
+    font-weight: 600;
+}
+.watt_points p{
+    color: #000;
+    font-size: 35px;
+    margin: 10px 0px;
+    font-weight: bold;
+}
+.watt_points_text p{
+    color: #fff;
+}
+.watt_points_block button{
+    border: none;
+    border-radius: 2px;
+    padding: 3px 10px;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all .3s;
+}
+.watt_points_block button.get_points{
+    background: #402D2DFF;
+    margin-right: 15px;
+    color: #fff;
+}
+.watt_points_block button:hover{
+    background: #402D2DFF;
+    color: #fff;
+}
+.watt_points_block button.get_points:hover{
+    background: #fff;
+    color: #402D2DFF;
+}
+.dark{
+    opacity: 0;
+    visibility: hidden;
+}
+.hwFilter{
+    transition: .2s;
+}
 .applicant-table select{
     width: 200px;
 }

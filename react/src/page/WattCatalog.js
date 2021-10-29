@@ -4,23 +4,22 @@ import {Context} from "../index";
 import ContactTable from "../component/tables/ContactTable";
 import Footer from "../component/Footer";
 import {createAdmin, createReferalLink, fetchPotentials, fetchReferals} from "../http/contactAPI";
-import {ADMIN_ROUTE, REGISTRATION_REFERAL_ROUTE, WATT_ROUTE} from "../utils/const";
+import {ADMIN_ROUTE, REGISTRATION_REFERAL_ROUTE, WATT_REFERALS} from "../utils/const";
 import WattTable from "../component/tables/WattTable";
+import HeaderItem from "../component/items/HeaderItem";
 
-const Watt = () => {
+const WattCatalog = () => {
     const history = useHistory()
     const location = useLocation()
     const {watt} = useContext(Context)
     const {user} = useContext(Context)
-    const [referalLink, setReferalLink] = useState('')
+    const [email, setEmail] = useState('')
 
     const generateReferalLink = async () => {
         try {
             let response
-            response = await createReferalLink(user.id)
-            console.log(response)
-            setReferalLink('http://localhost:3000' + REGISTRATION_REFERAL_ROUTE + '/' + response)
-            history.push(WATT_ROUTE);
+            let id = user.id
+            response = await createReferalLink(email, id)
         } catch (e) {
             console.log(e)
         }
@@ -35,20 +34,7 @@ const Watt = () => {
                 <div className="content">
                     <div className="container-fluid">
 
-                        <div className="row">
-                            <div className="col-12">
-                                <div className="page-title-box">
-                                    <div className="page-title-right">
-                                        <ol className="breadcrumb m-0">
-                                            <li className="breadcrumb-item"><a href="#">UBold</a></li>
-                                            <li className="breadcrumb-item"><a href="#">CRM</a></li>
-                                            <li className="breadcrumb-item active">Watt peneženka</li>
-                                        </ol>
-                                    </div>
-                                    <h4 className="page-title">Watt peneženka</h4>
-                                </div>
-                            </div>
-                        </div>
+                        <HeaderItem title="Katalog"></HeaderItem>
 
 
                         <div className="row">
@@ -56,16 +42,15 @@ const Watt = () => {
                                 <div className="card">
                                     <div className="card-body">
                                         <div className="row mb-2">
+                                            <div className="col-sm-8">
+                                                <div className="text-sm-end mt-2 mt-sm-0">
+                                                    <input  type="text" className="form-control" placeholder="Email kám odeslat referalní odkaz" onChange={e => setEmail(e.target.value)} value={email} />
+                                                </div>
+                                            </div>
                                             <div className="col-sm-4">
                                                 <button onClick={generateReferalLink} className="btn btn-danger waves-effect waves-light"><i
                                                     className="mdi mdi-plus-circle me-1"></i> Vygenerovat unikátní odkaz
                                                 </button>
-                                            </div>
-                                            <div className="col-sm-8">
-                                                <div className="text-sm-end mt-2 mt-sm-0">
-                                                    <input  type="text" id="example-readonly" className="form-control"
-                                                           readOnly="" value={referalLink} />
-                                                </div>
                                             </div>
                                         </div>
 
@@ -131,4 +116,4 @@ const Watt = () => {
     );
 };
 
-export default Watt;
+export default WattCatalog;

@@ -29,6 +29,20 @@ export const fetchLeads = async () =>{
     return data
 }
 
+export const fetchLastLeads = async () =>{
+    const {data} = await $authHost.get('edr_api/user/contact/last-leads/')
+    return data
+}
+
+export const fetchLastContracts = async () =>{
+    const {data} = await $authHost.get('edr_api/user/contact/last-contracts/')
+    return data
+}
+
+export const exportJson = async () =>{
+    const {data} = await $authHost.get('edr_api/user/export-json')
+    return data
+}
 
 export const fetchApplicants = async () =>{
     const {data} = await $authHost.get('edr_api/user/contact/applicants/')
@@ -96,6 +110,11 @@ export const deleteEdrRequest = async (id) =>{
     return data
 }
 
+export const deleteUserFacture = async (id) =>{
+    const {data} = await $authHost.get('edr_api/factures/' + id + '/delete')
+    return data
+}
+
 export const fetchAdminCoint = async () => {
     const {data} = await $authHost.get('edr_api/user/count/admin')
     return data
@@ -137,6 +156,14 @@ export const createContact = async (name, male, phone, surname, email, ico, cont
     return data
 }
 
+export const updateUserEntity = async (userId, editorId, name, surname, phone, email, ico) => {
+    console.log(userId, editorId, name, surname, phone, email, ico)
+    const {data} = await $authHost.post('edr_api/user/update',
+        {userId, editorId, name, surname, phone, email, ico})
+    console.log(data)
+    return data
+}
+
 
 // referal person registrates by referal link
 export const createReferalContact = async (name, surname, phone, email, jobPosition, ico, companyName, city) => {
@@ -152,8 +179,8 @@ export const sendEdrRegistrationLink = async (id) =>{
 
 
 // edr creates new ref link and send to some person
-export const createReferalLink = async (id) => {
-    const {data} = await $authHost.get('edr_api/edr/referal-link/' + id)
+export const createReferalLink = async (email, id) => {
+    const {data} = await $authHost.get('edr_api/edr/referal-link/' + email + '/' + id)
     return data
 }
 

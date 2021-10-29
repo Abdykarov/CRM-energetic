@@ -3,8 +3,8 @@ import {
     ADMIN_ROUTE, APPLICANT_ROUTE,
     CONTACTS_ROUTE,
     DASHBOARD_ROUTE, EDR_ROUTE, FACTURE_ROUTE, INBOX_ROUTE, LEAD_ROUTE,
-    MANAGER_ROUTE, OUTBOX_ROUTE,
-    SALESMAN_ROUTE, WATT_ROUTE
+    MANAGER_ROUTE,
+    SALESMAN_ROUTE, WATT_CATALOG, WATT_MAIN, WATT_REFERALS, WATT_ROUTE
 } from "../utils/const";
 import {Context} from "../index";
 import {observer} from "mobx-react-lite";
@@ -79,28 +79,25 @@ const LeftSidebar = observer(() => {
                         <div id="sidebar-menu">
 
                             <ul id="side-menu">
-
-                                <li className="menu-title">Navigace</li>
-
-                                <li>
-                                    <a href={DASHBOARD_ROUTE}>
-                                        <i className="mdi mdi-view-dashboard-outline"></i>
-                                        <span> Hlavní stranka </span>
-                                    </a>
-                                </li>
                                 {
-                                    user.role === "ROLE_ADMIN" ?
-                                        <li>
-                                            <a href={ADMIN_ROUTE}>
-                                                <i className="fe-user-check"></i>
-                                                <span className="badge bg-success rounded-pill float-end">{adminCount}</span>
-                                                <span> Adminy </span>
-                                            </a>
-                                        </li>
-                                        : ""
+                                    user.role === "ROLE_EDR" ?
+                                        ""
+                                        :
+                                        <li className="menu-title">Navigace</li>
                                 }
                                 {
-                                    user.role === "ROLE_ADMIN" || user.role === "ROLE_MANAGER" ?
+                                    user.role === "ROLE_EDR" ?
+                                        ""
+                                        :
+                                        <li>
+                                            <a href={DASHBOARD_ROUTE}>
+                                                <i className="mdi mdi-view-dashboard-outline"></i>
+                                                <span> Hlavní stranka </span>
+                                            </a>
+                                        </li>
+                                }
+                                {
+                                    user.role === "ROLE_ADMIN" ?
                                         <li>
                                             <a href={MANAGER_ROUTE}>
                                                 <i className="fe-user-plus"></i>
@@ -111,7 +108,7 @@ const LeftSidebar = observer(() => {
                                         : ""
                                 }
                                 {
-                                    user.role === "ROLE_ADMIN" || user.role === "ROLE_MANAGER" || user.role === "ROLE_SALESMAN" ?
+                                    user.role === "ROLE_ADMIN" || user.role === "ROLE_MANAGER" ?
                                         <li>
                                             <a href={SALESMAN_ROUTE}>
                                                 <i className="fe-user-check"></i>
@@ -122,7 +119,19 @@ const LeftSidebar = observer(() => {
                                         : ""
                                 }
                                 {
-                                    user.role === "ROLE_ADMIN" || user.role === "ROLE_SALESMAN" || user.role === "ROLE_MANAGER" ?
+                                    user.role === "ROLE_ADMIN" || user.role === "ROLE_MANAGER" ?
+                                        <li>
+                                            <a href={SALESMAN_ROUTE}>
+                                                <i className="fe-user-check"></i>
+                                                <span className="badge bg-success rounded-pill float-end">{salesmanCount}</span>
+                                                <span> Call centrum </span>
+                                            </a>
+                                        </li>
+                                        : ""
+                                }
+
+                                {
+                                    user.role === "ROLE_ADMIN" || user.role === "ROLE_SALESMAN" || user.role === "ROLE_MANAGER" || user.role === "ROLE_CC" ?
                                         <li>
                                             <a aria-expanded={true} href="#sidebarDashboards" data-bs-toggle="collapse">
                                                 <i className="fe-user"></i>
@@ -156,9 +165,29 @@ const LeftSidebar = observer(() => {
                                 {
                                     user.role === "ROLE_EDR" ?
                                         <li>
-                                            <a href={WATT_ROUTE}>
+                                            <a href={WATT_MAIN}>
                                                 <i className="fe-credit-card"></i>
                                                 <span> Watt Peneženka </span>
+                                            </a>
+                                        </li>
+                                        : ""
+                                }
+                                {
+                                    user.role === "ROLE_EDR" ?
+                                        <li>
+                                            <a href={WATT_CATALOG}>
+                                                <i className="fe-credit-card"></i>
+                                                <span> Watt katalog </span>
+                                            </a>
+                                        </li>
+                                        : ""
+                                }
+                                {
+                                    user.role === "ROLE_EDR" ?
+                                        <li>
+                                            <a href={WATT_REFERALS}>
+                                                <i className="fe-credit-card"></i>
+                                                <span> Watt referaly </span>
                                             </a>
                                         </li>
                                         : ""
@@ -181,9 +210,6 @@ const LeftSidebar = observer(() => {
                                                 <ul className="nav-second-level">
                                                     <li>
                                                         <a href={INBOX_ROUTE}>Příchozí</a>
-                                                    </li>
-                                                    <li>
-                                                        <a href={OUTBOX_ROUTE}>Odeslané</a>
                                                     </li>
                                                 </ul>
                                             </div>

@@ -6,6 +6,8 @@ VALUES ('MANAGER');
 INSERT INTO role_entity (name)
 VALUES ('SALESMAN');
 INSERT INTO role_entity (name)
+VALUES ('CC');
+INSERT INTO role_entity (name)
 VALUES ('NEW');
 INSERT INTO role_entity (name)
 VALUES ('LEAD');

@@ -4,6 +4,8 @@ import {Context} from "../index";
 import {fetchEdr, fetchLeads} from "../http/contactAPI";
 import EdrTable from "../component/tables/EdrTable";
 import {CONTACT_PROFILE_ROUTE} from "../utils/const";
+import HeaderItem from "../component/items/HeaderItem";
+import Footer from "../component/Footer";
 
 const Edr = () => {
     const {edr} = useContext(Context)
@@ -19,57 +21,76 @@ const Edr = () => {
                 <div className="content">
                     <div className="container-fluid">
 
-                        <div className="row">
-                            <div className="col-12">
-                                <div className="page-title-box">
-                                    <div className="page-title-right">
-                                        <ol className="breadcrumb m-0">
-                                            <li className="breadcrumb-item"><a href="#">UBold</a></li>
-                                            <li className="breadcrumb-item"><a href="#">CRM</a></li>
-                                            <li className="breadcrumb-item active">EDR členy</li>
-                                        </ol>
-                                    </div>
-                                    <h4 className="page-title">EDR členy</h4>
-                                </div>
-                            </div>
-                        </div>
-
+                        <HeaderItem title="Edr členy"></HeaderItem>
 
                         <div className="row">
                             <div className="col-12">
                                 <div className="card">
                                     <div className="card-body">
                                         <div className="row mb-2">
-                                            <div className="col-sm-8">
-                                                <form className="d-flex flex-wrap align-items-center">
-                                                    <label htmlFor="inputPassword2"
-                                                           className="visually-hidden">Search</label>
-                                                    <div className="me-3">
-                                                        <input type="search" className="form-control my-1 my-lg-0"
-                                                               id="inputPassword2" placeholder="Search..." />
-                                                    </div>
-                                                    <label htmlFor="status-select" className="me-2">Sort By</label>
-                                                    <div className="me-sm-3">
-                                                        <select className="form-select my-1 my-lg-0" id="status-select">
-                                                            <option selected="">All</option>
-                                                            <option value="1">Popular</option>
-                                                            <option value="2">Price Low</option>
-                                                            <option value="3">Price High</option>
-                                                            <option value="4">Sold Out</option>
-                                                        </select>
-                                                    </div>
-                                                </form>
-                                            </div>
                                             <div className="col-sm-4">
+
+                                            </div>
+                                            <div className="col-sm-8">
                                                 <div className="text-sm-end mt-2 mt-sm-0">
-                                                    <button type="button" className="btn btn-success mb-2 me-1"><i
-                                                        className="mdi mdi-cog"></i></button>
                                                     <button type="button" className="btn btn-light mb-2 me-1">Import
                                                     </button>
-                                                    <button type="button" className="btn btn-light mb-2">Export</button>
+                                                    <a href="http://localhost:8080/edr_api/user/export-json" className="btn btn-light mb-2">Export</a>
                                                 </div>
                                             </div>
                                         </div>
+                                        <div className="row mb-2">
+                                            <div className="col-sm-3">
+                                                <label htmlFor="inputPassword2">Vyhledat podle jména nebo příjmení</label>
+                                                <div className="me-3 mt-2">
+                                                    <input type="search" className="form-control my-1 my-md-0"
+                                                           id="inputPassword2" placeholder="Vyhledat..."/>
+                                                </div>
+                                            </div>
+                                            <div className="col-sm-3">
+                                                <label htmlFor="status-select" className="me-2">Filtrovat podle</label>
+                                                <div className="me-sm-3 mt-2">
+                                                    <select className="form-select my-1 my-md-0" id="status-select">
+                                                        <option value="id">Datum vytvoření</option>
+                                                        <option value="name">Jméno</option>
+                                                        <option value="surname">Příjmení</option>
+                                                        <option value="email">Email</option>
+                                                        <option value="area">Kraj</option>
+                                                        <option value="points">Počet bodů</option>
+                                                        <option value="referals">Počet doporučených</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div className="col-sm-3 dark" id="hwFilter">
+                                                <label htmlFor="status-select" className="me-2">Podle stavu HW</label>
+                                                <div className="me-sm-3 mt-2">
+                                                    <select className="form-select my-1 my-md-0" id="status-select">
+                                                        <option value="generatedHw">Generovaný</option>
+                                                        <option value="sentHw">Odeslaný</option>
+                                                        <option value="signedHw">Podepsaný</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div className="col-sm-3">
+                                                <label htmlFor="status-select" className="me-2">Sortovat</label>
+                                                <div className="me-sm-3 mt-2">
+                                                    <select className="form-select my-1 my-md-0">
+                                                        <option value="asc">Vzestupně</option>
+                                                        <option value="desc">Sestupně</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="row">
+                                            <div className="col-sm-9">
+
+                                            </div>
+                                            <div className="text-sm-end mt-2 mb-2 col-sm-3">
+                                                <button type="button" className="btn btn-success waves-effect waves-light">Filtrovat</button>
+                                            </div>
+                                        </div>
+
 
                                         <div className="table-responsive">
                                             <table className="table table-centered table-nowrap table-striped"
@@ -97,52 +118,6 @@ const Edr = () => {
                                                     <th style={{width: '85px'}}>Osobní Stranka</th>
                                                 </tr>
                                                 </thead>
-                                                <tbody>
-                                                <tr>
-                                                    <td>
-                                                        <div className="form-check">
-                                                            <input type="checkbox" className="form-check-input"
-                                                                   id="customCheck2" />
-                                                            <label className="form-check-label"
-                                                                   htmlFor="customCheck2">&nbsp;</label>
-                                                        </div>
-                                                    </td>
-                                                    <td className="table-user">
-                                                        <a href={CONTACT_PROFILE_ROUTE + '/' + 1} className="text-body fw-semibold">Ilias</a>
-                                                    </td>
-                                                    <td>
-                                                        Ilias
-                                                    </td>
-                                                    <td>
-                                                        Abdykarov
-                                                    </td>
-                                                    <td>
-                                                        123232323
-                                                    </td>
-                                                    <td>
-                                                        n13wka@gmail.com
-                                                    </td>
-                                                    <td>
-                                                        <span className="badge bg-soft-success text-success">ČLEN EDR</span>
-                                                    </td>
-                                                    <td>
-                                                        <a href={CONTACT_PROFILE_ROUTE + '/' + 1} className="text-body fw-semibold">Vladimir Sykora</a>
-                                                    </td>
-                                                    <td>
-                                                        Praha
-                                                    </td>
-                                                    <td>
-                                                        133200
-                                                    </td>
-                                                    <td>
-                                                        <b>5000</b>
-                                                    </td>
-                                                    <td>
-                                                        <a href={CONTACT_PROFILE_ROUTE + '/'+ 1} className="action-icon">
-                                                            <img width="35px" src="https://cdn.pixabay.com/photo/2020/07/14/13/07/icon-5404125_1280.png" alt=""/></a>
-                                                    </td>
-                                                </tr>
-                                                </tbody>
                                                 <EdrTable></EdrTable>
                                             </table>
                                         </div>
@@ -181,15 +156,8 @@ const Edr = () => {
 
                 </div>
 
-                <footer className="footer">
-                    <div className="container-fluid">
-                        <div className="row">
-                            <div className="col-md-6">
-                                &copy; Design by <a href="">Karlin It Group</a>
-                            </div>
-                        </div>
-                    </div>
-                </footer>
+                <Footer></Footer>
+
             </div>
         </div>
     );

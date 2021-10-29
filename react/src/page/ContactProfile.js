@@ -2,12 +2,12 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {Context} from "../index";
 import {
-    deleteContract, deleteEdrRequest, deleteFve, deleteSysel,
+    deleteContract, deleteEdrRequest, deleteFve, deleteSysel, deleteUserFacture,
     fetchUserById, sendEdrRegistrationLink, setEdrContractGenerated, setEdrContractSent, setEdrContractSigned,
     updateToAccepted, updateToApplicant,
     updateToCurrent, updateToEdr,
     updateToLead,
-    updateToPotential, uploadSignedContract
+    updateToPotential, updateUserEntity, uploadSignedContract
 } from "../http/contactAPI";
 import {useHistory, useParams} from "react-router-dom";
 import {CONTACT_PROFILE_ROUTE, DASHBOARD_ROUTE, LEAD_ROUTE, LOGIN_ROUTE} from "../utils/const";
@@ -28,12 +28,19 @@ const ContactProfile = observer(() => {
     const [role,setRole] = useState('')
     const [facture,setFacture] = useState(null)
     const [generatedFacture, setGeneratedFacture] = useState('')
+    const [updatedName, setUpdatedName] = useState('')
+    const [updatedSurname, setUpdatedSurname] = useState('')
+    const [updatedPhone, setUpdatedPhone] = useState('')
+    const [updatedIco, setUpdatedIco] = useState('')
+    const [updatedContactPerson, setUpdatedContactPerson] = useState('')
+    const [updatedEmail, setUpdatedEmail] = useState('')
     const [areaName,setAreaName] = useState('')
     const [referalName,setReferalName] = useState('')
     const [referalSurname,setReferalSurname] = useState('')
     const [salesmanName,setSalesmanName] = useState('')
     const [salesmanSurname,setSalesmanSurname] = useState('')
     const [signedContract, setSignedContract] = useState(null)
+    const [signedRequestToEdr, setSignedRequestToEdr] = useState(null)
     const [hwsunMonitor, setHwSunMonitor] = useState(null)
     const [connectedFVE, setConnectedFVE] = useState(null)
     const [syselAgreement, setSyselAgreement] = useState(null)
@@ -59,7 +66,13 @@ const ContactProfile = observer(() => {
             setContractGenerated(data.edrContractGenerated)
             setSignedContract(data.edrContractSigned)
             setConnectedFVE(data.connectedFveSigned)
+            setSignedRequestToEdr(data.requestToEdrSigned)
             setRole(data.roles[0].name)
+            setUpdatedName(data.name)
+            setUpdatedSurname(data.surname)
+            setUpdatedPhone(data.phone)
+            setUpdatedEmail(data.email)
+            setUpdatedIco(data.ico)
             if(data.factureGenerated){
                 let userId = id;
                 fetchFactureByUserId(userId).then(data => {
@@ -141,10 +154,37 @@ const ContactProfile = observer(() => {
         });
     }
 
+    const fetchFacture = async () => {
+        fetch(process.env.REACT_APP_API_URL + "edr_api/factures/facture-request-pdf/" + id, {
+            method: 'get',
+            headers: new Headers({
+                'Authorization': 'Bearer '+ localStorage.getItem('token'),
+                'Content-Type': 'application/json'
+            })
+        }) // FETCH BLOB FROM IT
+            .then((response) => response.blob())
+            .then((blob) => { // RETRIEVE THE BLOB AND CREATE LOCAL URL
+                var _url = window.URL.createObjectURL(blob);
+                window.open(_url, "_blank"); // window.open + focus
+            }).catch((err) => {
+            console.log(err);
+        });
+    }
+
     const deleteRequest = async () => {
         try {
             let response
             response = await deleteEdrRequest(id)
+            window.location.reload();
+        } catch (e) {
+            alert(e.response.data.message)
+        }
+    }
+
+    const deleteFactureFunc = async () => {
+        try {
+            let response
+            response = await deleteUserFacture(id)
             window.location.reload();
         } catch (e) {
             alert(e.response.data.message)
@@ -475,6 +515,24 @@ const ContactProfile = observer(() => {
         }
     }
 
+    const updateUser = async () => {
+        try {
+            let data;
+            let userId = id;
+            let editorId = user.id;
+            let name = updatedName;
+            let surname = updatedSurname;
+            let phone = updatedPhone;
+            let email = updatedEmail;
+            let ico = updatedIco;
+
+            data = await updateUserEntity(userId, editorId, name, surname, phone, email, ico);
+            window.location.reload();
+        } catch (e) {
+            console.log(e.response.data.message)
+        }
+    }
+
     const confirmLead = async () => {
         document.getElementById("lead-modal").classList.add("show");
     }
@@ -497,6 +555,10 @@ const ContactProfile = observer(() => {
             let userId = contact.id;
             data = await generateFacture(userId);
             setGeneratedFacture(true);
+            fetchFactureByUserId(userId).then(data => {
+                setFacture(data);
+                console.log(data)
+            })
         } catch (e) {
             alert(e.response.data.message)
         }
@@ -517,7 +579,35 @@ const ContactProfile = observer(() => {
         document.getElementById("facture-modal").classList.remove("show");
     }
 
+    function roleClassSwitch(param) {
+        switch(param) {
+            case 'NEW':
+                return 'badge bg-soft-success text-success';
+            case 'LOST':
+                return 'badge bg-soft-danger text-danger';
+            case 'DEFERRED':
+                return 'badge bg-soft-warning text-warning';
+            case 'EDR_CANCELLED':
+                return 'badge bg-soft-dark text-dark';
+            default:
+                return 'badge bg-soft-success text-success';
+        }
+    }
 
+    function roleTextSwitch(param) {
+        switch(param) {
+            case 'NEW':
+                return 'NOVÝ';
+            case 'LOST':
+                return 'ZTRACENÝ';
+            case 'DEFERRED':
+                return 'ODLOŽENÝ';
+            case 'EDR_CANCELLED':
+                return 'ZRUŠENÝ ČLEN';
+            default:
+                return 'NOVÝ';
+        }
+    }
 
 
 
@@ -612,14 +702,17 @@ const ContactProfile = observer(() => {
                                                  alt="profile-image" />
 
                                             <h4 className="mb-0">{contact.name + ' ' + contact.surname}</h4>
-                                            <p className="text-muted">@ {role}</p>
+                                              <p className="text-muted"><span className={roleClassSwitch(role)}>{roleTextSwitch(role)}</span>
+                                            </p>
 
                                             <button type="button"
                                                     className="btn btn-danger btn-xs waves-effect mb-2 waves-light">Odeslat email
                                             </button>
 
                                             <div className="text-start mt-3">
-                                                <h4 className="font-13 text-uppercase">Role : {role} </h4>
+                                                <h4 className="font-13 text-uppercase">Role :
+                                                    <span className={roleClassSwitch(role)}>{roleTextSwitch(role)}</span>
+                                                </h4>
 
                                                 <p className="text-muted mb-2 font-13"><strong>Jméno a přijmení :</strong>
                                                     <span className="ms-2">{contact.name + ' ' + contact.surname}</span></p>
@@ -719,7 +812,7 @@ const ContactProfile = observer(() => {
                                                                             <h3>Supersmlouva</h3>
                                                                             <button onClick={generateSupercontract} type="button" className="mb-3 mt-2 btn btn-info waves-effect waves-light"><i
                                                                                 className="mdi mdi-cloud-outline me-1"></i> Vygenerovat supersmlouvu
-                                                                            </button>
+                                                                            </button> <br/>
                                                                             <button onClick={generateSupercontract} type="button" className="mb-3 mt-2 btn btn-info waves-effect waves-light"><i
                                                                                 className="mdi mdi-cloud-outline me-1"></i> Vygenerovat dilčí supersmlouvu
                                                                             </button>
@@ -753,69 +846,63 @@ const ContactProfile = observer(() => {
                                                                     (role === "APPLICANT") ?
                                                                         <div className="col-md-12">
                                                                             <h4>Faktura</h4>
-                                                                            {
-                                                                                (contact.factureGenerated === false) ?
-                                                                                    <button onClick={createFacture} type="button" className="mb-3 mt-2 btn btn-info waves-effect waves-light"><i
-                                                                                        className="mdi mdi-cloud-outline me-1"></i> Vygenerovat fakturu
-                                                                                    </button>
-                                                                                    :
-                                                                                    facture !== null ?
-                                                                                        <div className="table-responsive">
-                                                                                            <table className="table table-centered table-nowrap table-striped"
-                                                                                                   id="products-datatable">
-                                                                                                <thead>
-                                                                                                <tr>
-                                                                                                    <th>Jméno</th>
-                                                                                                    <th>Příjmení</th>
-                                                                                                    <th>Datum vytvoření</th>
-                                                                                                    <th>Datum splatností</th>
-                                                                                                    <th>Variabilní symbol</th>
-                                                                                                    <th>Částka</th>
-                                                                                                    <th>Stav faktury</th>
-                                                                                                    <th>Stahnout</th>
-                                                                                                    <th>Odstranit</th>
-                                                                                                </tr>
-                                                                                                </thead>
-                                                                                                <tbody>
-                                                                                                <tr>
-                                                                                                    <td className="table-user">
-                                                                                                        <a href={CONTACT_PROFILE_ROUTE + '/' + facture.user.id} className="text-body fw-semibold">{facture.user.name}</a>
-                                                                                                    </td>
-                                                                                                    <td>
-                                                                                                        {facture.user.surname}
-                                                                                                    </td>
-                                                                                                    <td>
-                                                                                                        {facture.createdAt}
-                                                                                                    </td>
-                                                                                                    <td>
-                                                                                                        {facture.dueDate}
-                                                                                                    </td>
-                                                                                                    <td>
-                                                                                                        {facture.varSymbol}
-                                                                                                    </td>
-                                                                                                    <td>
-                                                                                                        {facture.totalPrice}
-                                                                                                    </td>
-                                                                                                    <td>
-                                                                                                        <span className={roleClassSwitch(facture.factureStatus)}>{roleTextSwitch(facture.factureStatus)}</span>
-                                                                                                    </td>
-                                                                                                    <td>
-                                                                                                        <button type="button" className="btn btn-success waves-effect waves-light"><i
-                                                                                                            className="mdi mdi-download"></i></button>
-                                                                                                    </td>
-                                                                                                    <td>
-                                                                                                        <button type="button" className="btn btn-danger waves-effect waves-light"><i
-                                                                                                            className="mdi mdi-close"></i></button>
-                                                                                                    </td>
-                                                                                                </tr>
-                                                                                                </tbody>
-                                                                                            </table>
-                                                                                        </div> : ""
-                                                                            }
-                                                                            <button type="button"
-                                                                                    className="mb-3 btn btn-dark waves-effect waves-light"><i
-                                                                                className="mdi mdi-cloud-outline me-1"></i> Zaslat fakturu do mailu
+                                                                            <button onClick={createFacture} type="button" className="mb-3 mt-2 btn btn-info waves-effect waves-light"><i
+                                                                                className="mdi mdi-cloud-outline me-1"></i> Vygenerovat fakturu
                                                                             </button>
+                                                                            {
+                                                                                facture !== null ?
+                                                                                    <div className="table-responsive">
+                                                                                        <table className="table table-centered table-nowrap table-striped"
+                                                                                               id="products-datatable">
+                                                                                            <thead>
+                                                                                            <tr>
+                                                                                                <th>Jméno</th>
+                                                                                                <th>Příjmení</th>
+                                                                                                <th>Datum vytvoření</th>
+                                                                                                <th>Datum splatností</th>
+                                                                                                <th>Variabilní symbol</th>
+                                                                                                <th>Částka</th>
+                                                                                                <th>Stav faktury</th>
+                                                                                                <th>Stahnout</th>
+                                                                                                <th>Odstranit</th>
+                                                                                            </tr>
+                                                                                            </thead>
+                                                                                            <tbody>
+                                                                                            <tr>
+                                                                                                <td className="table-user">
+                                                                                                    <a href={CONTACT_PROFILE_ROUTE + '/' + facture.user.id} className="text-body fw-semibold">{facture.user.name}</a>
+                                                                                                </td>
+                                                                                                <td>
+                                                                                                    {facture.user.surname}
+                                                                                                </td>
+                                                                                                <td>
+                                                                                                    {facture.createdAt}
+                                                                                                </td>
+                                                                                                <td>
+                                                                                                    {facture.dueDate}
+                                                                                                </td>
+                                                                                                <td>
+                                                                                                    {facture.varSymbol}
+                                                                                                </td>
+                                                                                                <td>
+                                                                                                    {facture.totalPrice}
+                                                                                                </td>
+                                                                                                <td>
+                                                                                                    <span className={roleClassSwitch(facture.factureStatus)}>{roleTextSwitch(facture.factureStatus)}</span>
+                                                                                                </td>
+                                                                                                <td>
+                                                                                                    <button type="button" onClick={fetchFacture} className="btn btn-success waves-effect waves-light"><i
+                                                                                                        className="mdi mdi-download"></i></button>
+                                                                                                </td>
+                                                                                                <td>
+                                                                                                    <button type="button" onClick={deleteFactureFunc} className="btn btn-danger waves-effect waves-light"><i
+                                                                                                        className="mdi mdi-close"></i></button>
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                            </tbody>
+                                                                                        </table>
+                                                                                    </div> : ""
+                                                                            }
                                                                             <br/><br/>
                                                                             <h4>Příhláška</h4>
 
@@ -824,31 +911,63 @@ const ContactProfile = observer(() => {
                                                                             </button> <br/>
                                                                             <button type="button"
                                                                                     className="mb-3 btn btn-dark waves-effect waves-light"><i
-                                                                                className="mdi mdi-cloud-outline me-1"></i> Zaslat příhlášku do mailu
+                                                                                className="mdi mdi-cloud-outline me-1"></i> Zaslat příhlášku s fakturou do mailu
                                                                             </button>
-                                                                            <br/><br/>
-                                                                            <div className="mb-3">
-                                                                                { (!signedContract) ?
-                                                                                    <div className="mb-3">
-                                                                                        <label htmlFor="example-fileinput" className="form-label">
-                                                                                            Přidat podepsanou přihlášku</label>
-                                                                                        <input type="file" onChange={e => setSelectedEdrRequest(e.target.files[0])} id="example-fileinput"
-                                                                                               className="form-control"/> <br/>
-                                                                                        <button onClick={saveRequest} type="button"
-                                                                                                className="mt-3 btn btn-primary waves-effect waves-light">Uložit podepsanou přihlášku
-                                                                                        </button>
-                                                                                    </div>
-                                                                                    :
-                                                                                    <div>
-                                                                                        <button onClick={fetchEdrRequest} type="button"
-                                                                                                className="btn btn-success waves-effect waves-light">Stahnout podepsanou přihlášku
-                                                                                        </button> <br/>
-                                                                                        <button onClick={deleteEdrRequest} type="button"
-                                                                                                className="mt-3 btn btn-danger waves-effect waves-light">Odstranit podepsanou přihlášku
-                                                                                        </button>
-                                                                                    </div>
-                                                                                }
-                                                                            </div>
+                                                                            {
+                                                                                facture !== null ?
+                                                                                    <div className="table-responsive">
+                                                                                        <table className="table table-centered table-nowrap table-striped"
+                                                                                               id="products-datatable">
+                                                                                            <thead>
+                                                                                            <tr>
+                                                                                                <th>Jméno</th>
+                                                                                                <th>Příjmení</th>
+                                                                                                <th>Datum vytvoření</th>
+                                                                                                <th>Datum splatností</th>
+                                                                                                <th>Variabilní symbol</th>
+                                                                                                <th>Částka</th>
+                                                                                                <th>Stav faktury</th>
+                                                                                                <th>Stahnout</th>
+                                                                                                <th>Odstranit</th>
+                                                                                            </tr>
+                                                                                            </thead>
+                                                                                            <tbody>
+                                                                                            <tr>
+                                                                                                <td className="table-user">
+                                                                                                    <a href={CONTACT_PROFILE_ROUTE + '/' + facture.user.id} className="text-body fw-semibold">{facture.user.name}</a>
+                                                                                                </td>
+                                                                                                <td>
+                                                                                                    {facture.user.surname}
+                                                                                                </td>
+                                                                                                <td>
+                                                                                                    {facture.createdAt}
+                                                                                                </td>
+                                                                                                <td>
+                                                                                                    {facture.dueDate}
+                                                                                                </td>
+                                                                                                <td>
+                                                                                                    {facture.varSymbol}
+                                                                                                </td>
+                                                                                                <td>
+                                                                                                    {facture.totalPrice}
+                                                                                                </td>
+                                                                                                <td>
+                                                                                                    <span className={roleClassSwitch(facture.factureStatus)}>{roleTextSwitch(facture.factureStatus)}</span>
+                                                                                                </td>
+                                                                                                <td>
+                                                                                                    <button type="button" onClick={fetchFacture} className="btn btn-success waves-effect waves-light"><i
+                                                                                                        className="mdi mdi-download"></i></button>
+                                                                                                </td>
+                                                                                                <td>
+                                                                                                    <button type="button" onClick={deleteFactureFunc} className="btn btn-danger waves-effect waves-light"><i
+                                                                                                        className="mdi mdi-close"></i></button>
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                            </tbody>
+                                                                                        </table>
+                                                                                    </div> : ""
+                                                                            }
+
                                                                         </div>
                                                                         : <div></div>
                                                                 }
@@ -866,7 +985,7 @@ const ContactProfile = observer(() => {
 
                                                     </div>
                                                 }
-                                                {(role === "ADMIN" || role === "MANAGER" || role === "SALESMAN") ?
+                                                {(role === "ADMIN" || role === "MANAGER" || role === "SALESMAN" || role === "CC") ?
                                                     <div className="tab-pane active" id="edit">
                                                         <form>
                                                             <h5 className="mb-4 text-uppercase"><i
@@ -878,49 +997,43 @@ const ContactProfile = observer(() => {
                                                                 <div className="col-md-6">
                                                                     <div className="mb-3">
                                                                         <label htmlFor="firstname" className="form-label">Jméno</label>
-                                                                        <input value={contact.name} type="text" className="form-control"
+                                                                        <input value={updatedName} onChange={e => setUpdatedName(e.target.value)} type="text" className="form-control"
                                                                                id="firstname" placeholder="Enter first name" />
                                                                     </div>
                                                                 </div>
                                                                 <div className="col-md-6">
                                                                     <div className="mb-3">
                                                                         <label htmlFor="lastname" className="form-label">Příjmení</label>
-                                                                        <input value={contact.surname} type="text" className="form-control"
+                                                                        <input value={updatedSurname} onChange={e => setUpdatedSurname(e.target.value)} type="text" className="form-control"
                                                                                id="lastname" placeholder="Enter last name"/>
                                                                     </div>
                                                                 </div>
                                                                 <div className="col-md-6">
                                                                     <div className="mb-3">
                                                                         <label htmlFor="lastname" className="form-label">Telefon</label>
-                                                                        <input value={contact.phone} type="number" className="form-control"
+                                                                        <input value={updatedPhone} onChange={e => setUpdatedPhone(e.target.value)} type="number" className="form-control"
                                                                                id="lastname" placeholder="Enter last name"/>
                                                                     </div>
                                                                 </div>
                                                                 <div className="col-md-6">
                                                                     <div className="mb-3">
                                                                         <label htmlFor="lastname" className="form-label">Email</label>
-                                                                        <input value={contact.email} type="name" className="form-control"
-                                                                               id="lastname" placeholder="Enter last name"/>
-                                                                    </div>
-                                                                </div>
-                                                                <div className="col-md-6">
-                                                                    <div className="mb-3">
-                                                                        <label htmlFor="lastname" className="form-label">Město</label>
-                                                                        <input value={contact.city} type="name" className="form-control"
+                                                                        <input value={updatedEmail} onChange={e => setUpdatedEmail(e.target.value)} type="name" className="form-control"
                                                                                id="lastname" placeholder="Enter last name"/>
                                                                     </div>
                                                                 </div>
                                                                 <div className="col-md-6">
                                                                     <div className="mb-3">
                                                                         <label htmlFor="lastname" className="form-label">PSČ</label>
-                                                                        <input value={contact.ico} type="name" className="form-control"
+                                                                        <input value={updatedIco} onChange={e => setUpdatedIco(e.target.value)} type="number" className="form-control"
                                                                                id="lastname" placeholder="Enter last name"/>
                                                                     </div>
                                                                 </div>
+
                                                             </div>
 
                                                             <div className="text-end">
-                                                                <button type="submit"
+                                                                <button onClick={updateUser} type="button"
                                                                         className="btn btn-success waves-effect waves-light mt-2">
                                                                     <i className="mdi mdi-content-save"></i> Save
                                                                 </button>
@@ -977,64 +1090,59 @@ const ContactProfile = observer(() => {
                                                             </div>
                                                         </div>
 
-                                                        <form>
-                                                            <h5 className="mb-4 text-uppercase"><i
-                                                                className="mdi mdi-account-circle me-1"></i> Osobní informace</h5>
-                                                            <div className="row">
+                                                        <div className="tab-pane active" id="edit">
+                                                            <form>
+                                                                <h5 className="mb-4 text-uppercase"><i
+                                                                    className="mdi mdi-account-circle me-1"></i> Osobní informace</h5>
+                                                                <div className="row">
 
-                                                            </div>
-                                                            <div className="row">
-                                                                <div className="col-md-6">
-                                                                    <div className="mb-3">
-                                                                        <label htmlFor="firstname" className="form-label">Jméno</label>
-                                                                        <input value={contact.name} type="text" className="form-control"
-                                                                               id="firstname" placeholder="Enter first name" />
+                                                                </div>
+                                                                <div className="row">
+                                                                    <div className="col-md-6">
+                                                                        <div className="mb-3">
+                                                                            <label htmlFor="firstname" className="form-label">Jméno</label>
+                                                                            <input value={updatedName} onChange={e => setUpdatedName(e.target.value)} type="text" className="form-control"
+                                                                                   id="firstname" placeholder="Enter first name" />
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="col-md-6">
+                                                                        <div className="mb-3">
+                                                                            <label htmlFor="lastname" className="form-label">Příjmení</label>
+                                                                            <input value={updatedSurname} onChange={e => setUpdatedSurname(e.target.value)} type="text" className="form-control"
+                                                                                   id="lastname" placeholder="Enter last name"/>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="col-md-6">
+                                                                        <div className="mb-3">
+                                                                            <label htmlFor="lastname" className="form-label">Telefon</label>
+                                                                            <input value={updatedPhone} onChange={e => setUpdatedPhone(e.target.value)} type="number" className="form-control"
+                                                                                   id="lastname" placeholder="Enter last name"/>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="col-md-6">
+                                                                        <div className="mb-3">
+                                                                            <label htmlFor="lastname" className="form-label">Email</label>
+                                                                            <input value={updatedEmail} onChange={e => setUpdatedEmail(e.target.value)} type="name" className="form-control"
+                                                                                   id="lastname" placeholder="Enter last name"/>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="col-md-6">
+                                                                        <div className="mb-3">
+                                                                            <label htmlFor="lastname" className="form-label">PSČ</label>
+                                                                            <input value={updatedIco} onChange={e => setUpdatedIco(e.target.value)} type="name" className="form-control"
+                                                                                   id="lastname" placeholder="Enter last name"/>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
-                                                                <div className="col-md-6">
-                                                                    <div className="mb-3">
-                                                                        <label htmlFor="lastname" className="form-label">Příjmení</label>
-                                                                        <input value={contact.surname} type="text" className="form-control"
-                                                                               id="lastname" placeholder="Enter last name"/>
-                                                                    </div>
-                                                                </div>
-                                                                <div className="col-md-6">
-                                                                    <div className="mb-3">
-                                                                        <label htmlFor="lastname" className="form-label">Telefon</label>
-                                                                        <input value={contact.phone} type="number" className="form-control"
-                                                                               id="lastname" placeholder="Enter last name"/>
-                                                                    </div>
-                                                                </div>
-                                                                <div className="col-md-6">
-                                                                    <div className="mb-3">
-                                                                        <label htmlFor="lastname" className="form-label">Email</label>
-                                                                        <input value={contact.email} type="name" className="form-control"
-                                                                               id="lastname" placeholder="Enter last name"/>
-                                                                    </div>
-                                                                </div>
-                                                                <div className="col-md-6">
-                                                                    <div className="mb-3">
-                                                                        <label htmlFor="lastname" className="form-label">Město</label>
-                                                                        <input value={contact.city} type="name" className="form-control"
-                                                                               id="lastname" placeholder="Enter last name"/>
-                                                                    </div>
-                                                                </div>
-                                                                <div className="col-md-6">
-                                                                    <div className="mb-3">
-                                                                        <label htmlFor="lastname" className="form-label">PSČ</label>
-                                                                        <input value={contact.ico} type="name" className="form-control"
-                                                                               id="lastname" placeholder="Enter last name"/>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
 
-                                                            <div className="text-end">
-                                                                <button type="submit"
-                                                                        className="btn btn-success waves-effect waves-light mt-2">
-                                                                    <i className="mdi mdi-content-save"></i> Save
-                                                                </button>
-                                                            </div>
-                                                        </form>
+                                                                <div className="text-end">
+                                                                    <button onClick={updateUser} type="button"
+                                                                            className="btn btn-success waves-effect waves-light mt-2">
+                                                                        <i className="mdi mdi-content-save"></i> Save
+                                                                    </button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
                                                     </div>
                                                 }
 
@@ -1047,7 +1155,7 @@ const ContactProfile = observer(() => {
                             </div>
 
                             {
-                                (role === "ADMIN" || role === "MANAGER" || role === "SALESMAN") ?
+                                (role === "ADMIN" || role === "MANAGER" || role === "SALESMAN" || role === "CC") ?
                                     ""
                                     :
                                     <div className="row mt-3">
@@ -1056,7 +1164,11 @@ const ContactProfile = observer(() => {
                                             <div className="email-communication">
                                                 <h4>Komunikace OZ s klientem</h4>
                                                 <ul className="conversation-list" data-simplebar="init">
-                                                    {communication.contacts.map(mail =>
+                                                    {
+                                                        communication.contacts.length === 0 ?
+                                                        "V současné chvíli neexistuje záznam o komunikaci s klientem"
+                                                        :
+                                                        communication.contacts.map(mail =>
                                                         mail.emailFrom == contact.email ?
                                                             <li className="clearfix odd" >
                                                                 <div className="chat-avatar">

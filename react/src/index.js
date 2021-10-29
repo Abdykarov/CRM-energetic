@@ -15,6 +15,7 @@ import CommunicationStore from "./store/CommunicationStore";
 import NotesStore from "./store/NotesStore";
 import AreaStore from "./store/AreaStore";
 import FactureStore from "./store/FactureStore";
+import LeadContractStore from "./store/LeadContractStore";
 
 export const Context = createContext(null)
 ReactDOM.render(
@@ -22,6 +23,7 @@ ReactDOM.render(
         user: new UserStore(),
         contact: new ContactStore(),
         lead: new LeadStore(),
+        leadContract: new LeadContractStore(),
         admin: new AdminStore(),
         salesman: new SalesmanStore(),
         manager: new ManagerStore(),

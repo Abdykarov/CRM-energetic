@@ -15,6 +15,6 @@ export const auth = async () => {
 
 // current sets his new username and password, and sends edr link
 export const edrRegistrate = async (edrLink, username, password) => {
-    const {data} = await $host.post('edr_api/user/edr/registrate', {edrLink, username, password})
+    const {data} = await $host.post('edr_api/edr/registrate', {edrLink, username, password})
     return data
 }

@@ -5,6 +5,7 @@ import {fetchContacts, fetchLeads} from "../http/contactAPI";
 import LeadTable from "../component/tables/LeadTable";
 import {CONTACT_PROFILE_ROUTE} from "../utils/const";
 import HeaderItem from "../component/items/HeaderItem";
+import Footer from "../component/Footer";
 
 const Lead = () => {
     const {lead} = useContext(Context)
@@ -30,9 +31,6 @@ const Lead = () => {
                                     <div className="card-body">
                                         <div className="row mb-2">
                                             <div className="col-sm-4">
-                                                <a href="/registration/contact" className="btn btn-danger waves-effect waves-light"><i
-                                                    className="mdi mdi-plus-circle me-1"></i> Vytvořit kontakt
-                                                </a>
                                             </div>
                                             <div className="col-sm-8">
                                                 <div className="text-sm-end mt-2 mt-sm-0">
@@ -167,15 +165,8 @@ const Lead = () => {
 
                 </div>
 
-                <footer className="footer">
-                    <div className="container-fluid">
-                        <div className="row">
-                            <div className="col-md-6">
-                                &copy; Design by <a href="">Karlin It Group</a>
-                            </div>
-                        </div>
-                    </div>
-                </footer>
+                <Footer></Footer>
+
             </div>
         </div>
     );

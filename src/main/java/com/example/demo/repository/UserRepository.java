@@ -19,4 +19,8 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     boolean existsByUsername(String username);
 
     List<UserEntity> findBySalesmanId(Long salesmanId);
+
+    List<UserEntity> findByRoles_NameOrderByRoleChangedDateDesc(String name);
+
+
 }

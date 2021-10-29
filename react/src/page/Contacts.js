@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React, {useContext, useEffect} from 'react';
-import {fetchContacts, fetchSalesmanContacts} from "../http/contactAPI";
+import {exportJson, fetchContacts, fetchSalesmanContacts} from "../http/contactAPI";
 import ContactItem from "../component/items/ContactItem";
 import {observer} from "mobx-react-lite";
 import {Context} from "../index";
@@ -8,6 +8,7 @@ import ContactTable from "../component/tables/ContactTable";
 import Footer from "../component/Footer";
 import {CONTACT_PROFILE_ROUTE} from "../utils/const";
 import HeaderItem from "../component/items/HeaderItem";
+import {getFilteredFactures} from "../http/factureAPI";
 
 const Contacts = observer(() => {
     const {contact} = useContext(Context)
@@ -22,6 +23,15 @@ const Contacts = observer(() => {
                 console.log(data)
             })
     }, [])
+
+    const exportUsers = async () => {
+        try {
+            let response
+            response = await exportJson()
+        } catch (e) {
+            alert(e.response.data.message)
+        }
+    }
 
     return (
         <div>
@@ -45,7 +55,7 @@ const Contacts = observer(() => {
                                                 <div className="text-sm-end mt-2 mt-sm-0">
                                                     <button type="button" className="btn btn-light mb-2 me-1">Import
                                                     </button>
-                                                    <button type="button" className="btn btn-light mb-2">Export</button>
+                                                    <a href="http://localhost:8080/edr_api/user/export-json" className="btn btn-light mb-2">Export</a>
                                                 </div>
                                             </div>
                                         </div>

@@ -6,11 +6,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
 public interface EdrService {
-    String createReferalLink(Long edrId);
 
     EdrResponseDto registrateEdr(@RequestBody EdrRequestDto edrRequestDto);
 
     String createRegistrationLink(Long currentId);
 
     EdrResponseDto saveEdr(EdrRequestDto edrRequestDto);
+
+    String createReferalLink(String email, Long id);
 }

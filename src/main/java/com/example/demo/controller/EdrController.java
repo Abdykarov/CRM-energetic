@@ -27,9 +27,9 @@ public class EdrController {
     }
 
     @PreAuthorize("hasRole('ROLE_EDR')")
-    @GetMapping("/referal-link/{id}")
-    public String createReferalLink(@PathVariable("id") Long edrId){
-        return edrService.createReferalLink(edrId);
+    @GetMapping("/referal-link/{email}/{id}")
+    public String createReferalLink(@PathVariable("email") String email, @PathVariable Long id){
+        return edrService.createReferalLink(email, id);
     }
 
     @PostMapping("/registrate")

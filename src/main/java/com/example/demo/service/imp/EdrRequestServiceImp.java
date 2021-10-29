@@ -4,7 +4,9 @@ import com.example.demo.domain.UserEntity;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.EdrRequestService;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,11 +19,13 @@ import java.nio.file.Paths;
 
 @Service
 @Slf4j
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class EdrRequestServiceImp implements EdrRequestService {
 
-    private static String UPLOADED_FOLDER = "/home/abdykili/workflow/CRM-energetic/src/main/resources/edr_request/";
-    private UserRepository userRepository;
+    @Value("${file.upload.edr-requests}")
+    private String UPLOADED_FOLDER;
+
+    private final UserRepository userRepository;
 
     @Override
     @Transactional

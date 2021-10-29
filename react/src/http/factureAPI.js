@@ -24,3 +24,8 @@ export const generateFacture = async (userId) => {
     const {data} = await $authHost.post('edr_api/factures/generate-request', {userId})
     return data
 }
+
+export const getDocumentPdf = async (factureId) => {
+    const {data} = await $authHost.get('edr_api/factures/facture-request-pdf/' + factureId)
+    return data
+}

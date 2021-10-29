@@ -5,12 +5,6 @@ export const fetchInbox = async () =>{
     return data
 }
 
-
-export const fetchOutbox = async () =>{
-    const {data} = await $authHost.get('edr_api/mail/fetch/outbox')
-    return data
-}
-
 export const fetchCommunicationByUserId = async (id) =>{
     let url = 'edr_api/mail/'+id+'/communication'
     const {data} = await $authHost.get(url)

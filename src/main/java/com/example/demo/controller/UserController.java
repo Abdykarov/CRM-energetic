@@ -4,6 +4,7 @@ import com.example.demo.dto.request.ReferalContactRequestDto;
 import com.example.demo.dto.request.*;
 import com.example.demo.dto.response.*;
 import com.example.demo.security.TokenProvider;
+import com.example.demo.service.imp.JsonExporterImpl;
 import com.example.demo.service.imp.UserServiceImp;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.SignatureException;
@@ -40,6 +41,8 @@ public class UserController {
     private TokenProvider tokenProvider;
 
     private UserServiceImp userService;
+
+    private JsonExporterImpl jsonExporter;
 
     @GetMapping("/refresh/")
     public ResponseEntity<?> refreshToken(HttpServletRequest request, HttpServletResponse response) {
@@ -173,6 +176,19 @@ public class UserController {
     public List<LeadResponseDto> getLeads() {
         return userService.getLeads();
     }
+
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_SALESMAN')")
+    @GetMapping("/contact/last-leads")
+    public List<LeadResponseDto> getLastLeads() {
+        return userService.getLastLeads();
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_SALESMAN')")
+    @GetMapping("/contact/last-contracts")
+    public List<LeadResponseDto> getLastContracts() {
+        return userService.getLastContracts();
+    }
+
 
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')")
     @GetMapping("/contact/applicants/")
@@ -357,7 +373,16 @@ public class UserController {
         userService.setDocumentState(id, document, status);
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_SALESMAN')")
+    @PostMapping("/update")
+    public UserResponseDto updateUser(@RequestBody UserUpdatedRequestDto userUpdatedRequestDto) {
+        return userService.updateUser(userUpdatedRequestDto);
+    }
 
+    @GetMapping("/export-json")
+    public ResponseEntity<byte[]> downloadJsonFile() {
+        return userService.exportJsonFile();
+    }
 
 
 }

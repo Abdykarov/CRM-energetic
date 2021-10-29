@@ -3,10 +3,29 @@
 import React from 'react';
 import {useHistory} from "react-router-dom";
 import {CONTACT_PROFILE_ROUTE} from "../../utils/const";
+import {setDocumentState} from "../../http/contactAPI";
+import {getDocumentPdf} from "../../http/factureAPI";
 
 const FactureItem = ({facture}) => {
     const history = useHistory()
-    console.log(facture)
+
+    const downloadPdf = async () => {
+        fetch(process.env.REACT_APP_API_URL + "edr_api/factures/facture-request-pdf/" + facture.id, {
+            method: 'get',
+            headers: new Headers({
+                'Authorization': 'Bearer '+ localStorage.getItem('token'),
+                'Content-Type': 'application/json'
+            })
+        }) // FETCH BLOB FROM IT
+            .then((response) => response.blob())
+            .then((blob) => { // RETRIEVE THE BLOB AND CREATE LOCAL URL
+                var _url = window.URL.createObjectURL(blob);
+                window.open(_url, "_blank"); // window.open + focus
+            }).catch((err) => {
+            console.log(err);
+        });
+    }
+
     function roleClassSwitch(param) {
         switch(param) {
             case 'PAID':
@@ -57,7 +76,7 @@ const FactureItem = ({facture}) => {
                 <span className={roleClassSwitch(facture.factureStatus)}>{roleTextSwitch(facture.factureStatus)}</span>
             </td>
             <td>
-                <button type="button" className="btn btn-success waves-effect waves-light"><i
+                <button onClick={downloadPdf} type="button" className="btn btn-success waves-effect waves-light"><i
                     className="mdi mdi-download"></i></button>
             </td>
             <td>

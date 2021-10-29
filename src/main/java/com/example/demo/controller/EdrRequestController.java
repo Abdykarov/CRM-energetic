@@ -4,8 +4,10 @@ package com.example.demo.controller;
 import com.example.demo.service.imp.EdrRequestServiceImp;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -21,13 +23,17 @@ import java.nio.file.Paths;
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RequestMapping("/edr_api/edr_request")
 public class EdrRequestController {
 
+    @Value("${file.upload.edr-requests}")
+    private String UPLOADED_FOLDER;
+
+    @Value("${file.app.folder}")
+    private String APP_FOLDER;
+
     private final EdrRequestServiceImp edrRequestService;
-    private static String UPLOADED_FOLDER = "/home/abdykili/workflow/CRM-energetic/src/main/resources/edr_request/";
-    private static String APP_FOLDER = "/home/abdykili/workflow/CRM-energetic/src/main/resources/documents/";
 
     @RequestMapping(value = "/save/{userId}", method = RequestMethod.POST)
     public String uploadRequest(@RequestParam("file") MultipartFile file, @PathVariable Long userId) {

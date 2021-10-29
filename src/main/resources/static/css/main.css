@@ -1,0 +1,23 @@
+@import url('https://fonts.googleapis.com/css2?family=Titillium+Web:wght@200;300;400;600;700;900&display=swap');
+
+body{
+    font-family: 'Titillium Web', sans-serif !important;
+    color: #505050;
+}
+.header{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+.header div{
+    width: 50%;
+}
+.facture-info{
+    background: #41c0bd;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+.facture-info div{
+    width: 50%;
+}

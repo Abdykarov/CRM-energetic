@@ -35,4 +35,6 @@ public interface FactureRepository extends JpaRepository<FactureEntity, Long> {
 
 
     FactureEntity findByUserId(Long userId);
+
+    boolean existsByUserId(Long userId);
 }

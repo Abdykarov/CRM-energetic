@@ -6,6 +6,7 @@ import com.example.demo.domain.RoleEntity;
 import com.example.demo.domain.UserEntity;
 import com.example.demo.dto.request.EdrRequestDto;
 import com.example.demo.dto.response.EdrResponseDto;
+import com.example.demo.exception.UserStateControlException;
 import com.example.demo.mapper.EdrMapper;
 import com.example.demo.repository.EdrLinkRepository;
 import com.example.demo.repository.ReferalLinkRepository;
@@ -14,14 +15,19 @@ import com.example.demo.repository.UserRepository;
 import com.example.demo.service.EdrService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.mail.*;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import javax.persistence.EntityNotFoundException;
 import java.util.HashSet;
+import java.util.Properties;
 import java.util.Random;
 import java.util.Set;
 
@@ -42,22 +48,22 @@ public class EdrServiceImp implements UserDetailsService,EdrService {
      * Generate referal link which is reffered to edr user
      * Create referal link entity with link, edr user
      * Return generated referal link
-     * @param edrId Edr user id
+     * @param Edr user id
      * @return Generated Referal link
      */
     @Override
-    public String createReferalLink(Long edrId) {
+    public String createReferalLink(String email, Long id) {
 
         // generate unique referal link
-        String generateReferalLink = generateUniqueString(10);
+        String generateReferalLink = generateUniqueString(20);
 
         // find edr user by id
-        final UserEntity edrEntity = userRepository.findById(edrId)
+        final UserEntity edrEntity = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Edr user not found"));
 
         // check if referal link exists, if it is then call the function again
         if(referalLinkRepository.existsByReferalLink(generateReferalLink)){
-            createReferalLink(edrId);
+            createReferalLink(email,id);
         }
 
         // create new referal link entity, with edr user, new referal link
@@ -68,6 +74,43 @@ public class EdrServiceImp implements UserDetailsService,EdrService {
         // save referal link entity
         ReferalLinkEntity save = referalLinkRepository.save(referalLinkEntity);
 
+        // email send string TODO
+        log.info("Generated ref link : {}", generateReferalLink);
+
+        final String username = "crm@energetickedruzstvo.cz";  // like yourname@outlook.com
+        final String password = "Foy37364";   // password here
+
+        Properties props = new Properties();
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.host", "smtp-mail.outlook.com");
+        props.put("mail.smtp.port", "587");
+
+        Session session = Session.getInstance(props,
+                new javax.mail.Authenticator() {
+                    @Override
+                    protected PasswordAuthentication getPasswordAuthentication() {
+                        return new PasswordAuthentication(username, password);
+                    }
+                });
+        session.setDebug(true);
+
+        try {
+
+            Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(username));
+            message.setRecipients(Message.RecipientType.TO,
+                    InternetAddress.parse(email));   // like inzi769@gmail.com
+            message.setSubject("Registrace do systému, registrační formulář");
+            message.setText("Dobrý den, posíláme Vám váš registrační odkaz do registračního formulářu " + "http://localhost:3000/registration/referal/" + generateReferalLink + " .Vás doporučil/a pan̈́/paní " +
+                    edrEntity.getName() + " " + edrEntity.getSurname());
+
+            Transport.send(message);
+
+            log.info("Registrační odkaz byl odeslan");
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
+        }
         return generateReferalLink;
     }
 
@@ -81,6 +124,9 @@ public class EdrServiceImp implements UserDetailsService,EdrService {
     public EdrResponseDto registrateEdr(EdrRequestDto edrRequestDto) {
         // Edr registration unique link
         final String edrLink = edrRequestDto.getEdrLink();
+        if(!edrLinkRepository.existsByRegistrationLink(edrLink)){
+            throw new UserStateControlException("Registrační odkáz je neplatný", HttpStatus.CONFLICT);
+        }
         // Get entity by edr link
         final EdrLinkEntity edrLinkEntity = edrLinkRepository.findByRegistrationLink(edrLink);
         // get current id from edr link entity, then fetch user by current id
@@ -88,11 +134,11 @@ public class EdrServiceImp implements UserDetailsService,EdrService {
                 .orElseThrow(() -> new EntityNotFoundException("User doesnt exist"));
         // check if username already exists
         if(user.getUsername() != null){
-            throw new RuntimeException("Edr already exists");
+            throw new UserStateControlException("Edr already exists", HttpStatus.CONFLICT);
         }
         // check if such username exists
         if (userRepository.existsByUsername(edrRequestDto.getUsername())) {
-            throw new RuntimeException("User with such username exists");
+            throw new UserStateControlException("User with such username exists", HttpStatus.CONFLICT);
         }
         // set password and username
         user
@@ -119,12 +165,14 @@ public class EdrServiceImp implements UserDetailsService,EdrService {
     public String createRegistrationLink(Long currentId) {
 
         // generate unique edr registration link
-        String generateUniqueString = generateUniqueString(10);
+        String generateUniqueString = generateUniqueString(20);
 
         // find current user by id
         final UserEntity currentEntity = userRepository.findById(currentId)
                 .orElseThrow(() -> new EntityNotFoundException("User with such id doesnt exist"));
-
+        if(!currentEntity.isRequestToEdrAccepted()){
+            throw new UserStateControlException("Musíte schválit kontakt předtím", HttpStatus.CONFLICT);
+        }
         // check if registration link exists, if it is then call the function again
         if(edrLinkRepository.existsByRegistrationLink(generateUniqueString)){
             createRegistrationLink(currentId);
@@ -139,7 +187,41 @@ public class EdrServiceImp implements UserDetailsService,EdrService {
         EdrLinkEntity save = edrLinkRepository.save(edrLinkEntity);
 
         // email send string TODO
+        log.info("Generated ref link : {}", generateUniqueString);
 
+        final String username = "crm@energetickedruzstvo.cz";  // like yourname@outlook.com
+        final String password = "Foy37364";   // password here
+
+        Properties props = new Properties();
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.host", "smtp-mail.outlook.com");
+        props.put("mail.smtp.port", "587");
+
+        Session session = Session.getInstance(props,
+                new javax.mail.Authenticator() {
+                    @Override
+                    protected PasswordAuthentication getPasswordAuthentication() {
+                        return new PasswordAuthentication(username, password);
+                    }
+                });
+        session.setDebug(true);
+
+        try {
+
+            Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(username));
+            message.setRecipients(Message.RecipientType.TO,
+                    InternetAddress.parse(currentEntity.getEmail()));   // like inzi769@gmail.com
+            message.setSubject("Registrace do systému, registrační odkaz");
+            message.setText("Dobrý den, posíláme Vám váš registrační odkaz do systému " + "http://localhost:3000/edr/registrate/" + generateUniqueString);
+
+            Transport.send(message);
+
+            log.info("Registrační odkaz byl odeslan");
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
+        }
         return generateUniqueString;
     }
 

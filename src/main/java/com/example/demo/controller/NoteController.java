@@ -35,7 +35,7 @@ public class NoteController {
         return noteService.getContactNotes(contactId);
     }
 
-    @PreAuthorize("hasRole('ROLE_MANAGER')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')")
     @PostMapping
     public void saveContactNote(@RequestBody NoteRequestDto noteRequestDto){
         noteService.saveContactNote(noteRequestDto);

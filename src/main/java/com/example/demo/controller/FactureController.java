@@ -67,12 +67,18 @@ public class FactureController {
         return factureService.generateRequestFacture(factureRequestDto);
     }
 
-//
-//    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')")
-//    @GetMapping("/facture-request-pdf/{facture-id}")
-//    public ResponseEntity<?> getFacturePdf(HttpServletRequest request, HttpServletResponse response, @PathVariable("facture-id") Long factureId) throws Exception {
-//        return factureService.getFacturePdf(templateEngine, request, response, factureId);
-//    }
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')")
+    @GetMapping("/{userId}/delete")
+    public HttpStatus deleteFacture(@PathVariable Long userId){
+        return factureService.deleteFacture(userId);
+    }
+
+    @GetMapping("/facture-request-pdf/{facture-id}")
+    public ResponseEntity<ByteArrayResource> getFacturePdf(@PathVariable("facture-id") Long factureId) {
+        final ResponseEntity<ByteArrayResource> facturePdf = factureService.getFacturePdf(factureId);
+        log.info("Returning pdf facture {}", facturePdf);
+        return facturePdf;
+    }
 
 
 }

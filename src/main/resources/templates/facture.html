@@ -1,22 +1,56 @@
-<!doctype html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!DOCTYPE HTML>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
 <head>
-    <meta charset="UTF-8">
-    <meta content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
-          name="viewport">
-    <meta content="ie=edge" http-equiv="X-UA-Compatible">
-    <title>Spring Boot - Thymeleaf</title>
-    <link th:href="@{/main.css}" rel="stylesheet"/>
+    <title>Student Details</title>
+    <link rel="stylesheet" th:href="@{css/main.css}"></link>
+    <!--    <link type="stylesheet" href="http://localhost:8080/css/main.css"/>-->
 </head>
-<body class="flex items-center justify-center h-screen">
-<div class="rounded-lg border shadow-lg p-10 w-3/5">
-    <div class="flex flex-row justify-between pb-4">
-        <div>
-            <h2 class="text-xl font-bold">FAKTURA #<span class="text-green-600" th:text="${factureEntity.id}"></span>
-            </h2>
-        </div>
-    </div>
+<body>
+<div>
+            <div class="header">
+                <div>
+                    <h2 class="text-xl font-bold">FAKTURA č<span th:text="${factureId}"></span>
+                    </h2>
+                </div>
+                <div>
+                </div>
+            </div>
+            <div class="facture-info">
+                <div> <p><span th:text="${name}"></span></p>
+                    <p><span th:text="${surname}"></span></p>
+                    <p><span th:text="${ico}"></span></p>
+                    <p><span th:text="${area}"></span></p>
+                    <p><span th:text="${phone}"></span></p>
+                    <p><span th:text="${email}"></span></p>
+                    <p><span th:text="${creationDate}"></span></p>
+                    <p><span th:text="${untilDate}"></span></p>
+                    <p><span th:text="${price}"></span></p>
+                    <p><span th:text="${vs}"></span></p></div>
+                <div> <p><span th:text="${name}"></span></p>
+                    <p><span th:text="${surname}"></span></p>
+                    <p><span th:text="${ico}"></span></p>
+                    <p><span th:text="${area}"></span></p>
+                    <p><span th:text="${phone}"></span></p>
+                    <p><span th:text="${email}"></span></p>
+                    <p><span th:text="${creationDate}"></span></p>
+                    <p><span th:text="${untilDate}"></span></p>
+                    <p><span th:text="${price}"></span></p>
+                    <p><span th:text="${vs}"></span></p></div>
+            </div>
+            <div class="facture-details">
+
+            </div>
+            <div class="facture-price">
+
+            </div>
+            <div class="facture-footer">
+
+            </div>
 
 </div>
+
 </body>
+
 </html>

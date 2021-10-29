@@ -9,8 +9,6 @@ import java.sql.Date;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ApplicantRequestDto {
-
-    String opNumber;
     String name;
     String surname;
     String phone;

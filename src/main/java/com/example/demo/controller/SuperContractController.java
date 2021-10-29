@@ -1,12 +1,15 @@
 package com.example.demo.controller;
 
+import com.example.demo.domain.DocumentStatus;
 import com.example.demo.domain.UserEntity;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.imp.SuperContractServiceImpl;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -25,15 +28,18 @@ import java.time.LocalDateTime;
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RequestMapping("/edr_api/supercontract")
 public class SuperContractController {
 
     private final UserRepository userRepository;
+    private final SuperContractServiceImpl superContractService;
 
-    SuperContractServiceImpl superContractService;
-    private static String UPLOADED_FOLDER = "/home/abdykili/workflow/CRM-energetic/src/main/resources/supercontracts/";
-    private static String APP_FOLDER = "/home/abdykili/workflow/CRM-energetic/src/main/resources/documents/";
+    @Value("${file.upload.contracts}")
+    private String UPLOADED_FOLDER;
+
+    @Value("${file.app.folder}")
+    private String APP_FOLDER;
 
     @RequestMapping(value = "/save/{userId}", method = RequestMethod.POST)
     public String uploadSuperContract(@RequestParam("file") MultipartFile file, @PathVariable Long userId) {
@@ -50,13 +56,9 @@ public class SuperContractController {
     public ResponseEntity<ByteArrayResource> generateContract(@PathVariable Long userId) throws Exception {
         final UserEntity user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User doesnt exist"));
-        if(user.isEdrContractGenerated()){
-            user.setEdrContractGenerated(false);
-            user.setEdrContractGeneratedDate(LocalDateTime.now());
-        }else{
-            user.setEdrContractGenerated(true);
-            user.setEdrContractGeneratedDate(LocalDateTime.now());
-        }
+        user.setEdrContractGenerated(true);
+        user.setEdrContractGeneratedDate(LocalDateTime.now());
+        user.setEdrContractStatus(DocumentStatus.GENERATED);
         File file = new File(APP_FOLDER + "supercontract.pdf");
         log.info("File path - {}", file);
 

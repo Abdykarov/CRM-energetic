@@ -3,6 +3,7 @@ package com.example.demo.service;
 import com.example.demo.dto.request.ReferalContactRequestDto;
 import com.example.demo.dto.request.*;
 import com.example.demo.dto.response.*;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
@@ -101,4 +102,12 @@ public interface UserService {
     String getDocumentState(Long id, String document);
 
     void setDocumentState(Long id, String document, String status);
+
+    UserResponseDto updateUser(UserUpdatedRequestDto userUpdatedRequestDto);
+
+    List<LeadResponseDto> getLastLeads();
+
+    List<LeadResponseDto> getLastContracts();
+
+    ResponseEntity<byte[]> exportJsonFile();
 }

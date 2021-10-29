@@ -4,6 +4,7 @@ import {useHistory, useParams} from "react-router-dom";
 import {edrRegistrate, login} from "../http/userAPI";
 import {observer} from "mobx-react-lite";
 import {Context} from "../index";
+import {getFilteredFactures} from "../http/factureAPI";
 
 const EdrRegistration = observer(() => {
     const history = useHistory()
@@ -13,10 +14,13 @@ const EdrRegistration = observer(() => {
     const [password,setPassword] = useState('')
 
     const edr_registrate = async () => {
-        let data;
-        console.log(user)
-        data = await edrRegistrate(edrLink,username, password);
-        history.push(LOGIN_ROUTE)
+        try {
+            let response
+            response = await edrRegistrate(edrLink,username, password);
+            history.push(LOGIN_ROUTE)
+        } catch (e) {
+            alert(e)
+        }
     }
 
     return (

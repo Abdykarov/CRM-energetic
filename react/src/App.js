@@ -29,7 +29,11 @@ const App = observer(() => {
     return (
         <BrowserRouter>
             <NavBar />
-            <LeftSidebar />
+            { ( user.role === "ROLE_EDR" && window.location.pathname === "/") ?
+                ""
+                :
+                <LeftSidebar />
+            }
             <AppRouter />
         </BrowserRouter>
     );

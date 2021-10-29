@@ -1,6 +1,6 @@
 import Admin from "./page/Admin";
 import {
-    ADMIN_ROUTE, APPLICANT_ROUTE,
+    ADMIN_ROUTE, APPLICANT_ROUTE, CALLCENTRUM_ROUTE,
     CONTACT_PROFILE_ROUTE,
     CONTACTS_ROUTE,
     CREATE_EDR_ROUTE,
@@ -10,18 +10,17 @@ import {
     INBOX_ROUTE,
     LEAD_ROUTE,
     LOGIN_ROUTE,
-    MANAGER_ROUTE, OUTBOX_ROUTE,
+    MANAGER_ROUTE,
     REGISTRATION_ADMIN_ROUTE,
     REGISTRATION_CONTACT_ROUTE,
     REGISTRATION_MANAGER_ROUTE, REGISTRATION_REFERAL_ROUTE,
     REGISTRATION_SALESMAN_ROUTE,
-    SALESMAN_ROUTE,
+    SALESMAN_ROUTE, WATT_CATALOG, WATT_REFERALS,
     WATT_ROUTE
 } from "./utils/const";
 import Lead from "./page/Lead";
 import Contacts from "./page/Contacts";
 import Edr from "./page/Edr";
-import Watt from "./page/Watt";
 import Auth from "./page/Auth";
 import Dashboard from "./page/Dashboard";
 import Manager from "./page/Manager";
@@ -33,8 +32,10 @@ import Registration from "./page/Registration";
 import Edr_Registration from "./page/EdrRegistration";
 import RegestrationReferal from "./page/RegestrationReferal";
 import EdrRegistration from "./page/EdrRegistration";
-import Outbox from "./page/Outbox";
 import Applicant from "./page/Applicant";
+import CallCentrum from "./page/CallCentrum";
+import WattCatalog from "./page/WattCatalog";
+import WattReferals from "./page/WattReferals";
 
 export const authRoutes = [
     {
@@ -62,8 +63,12 @@ export const authRoutes = [
         Component: ContactProfile
     },
     {
-        path: WATT_ROUTE,
-        Component: Watt
+        path: WATT_REFERALS,
+        Component: WattReferals
+    },
+    {
+        path: WATT_CATALOG,
+        Component: WattCatalog
     },
     {
         path: MANAGER_ROUTE,
@@ -74,8 +79,8 @@ export const authRoutes = [
         Component: Salesman
     },
     {
-        path: OUTBOX_ROUTE,
-        Component: Outbox
+        path: CALLCENTRUM_ROUTE,
+        Component: CallCentrum
     },
     {
         path: INBOX_ROUTE,

@@ -1,5 +1,6 @@
 package com.example.demo.service.imp;
 
+import com.example.demo.domain.DocumentStatus;
 import com.example.demo.domain.FactureEntity;
 import com.example.demo.domain.FactureStatus;
 import com.example.demo.domain.UserEntity;
@@ -7,29 +8,50 @@ import com.example.demo.dto.fio.FioResponseDto;
 import com.example.demo.dto.fio.TransactionResponseDto;
 import com.example.demo.dto.request.FactureRequestDto;
 import com.example.demo.dto.response.FactureResponseDto;
+import com.example.demo.exception.UserStateControlException;
 import com.example.demo.mapper.FactureMapper;
 import com.example.demo.repository.FactureRepository;
 import com.example.demo.repository.NoteRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.FactureService;
+import com.lowagie.text.DocumentException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.sql.Template;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
+import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import javax.persistence.EntityNotFoundException;
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -49,7 +71,109 @@ public class FactureServiceImp implements FactureService {
     private final RestTemplate restTemplate;
 
     @Autowired
+    private final TemplateEngine templateEngine;
+
+    @Autowired
     ServletContext servletContext;
+
+    @Override
+    public ResponseEntity<ByteArrayResource> getFacturePdf(Long factureId) {
+        final FactureEntity factureEntity = factureRepository.findById(factureId)
+                .orElseThrow(() -> new EntityNotFoundException("Entity not found"));
+        Map<String,Object> studentMap = new HashMap<>();
+
+        studentMap.put("factureId", factureEntity.getId());
+        studentMap.put("name", factureEntity.getUser().getName());
+        studentMap.put("surname", factureEntity.getUser().getSurname());
+        studentMap.put("ico", factureEntity.getUser().getIco());
+        studentMap.put("area", factureEntity.getUser().getArea());
+        studentMap.put("phone", factureEntity.getUser().getPhone());
+        studentMap.put("email", factureEntity.getUser().getEmail());
+        studentMap.put("creationDate", factureEntity.getCreatedAt());
+        studentMap.put("untilDate", factureEntity.getDueDate());
+        studentMap.put("price", factureEntity.getTotalPrice());
+        studentMap.put("vs", factureEntity.getVarSymbol());
+
+//        studentMap.put("address", factureEntity.getUser().getAddress();
+        ByteArrayResource resource = null;
+        Long fileLength = null;
+        try {
+            String property = "java.io.tmpdir";
+            String tempDir = System.getProperty(property);
+            ArrayList<?> createPdfList = createPdf("facture", studentMap);
+            String fileNameUrl = (String) createPdfList.get(0);
+            fileLength = (Long) createPdfList.get(1);
+            Path path = Paths.get(tempDir+"/" + fileNameUrl);
+            resource = new ByteArrayResource(Files.readAllBytes(path));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        HttpHeaders header = new HttpHeaders();
+        header.add(HttpHeaders.CONTENT_DISPOSITION, "inline;filename=facture.pdf");
+
+        return ResponseEntity.ok()
+                .headers(header)
+                .contentLength(fileLength)
+                .contentType(MediaType.parseMediaType("application/pdf"))
+                .body(resource);
+    }
+
+    public void addResourceHandlers(final ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/css/**")
+                .addResourceLocations("classpath:/css/")
+                .setCachePeriod(31556926);
+    }
+
+    private static String getCurrentBaseUrl() {
+        ServletRequestAttributes sra = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        HttpServletRequest req = sra.getRequest();
+        return req.getScheme() + "://" + req.getServerName() + ":" + req.getServerPort() + req.getContextPath();
+    }
+
+    private ArrayList<?> createPdf(String templatename, Map map) throws IOException, DocumentException {
+
+        String fileNameUrl = "";
+        Context ctx = new Context();
+
+        if (map != null) {
+            Iterator itMap = map.entrySet().iterator();
+
+            while (itMap.hasNext()) {
+                Map.Entry pair = (Map.Entry) itMap.next();
+                ctx.setVariable(pair.getKey().toString(), pair.getValue());
+            }
+        }
+        ctx.setVariable("baseUrl", getCurrentBaseUrl());
+
+        String processedHtml = templateEngine.process(templatename, ctx);
+        FileOutputStream os = null;
+        String factureId = map.get("factureId").toString();
+        Long fileLength = null;
+        try {
+            final File outputFile = File.createTempFile("Facture_"+factureId, ".pdf");
+            os = new FileOutputStream(outputFile);
+            ITextRenderer itr = new ITextRenderer();
+            itr.setDocumentFromString(processedHtml);
+            itr.layout();
+            itr.createPDF(os, false);
+            itr.finishPDF();
+            fileLength = outputFile.length();
+            fileNameUrl = outputFile.getName();
+        }
+
+        finally {
+            if (os != null) {
+                try {
+                    os.close();
+                } catch (IOException ignored) { }
+            }
+        }
+        ArrayList list = new ArrayList<>();
+        list.add(fileNameUrl);
+        list.add(fileLength);
+        return list;
+    }
 
     @Override
     public List<FactureResponseDto> findAll() {
@@ -64,12 +188,14 @@ public class FactureServiceImp implements FactureService {
     @Override
     @Transactional
     public HttpStatus generateRequestFacture(FactureRequestDto factureRequestDto) {
-
+        if(factureRepository.existsByUserId(factureRequestDto.getUserId())){
+            throw new UserStateControlException("Faktura už existuje, odstrante existujicí", HttpStatus.CONFLICT);
+        }
         final UserEntity user = userRepository.findById(factureRequestDto.getUserId())
                 .orElseThrow(EntityNotFoundException::new);
         LocalDate currentDate =  LocalDate.now();
         LocalDate dueToDate =  LocalDate.now().plusDays(14);
-        String varSymbol = String.format("2021%04d", 321);
+        String varSymbol = String.format("2021%04d", user.getId());
         final FactureEntity factureEntity = new FactureEntity()
                 .setCreatedAt(currentDate)
                 .setDueDate(dueToDate)
@@ -81,6 +207,7 @@ public class FactureServiceImp implements FactureService {
         factureRepository.save(factureEntity);
         user.setFactureGenerated(true);
         user.setFactureGeneratedDate(LocalDateTime.now());
+        user.setFactureStatus(DocumentStatus.GENERATED);
         return HttpStatus.ACCEPTED;
     }
 
@@ -129,15 +256,14 @@ public class FactureServiceImp implements FactureService {
     public void checkExpiredFactures() {
         log.info("Checking expired factures");
         final LocalDate todayDate = LocalDate.now();
-        List<FactureEntity> expiredFactures = factureRepository.findAllByFactureStatusAndDueDateGreaterThan(FactureStatus.GENERATED, todayDate);
-        if(expiredFactures.isEmpty()){
-            log.warn("Expired factures don't exist");
-            return;
-        }
-        log.info("Expired factures : {}", expiredFactures);
-        for ( FactureEntity facture : expiredFactures ) {
-            facture.setFactureStatus(FactureStatus.EXPIRED);
+        List<FactureEntity> generatedFactures = factureRepository.findAllByFactureStatus(FactureStatus.GENERATED);
 
+        log.info("Generated factures size {} : {}", generatedFactures.size(), generatedFactures);
+        for ( FactureEntity facture : generatedFactures ) {
+            if(todayDate.isAfter(facture.getDueDate())){
+                log.info("Facture id {} is expired", facture.getVarSymbol());
+                facture.setFactureStatus(FactureStatus.EXPIRED);
+            }
         }
 
     }
@@ -189,40 +315,22 @@ public class FactureServiceImp implements FactureService {
         return factureMapper.toResponse(facture);
     }
 
+    @Override
+    @Transactional
+    public HttpStatus deleteFacture(Long userId) {
+        final UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User didnt find"));
+        final FactureEntity facture = factureRepository.findByUserId(userId);
+        factureRepository.delete(facture);
+        user.setFactureGeneratedDate(null);
+        user.setFactureGenerated(false);
+        user.setFacturePaid(false);
+        user.setFacturePaidDate(null);
+        user.setFactureSent(false);
+        user.setFactureSentDate(null);
+        user.setFactureStatus(DocumentStatus.NONE);
+        return HttpStatus.OK;
+    }
 
-//    @Override
-//    public ResponseEntity<?> getFacturePdf(TemplateEngine templateEngine, HttpServletRequest request, HttpServletResponse response, Long factureId) {
-//        /* Do Business Logic*/
-//
-//        final FactureEntity factureEntity = factureRepository.findById(factureId)
-//                .orElseThrow(() -> new EntityNotFoundException("Entity not found"));
-//
-//        /* Create HTML using Thymeleaf template Engine */
-//
-//        WebContext context = new WebContext(request, response, servletContext);
-//        context.setVariable("factureEntity", factureEntity);
-//        String orderHtml = templateEngine.process("facture", context);
-//
-//        /* Setup Source and target I/O streams */
-//
-//        ByteArrayOutputStream target = new ByteArrayOutputStream();
-//
-//        /*Setup converter properties. */
-//        ConverterProperties converterProperties = new ConverterProperties();
-//        converterProperties.setBaseUri("http://localhost:8080");
-//
-//        /* Call convert method */
-//        HtmlConverter.convertToPdf(orderHtml, target, converterProperties);
-//
-//        /* extract output as bytes */
-//        byte[] bytes = target.toByteArray();
-//
-//
-//        /* Send the response as downloadable PDF */
-//
-//        return ResponseEntity.ok()
-//                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=facture.pdf")
-//                .contentType(MediaType.APPLICATION_PDF)
-//                .body(bytes);
-//    }
+
 }
