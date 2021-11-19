@@ -16,6 +16,8 @@ import NotesStore from "./store/NotesStore";
 import AreaStore from "./store/AreaStore";
 import FactureStore from "./store/FactureStore";
 import LeadContractStore from "./store/LeadContractStore";
+import CallCentrumStore from "./store/CallCentrumStore";
+import NotificationStore from "./store/NotificationStore";
 
 export const Context = createContext(null)
 ReactDOM.render(
@@ -34,7 +36,9 @@ ReactDOM.render(
         applicant: new ApplicantStore(),
         notes: new NotesStore(),
         facture: new FactureStore(),
-        area: new AreaStore()
+        area: new AreaStore(),
+        notification: new NotificationStore(),
+        callCentrum: new CallCentrumStore()
     }}>
         <App />
     </Context.Provider>,

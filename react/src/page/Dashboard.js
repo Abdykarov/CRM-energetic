@@ -4,14 +4,18 @@ import {CONTACT_PROFILE_ROUTE} from "../utils/const";
 import Footer from "../component/Footer";
 import {Context} from "../index";
 import $ from 'jquery';
-import {fetchLastContracts, fetchLastLeads, fetchLeads} from "../http/contactAPI";
+import {deleteUserFacture, fetchLastContracts, fetchLastLeads, fetchLeads} from "../http/contactAPI";
 import LeadTable from "../component/tables/LeadTable";
 import SuperContractTable from "../component/tables/SuperContractTable";
+import {findPerson} from "../http/userAPI";
 
 const Dashboard = () => {
     const {user} = useContext(Context)
     const {lead} = useContext(Context)
     const {leadContract} = useContext(Context)
+    const [searchInput,setSearchInput] = useState('')
+    const [foundContacts,setFoundContacts] = useState([])
+
 
     useEffect(() => {
         fetchLastLeads().then(data => {
@@ -23,6 +27,26 @@ const Dashboard = () => {
             console.log(data)
         })
     }, [])
+
+    function isBlank(str) {
+        return (!str || /^\s*$/.test(str));
+    }
+
+    const searchPerson = async (word) => {
+        try {
+            setSearchInput(word)
+            let response
+            let string = searchInput.split(" ");
+            let name = string[0];
+            let surname = string[1];
+            response = await findPerson(name, surname)
+            setFoundContacts(response)
+        } catch (e) {
+            alert(e.response.data.message)
+        }
+    }
+
+
     return (
         <div>
             {
@@ -94,18 +118,24 @@ const Dashboard = () => {
                             </div>
 
                             <div className="row">
-                                <div className="col">
-                                    <input type="text" className="form-control chat-input" placeholder="Vyhledat kontakt"
+                                <div className="col-md-12 mb-3">
+                                    <input type="text" value={searchInput} onChange={event => searchPerson(event.target.value)} className="form-control chat-input" placeholder="Vyhledat kontakt"
                                            required="" />
                                     <div className="invalid-feedback">
                                         Vyhledat kontakt
                                     </div>
                                 </div>
-                                <div className="col-auto">
-                                    <button type="submit"
-                                            className="btn btn-danger chat-send waves-effect waves-light w-100">Najít
-                                    </button>
-                                </div>
+                            </div>
+                            <div className="row">
+                                <ul className="foundContacts">
+                                    { foundContacts.length === 0 ?
+                                        "Empty contacts"
+                                        :
+                                        foundContacts.map(contact =>
+                                            <li><a href={CONTACT_PROFILE_ROUTE + '/' + contact.id}>{contact.name} {contact.surname} {contact.roles[0].name}</a></li>
+                                        )
+                                    }
+                                </ul>
                             </div>
 
                             <div className="row">

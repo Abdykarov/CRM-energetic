@@ -87,6 +87,42 @@ const ApplicantItem = ({applicant}) => {
         }
     }
 
+    function roleTextSwitch(param) {
+        switch(param) {
+            case 'SIGNED':
+                return 'Podepsaný';
+            default:
+                return 'Nepodepsaný';
+        }
+    }
+
+    function factureStateFactory(param) {
+        switch(param) {
+            case 'GENERATED':
+                return 'Vygenerovaný';
+            case 'SENT':
+                return 'Odeslaný';
+            case 'PAID':
+                return 'Zaplácený';
+            default:
+                return 'Žádný';
+        }
+    }
+
+    function edrRequestStateFactory(param) {
+        switch(param) {
+            case 'GENERATED':
+                return 'Vygenerovaný';
+            case 'SENT':
+                return 'Odeslaný';
+            case 'SIGNED':
+                return 'Zaplácený';
+            case 'ACCEPTED':
+                return 'Schválený';
+            default:
+                return 'Žádný';
+        }
+    }
     return (
         <tr className="applicant-table">
             <td>
@@ -130,257 +166,34 @@ const ApplicantItem = ({applicant}) => {
                 }
             </td>
             <td>
-                {
-                    (hwSunMonitorStatus === "GENERATED") ?
-                        <select value={hwSunMonitorStatus} onChange={e => setHwSunMonitor(e.target.value)} className="form-select my-1 my-md-0" id="status-select">
-                            <option value="GENERATED" selected>Vygenerovaný</option>
-                            <option value="SENT">Odeslaný</option>
-                            <option value="SIGNED">Podepsaný</option>
-                            <option disabled value="NONE">Žádný</option>
-                        </select>
-                        :
-                        ""
-                }
-                {
-                    (hwSunMonitorStatus === "SENT") ?
-                        <select value={hwSunMonitorStatus} onChange={e => setHwSunMonitor(e.target.value)} className="form-select my-1 my-md-0" id="status-select">
-                            <option value="GENERATED">Vygenerovaný</option>
-                            <option value="SENT" selected>Odeslaný</option>
-                            <option value="SIGNED">Podepsaný</option>
-                            <option disabled value="NONE">Žádný</option>
-                        </select>
-                        :
-                        ""
-                }
-                {
-                    (hwSunMonitorStatus === "SIGNED") ?
-                        <select value={hwSunMonitorStatus} onChange={e => setHwSunMonitor(e.target.value)} className="form-select my-1 my-md-0" id="status-select">
-                            <option value="GENERATED">Vygenerovaný</option>
-                            <option value="SENT">Odeslaný</option>
-                            <option value="SIGNED" selected>Podepsaný</option>
-                            <option disabled value="NONE">Žádný</option>
-                        </select>
-                        :
-                        ""
-                }
-                {
-                    (hwSunMonitorStatus === "NONE") ?
-                        <select value={hwSunMonitorStatus} onChange={e => setHwSunMonitor(e.target.value)} className="form-select my-1 my-md-0" id="status-select">
-                            <option value="GENERATED">Vygenerovaný</option>
-                            <option value="SENT">Odeslaný</option>
-                            <option value="SIGNED">Podepsaný</option>
-                            <option value="NONE" selected={true}>Žádný</option>
-                        </select>
-                        :
-                        ""
-                }
+                <div className="document_state">
+                    {roleTextSwitch(hwSunMonitorStatus)}
+                </div>
+            </td>
+            <td>
+                <div className="document_state">
+                    {roleTextSwitch(syselAgreementStatus)}
+                </div>
 
             </td>
             <td>
-                {
-                    (syselAgreementStatus === "GENERATED") ?
-                        <select value={syselAgreementStatus} onChange={e => setSyselAgreement(e.target.value)} className="form-select my-1 my-md-0" id="status-select">
-                            <option value="GENERATED" selected>Vygenerovaný</option>
-                            <option value="SENT">Odeslaný</option>
-                            <option value="SIGNED">Podepsaný</option>
-                            <option disabled value="NONE">Žádný</option>
-                        </select>
-                        :
-                        ""
-                }
-                {
-                    (syselAgreementStatus === "SENT") ?
-                        <select value={syselAgreementStatus} onChange={e => setSyselAgreement(e.target.value)} className="form-select my-1 my-md-0" id="status-select">
-                            <option value="GENERATED">Vygenerovaný</option>
-                            <option value="SENT" selected>Odeslaný</option>
-                            <option value="SIGNED">Podepsaný</option>
-                            <option disabled value="NONE">Žádný</option>
-                        </select>
-                        :
-                        ""
-                }
-                {
-                    (syselAgreementStatus === "SIGNED") ?
-                        <select value={syselAgreementStatus} onChange={e => setSyselAgreement(e.target.value)} className="form-select my-1 my-md-0" id="status-select">
-                            <option value="GENERATED">Vygenerovaný</option>
-                            <option value="SENT">Odeslaný</option>
-                            <option value="SIGNED" selected>Podepsaný</option>
-                            <option disabled value="NONE">Žádný</option>
-                        </select>
-                        :
-                        ""
-                }
-                {
-                    (syselAgreementStatus === "NONE") ?
-                        <select value={syselAgreementStatus} onChange={e => setSyselAgreement(e.target.value)} className="form-select my-1 my-md-0" id="status-select">
-                            <option value="GENERATED">Vygenerovaný</option>
-                            <option value="SENT">Odeslaný</option>
-                            <option value="SIGNED">Podepsaný</option>
-                            <option value="NONE" selected={true}>Žádný</option>
-                        </select>
-                        :
-                        ""
-                }
-
+                <div className="document_state">
+                    {roleTextSwitch(connectedFveStatus)}
+                </div>
             </td>
             <td>
-                {
-                    (connectedFveStatus === "GENERATED") ?
-                        <select value={connectedFveStatus} onChange={e => setConnectedFve(e.target.value)} className="form-select my-1 my-md-0" id="status-select">
-                            <option value="GENERATED" selected>Vygenerovaný</option>
-                            <option value="SENT">Odeslaný</option>
-                            <option value="SIGNED">Podepsaný</option>
-                            <option disabled value="NONE">Žádný</option>
-                        </select>
-                        :
-                        ""
-                }
-                {
-                    (connectedFveStatus === "SENT") ?
-                        <select value={connectedFveStatus} onChange={e => setConnectedFve(e.target.value)} className="form-select my-1 my-md-0" id="status-select">
-                            <option value="GENERATED">Vygenerovaný</option>
-                            <option value="SENT" selected>Odeslaný</option>
-                            <option value="SIGNED">Podepsaný</option>
-                            <option disabled value="NONE">Žádný</option>
-                        </select>
-                        :
-                        ""
-                }
-                {
-                    (connectedFveStatus === "SIGNED") ?
-                        <select value={connectedFveStatus} onChange={e => setConnectedFve(e.target.value)} className="form-select my-1 my-md-0" id="status-select">
-                            <option value="GENERATED">Vygenerovaný</option>
-                            <option value="SENT">Odeslaný</option>
-                            <option value="SIGNED" selected>Podepsaný</option>
-                            <option disabled value="NONE">Žádný</option>
-                        </select>
-                        :
-                        ""
-                }
-                {
-                    (connectedFveStatus === "NONE") ?
-                        <select value={connectedFveStatus} onChange={e => setConnectedFve(e.target.value)} className="form-select my-1 my-md-0" id="status-select">
-                            <option value="GENERATED">Vygenerovaný</option>
-                            <option value="SENT">Odeslaný</option>
-                            <option value="SIGNED">Podepsaný</option>
-                            <option value="NONE" selected={true}>Žádný</option>
-                        </select>
-                        :
-                        ""
-                }
+                <div className="document_state">
+                    {edrRequestStateFactory(requestToEdrStatus)}
+                </div>
             </td>
             <td>
-                {
-                    (requestToEdrStatus === "GENERATED") ?
-                        <select value={requestToEdrStatus} onChange={e => setRequestToEdr(e.target.value)} className="form-select my-1 my-md-0" id="status-select">
-                            <option value="GENERATED" selected>Vygenerovaný</option>
-                            <option value="SENT">Odeslaný</option>
-                            <option value="SIGNED">Podepsaný</option>
-                            <option value="ACCEPTED">Schválený</option>
-                            <option disabled value="NONE">Žádný</option>
-                        </select>
-                        :
-                        ""
-                }
-                {
-                    (requestToEdrStatus === "SENT") ?
-                        <select value={requestToEdrStatus} onChange={e => setRequestToEdr(e.target.value)} className="form-select my-1 my-md-0" id="status-select">
-                            <option value="GENERATED">Vygenerovaný</option>
-                            <option value="SENT" selected>Odeslaný</option>
-                            <option value="SIGNED">Podepsaný</option>
-                            <option value="ACCEPTED">Schválený</option>
-                            <option disabled value="NONE">Žádný</option>
-                        </select>
-                        :
-                        ""
-                }
-                {
-                    (requestToEdrStatus === "SIGNED") ?
-                        <select value={requestToEdrStatus} onChange={e => setRequestToEdr(e.target.value)} className="form-select my-1 my-md-0" id="status-select">
-                            <option value="GENERATED">Vygenerovaný</option>
-                            <option value="SENT">Odeslaný</option>
-                            <option value="SIGNED" selected>Podepsaný</option>
-                            <option value="ACCEPTED">Schválený</option>
-                            <option disabled value="NONE">Žádný</option>
-                        </select>
-                        :
-                        ""
-                }
-                {
-                    (requestToEdrStatus === "NONE") ?
-                        <select value={requestToEdrStatus} onChange={e => setRequestToEdr(e.target.value)} className="form-select my-1 my-md-0" id="status-select">
-                            <option value="GENERATED">Vygenerovaný</option>
-                            <option value="SENT">Odeslaný</option>
-                            <option value="SIGNED">Podepsaný</option>
-                            <option value="ACCEPTED">Schválený</option>
-                            <option value="NONE" selected={true}>Žádný</option>
-                        </select>
-                        :
-                        ""
-                }
-                {
-                    (requestToEdrStatus === "ACCEPTED") ?
-                        <select value={requestToEdrStatus} onChange={e => setRequestToEdr(e.target.value)} className="form-select my-1 my-md-0" id="status-select">
-                            <option value="GENERATED">Vygenerovaný</option>
-                            <option value="SENT">Odeslaný</option>
-                            <option value="SIGNED">Podepsaný</option>
-                            <option value="ACCEPTED" selected>Schválený</option>
-                            <option disabled value="NONE">Žádný</option>
-                        </select>
-                        :
-                        ""
-                }
+                <div className="document_state">
+                    {factureStateFactory(factureStatus)}
+                </div>
             </td>
-            <td>
-                {
-                    (factureStatus === "GENERATED") ?
-                        <select value={factureStatus} onChange={e => setFacture(e.target.value)} className="form-select my-1 my-md-0" id="status-select">
-                            <option value="GENERATED" selected>Vygenerovaný</option>
-                            <option value="SENT">Odeslaný</option>
-                            <option value="PAID">Zaplácený</option>
-                            <option disabled value="NONE">Žádný</option>
-                        </select>
-                        :
-                        ""
-                }
-                {
-                    (factureStatus === "SENT") ?
-                        <select value={factureStatus} onChange={e => setFacture(e.target.value)} className="form-select my-1 my-md-0" id="status-select">
-                            <option value="GENERATED">Vygenerovaný</option>
-                            <option value="SENT" selected>Odeslaný</option>
-                            <option value="PAID">Zaplácený</option>
-                            <option disabled value="NONE">Žádný</option>
-                        </select>
-                        :
-                        ""
-                }
-                {
-                    (factureStatus === "PAID") ?
-                        <select value={factureStatus} onChange={e => setFacture(e.target.value)} className="form-select my-1 my-md-0" id="status-select">
-                            <option value="GENERATED">Vygenerovaný</option>
-                            <option value="SENT">Odeslaný</option>
-                            <option value="PAID" selected>Zaplácený</option>
-                            <option disabled value="NONE">Žádný</option>
-                        </select>
-                        :
-                        ""
-                }
-                {
-                    (factureStatus === "NONE") ?
-                        <select value={factureStatus} onChange={e => setFacture(e.target.value)} className="form-select my-1 my-md-0" id="status-select">
-                            <option value="GENERATED">Vygenerovaný</option>
-                            <option value="SENT">Odeslaný</option>
-                            <option value="PAID">Zaplácený</option>
-                            <option disabled value="NONE" selected>Žádný</option>
-                        </select>
-                        :
-                        ""
-                }
-            </td>
-            <td>
-                <a href={CONTACT_PROFILE_ROUTE + '/'+ applicant.id} className="action-icon"> <i
-                    className="mdi mdi-square-edit-outline"></i></a>
-            </td>
+            <td><a href={CONTACT_PROFILE_ROUTE + '/'+ applicant.id} className="action-icon">
+                <img src="https://cdn.pixabay.com/photo/2020/07/14/13/07/icon-5404125_1280.png" alt="" width="35px"/>
+            </a></td>
         </tr>
     );
 };

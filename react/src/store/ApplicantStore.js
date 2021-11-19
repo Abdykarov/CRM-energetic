@@ -5,6 +5,7 @@ export default class ApplicantStore {
     constructor() {
         this._contacts = []
         this._page = 1
+        this._totalPages = 0
         this._totalCount = 0
         this._limit = 5
         makeAutoObservable(this)
@@ -26,6 +27,15 @@ export default class ApplicantStore {
     setPage(page) {
         this._page = page;
     }
+
+    get totalPages() {
+        return this._totalPages;
+    }
+
+    setTotalPages(totalPages) {
+        this._totalPages = totalPages;
+    }
+
 
     get totalCount() {
         return this._totalCount;

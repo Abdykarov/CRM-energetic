@@ -67,6 +67,16 @@ const Inbox = observer(() => {
 
                                             <div className="mt-3">
                                                 <ul className="message-list">
+                                                    <li>
+                                                        <div className="col-mail col-mail-1"><span
+                                                            className="mail_icon"></span><a href="#"
+                                                                                                        className="title">Odkud</a>
+                                                        </div>
+                                                        <div className="col-mail col-mail-2"><a href="#"
+                                                                                                className="subject">Textová zpráva</a>
+                                                            <div className="date">Dátum</div>
+                                                        </div>
+                                                    </li>
                                                     {
                                                         mail.mails.length === 0 ?
                                                             <h3>Prazdné pole</h3>
@@ -74,8 +84,7 @@ const Inbox = observer(() => {
                                                             mail.mails.map(item =>
                                                                 <li className="unread">
                                                                     <div className="col-mail col-mail-1">
-                                                                <span
-                                                                    className="star-toggle far fa-star text-warning"></span>
+                                                                <span className="mail_icon"><img src="/images/gmail.png" alt=""/></span>
                                                                         <a href="#" onClick={() => openEmailText(item.body)} className="title">{item.emailFrom}</a>
                                                                     </div>
                                                                     <div className="col-mail col-mail-2">
@@ -92,19 +101,7 @@ const Inbox = observer(() => {
                                             </div>
 
 
-                                            <div className="row">
-                                                <div className="col-7 mt-1">
-                                                    Showing 1 - 20 of 289
-                                                </div>
-                                                <div className="col-5">
-                                                    <div className="btn-group float-end">
-                                                        <button type="button" className="btn btn-light btn-sm"><i
-                                                            className="mdi mdi-chevron-left"></i></button>
-                                                        <button type="button" className="btn btn-info btn-sm"><i
-                                                            className="mdi mdi-chevron-right"></i></button>
-                                                    </div>
-                                                </div>
-                                            </div>
+
                                         </div>
 
                                         <div className="clearfix"></div>

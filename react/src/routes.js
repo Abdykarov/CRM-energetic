@@ -10,7 +10,7 @@ import {
     INBOX_ROUTE,
     LEAD_ROUTE,
     LOGIN_ROUTE,
-    MANAGER_ROUTE,
+    MANAGER_ROUTE, NOTIFICATION_ROUTE,
     REGISTRATION_ADMIN_ROUTE,
     REGISTRATION_CONTACT_ROUTE,
     REGISTRATION_MANAGER_ROUTE, REGISTRATION_REFERAL_ROUTE,
@@ -36,8 +36,13 @@ import Applicant from "./page/Applicant";
 import CallCentrum from "./page/CallCentrum";
 import WattCatalog from "./page/WattCatalog";
 import WattReferals from "./page/WattReferals";
+import NotificationPage from "./page/NotificationPage";
 
 export const authRoutes = [
+    {
+      path: NOTIFICATION_ROUTE,
+      Component: NotificationPage
+    },
     {
         path: ADMIN_ROUTE,
         Component: Admin

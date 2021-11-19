@@ -2,21 +2,21 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {Context} from "../index";
 import {
-    deleteContract, deleteEdrRequest, deleteFve, deleteSysel, deleteUserFacture,
+    deleteContract, deleteEdrRequest, deleteFve, deleteSysel, deleteUser, deleteUserFacture,
     fetchUserById, sendEdrRegistrationLink, setEdrContractGenerated, setEdrContractSent, setEdrContractSigned,
     updateToAccepted, updateToApplicant,
     updateToCurrent, updateToEdr,
-    updateToLead,
+    updateToLead, updateToLost,
     updateToPotential, updateUserEntity, uploadSignedContract
 } from "../http/contactAPI";
 import {useHistory, useParams} from "react-router-dom";
-import {CONTACT_PROFILE_ROUTE, DASHBOARD_ROUTE, LEAD_ROUTE, LOGIN_ROUTE} from "../utils/const";
+import {CONTACT_PROFILE_ROUTE, CONTACTS_ROUTE, DASHBOARD_ROUTE, LEAD_ROUTE, LOGIN_ROUTE} from "../utils/const";
 import {observer} from "mobx-react-lite";
 import axios from "axios";
 import {edrRegistrate, login} from "../http/userAPI";
 import {createEdrNote, fetchCommunicationByUserId, fetchEdrNotesByUserId} from "../http/mailAPI";
 import Footer from "../component/Footer";
-import {fetchFactureByUserId, generateFacture} from "../http/factureAPI";
+import {deleteFactureByUserId, fetchFactureByUserId, generateFacture} from "../http/factureAPI";
 import FactureTable from "../component/tables/FactureTable";
 
 const ContactProfile = observer(() => {
@@ -155,7 +155,7 @@ const ContactProfile = observer(() => {
     }
 
     const fetchFacture = async () => {
-        fetch(process.env.REACT_APP_API_URL + "edr_api/factures/facture-request-pdf/" + id, {
+        fetch(process.env.REACT_APP_API_URL + "edr_api/factures/facture-request-pdf/" + facture.id, {
             method: 'get',
             headers: new Headers({
                 'Authorization': 'Bearer '+ localStorage.getItem('token'),
@@ -456,7 +456,16 @@ const ContactProfile = observer(() => {
         }
     }
 
-
+    const removeFacture = async () => {
+        try {
+            let response
+            let id = facture.id
+            response =  await deleteFactureByUserId(facture.user.id)
+            window.location.reload();
+        } catch (e) {
+            alert(e.response.data.message)
+        }
+    }
     // CONTACT ROLES
 
     const changeToLead = async () => {
@@ -464,6 +473,26 @@ const ContactProfile = observer(() => {
             let response
             response = await updateToLead(id)
             history.push(LEAD_ROUTE)
+        } catch (e) {
+            alert(e.response.data.message)
+        }
+    }
+
+    const changeToLost = async () => {
+        try {
+            let response
+            response = await updateToLost(id)
+            history.push(CONTACTS_ROUTE)
+        } catch (e) {
+            alert(e.response.data.message)
+        }
+    }
+
+    const deleteContact = async () => {
+        try {
+            let response
+            response = await deleteUser(id)
+            history.push(CONTACTS_ROUTE)
         } catch (e) {
             alert(e.response.data.message)
         }
@@ -537,8 +566,24 @@ const ContactProfile = observer(() => {
         document.getElementById("lead-modal").classList.add("show");
     }
 
+    const confirmLost = async () => {
+        document.getElementById("lost-modal").classList.add("show");
+    }
+
+    const confirmDelete = async () => {
+        document.getElementById("delete-modal").classList.add("show");
+    }
+
     const closeLead = async () => {
         document.getElementById("lead-modal").classList.remove("show");
+    }
+
+    const closeLost = async () => {
+        document.getElementById("lost-modal").classList.remove("show");
+    }
+
+    const closeDelete = async () => {
+        document.getElementById("delete-modal").classList.remove("show");
     }
 
     const confirmApplicant = async () => {
@@ -589,6 +634,12 @@ const ContactProfile = observer(() => {
                 return 'badge bg-soft-warning text-warning';
             case 'EDR_CANCELLED':
                 return 'badge bg-soft-dark text-dark';
+            case 'PAID':
+                return 'badge bg-soft-success text-success';
+            case 'GENERATED':
+                return 'badge bg-soft-primary text-primary';
+            case 'EXPIRED':
+                return 'badge bg-soft-danger text-danger';
             default:
                 return 'badge bg-soft-success text-success';
         }
@@ -596,6 +647,20 @@ const ContactProfile = observer(() => {
 
     function roleTextSwitch(param) {
         switch(param) {
+            case 'CC':
+                return 'CALL CENTRUM';
+            case 'SALESMAN':
+                return 'OBCHODNÍ ZÁSTUPCE';
+            case 'ADMIN':
+                return 'ADMIN';
+            case 'MANAGER':
+                return 'MANAŽER';
+            case 'GENERATED':
+                return 'ZGENEROVANÝ';
+            case 'PAID':
+                return 'ZAPLACENÝ';
+            case 'EXPIRED':
+                return 'VYPRŠENÍ';
             case 'NEW':
                 return 'NOVÝ';
             case 'LOST':
@@ -647,6 +712,50 @@ const ContactProfile = observer(() => {
                         </div>
                         <div className="modal-footer">
                             <button onClick={closeLead} type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="modal fade" id="lost-modal" tabIndex="-1" aria-labelledby="scrollableModalTitle" aria-modal="true" role="dialog">
+                <div className="modal-dialog modal-dialog-scrollable" role="document">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h5 className="modal-title" id="scrollableModalTitle">Potvrzení přechodu</h5>
+                            <button onClick={closeLost} type="button" className="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                        </div>
+                        <div className="modal-body">
+                            <p>
+                                Opravdu chcete změnit stav na Ztracený?
+                            </p>
+                            <button onClick={changeToLost} type="button"
+                                    className="mb-3 btn btn-primary waves-effect waves-light">Změnit stav na Ztracený
+                            </button>
+                        </div>
+                        <div className="modal-footer">
+                            <button onClick={closeLost} type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="modal fade" id="delete-modal" tabIndex="-1" aria-labelledby="scrollableModalTitle" aria-modal="true" role="dialog">
+                <div className="modal-dialog modal-dialog-scrollable" role="document">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h5 className="modal-title" id="scrollableModalTitle">Potvrzení smazaní</h5>
+                            <button onClick={closeDelete} type="button" className="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                        </div>
+                        <div className="modal-body">
+                            <p>
+                                Opravdu chcete smazat klienta?
+                            </p>
+                            <button onClick={deleteContact} type="button"
+                                    className="mb-3 btn btn-primary waves-effect waves-light">Smazat
+                            </button>
+                        </div>
+                        <div className="modal-footer">
+                            <button onClick={closeDelete} type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         </div>
                     </div>
                 </div>
@@ -705,9 +814,9 @@ const ContactProfile = observer(() => {
                                               <p className="text-muted"><span className={roleClassSwitch(role)}>{roleTextSwitch(role)}</span>
                                             </p>
 
-                                            <button type="button"
+                                            <a href={'mailto:' + contact.email}
                                                     className="btn btn-danger btn-xs waves-effect mb-2 waves-light">Odeslat email
-                                            </button>
+                                            </a>
 
                                             <div className="text-start mt-3">
                                                 <h4 className="font-13 text-uppercase">Role :
@@ -771,7 +880,7 @@ const ContactProfile = observer(() => {
                                     <div className="card">
                                         <div className="card-body">
                                                 {
-                                                    (role === "ADMIN" || role === "MANAGER" || role === "SALESMAN") ?
+                                                    (role === "ADMIN" || role === "MANAGER" || role === "SALESMAN" || role === "CC") ?
                                                         <ul className="nav nav-pills nav-fill navtab-bg">
                                                             <li className="nav-item">
                                                                 <a href="#edit" data-bs-toggle="tab" aria-expanded="false"
@@ -797,7 +906,7 @@ const ContactProfile = observer(() => {
                                                     </ul>
                                                 }
                                             <div className="tab-content">
-                                                {(role === "ADMIN" || role === "MANAGER" || role === "SALESMAN") ?
+                                                {(role === "ADMIN" || role === "MANAGER" || role === "SALESMAN" || role === "CC") ?
                                                     <div className="tab-pane show" id="attachments">
                                                     </div>
                                                     :
@@ -895,7 +1004,7 @@ const ContactProfile = observer(() => {
                                                                                                         className="mdi mdi-download"></i></button>
                                                                                                 </td>
                                                                                                 <td>
-                                                                                                    <button type="button" onClick={deleteFactureFunc} className="btn btn-danger waves-effect waves-light"><i
+                                                                                                    <button type="button" onClick={removeFacture} className="btn btn-danger waves-effect waves-light"><i
                                                                                                         className="mdi mdi-close"></i></button>
                                                                                                 </td>
                                                                                             </tr>
@@ -920,50 +1029,11 @@ const ContactProfile = observer(() => {
                                                                                                id="products-datatable">
                                                                                             <thead>
                                                                                             <tr>
-                                                                                                <th>Jméno</th>
-                                                                                                <th>Příjmení</th>
-                                                                                                <th>Datum vytvoření</th>
-                                                                                                <th>Datum splatností</th>
-                                                                                                <th>Variabilní symbol</th>
-                                                                                                <th>Částka</th>
-                                                                                                <th>Stav faktury</th>
-                                                                                                <th>Stahnout</th>
-                                                                                                <th>Odstranit</th>
+                                                                                                <th>Dátum vytvoření</th>
+                                                                                                <th>Dátum odeslaní</th>
+                                                                                                <th>Stav příhlášky</th>
                                                                                             </tr>
                                                                                             </thead>
-                                                                                            <tbody>
-                                                                                            <tr>
-                                                                                                <td className="table-user">
-                                                                                                    <a href={CONTACT_PROFILE_ROUTE + '/' + facture.user.id} className="text-body fw-semibold">{facture.user.name}</a>
-                                                                                                </td>
-                                                                                                <td>
-                                                                                                    {facture.user.surname}
-                                                                                                </td>
-                                                                                                <td>
-                                                                                                    {facture.createdAt}
-                                                                                                </td>
-                                                                                                <td>
-                                                                                                    {facture.dueDate}
-                                                                                                </td>
-                                                                                                <td>
-                                                                                                    {facture.varSymbol}
-                                                                                                </td>
-                                                                                                <td>
-                                                                                                    {facture.totalPrice}
-                                                                                                </td>
-                                                                                                <td>
-                                                                                                    <span className={roleClassSwitch(facture.factureStatus)}>{roleTextSwitch(facture.factureStatus)}</span>
-                                                                                                </td>
-                                                                                                <td>
-                                                                                                    <button type="button" onClick={fetchFacture} className="btn btn-success waves-effect waves-light"><i
-                                                                                                        className="mdi mdi-download"></i></button>
-                                                                                                </td>
-                                                                                                <td>
-                                                                                                    <button type="button" onClick={deleteFactureFunc} className="btn btn-danger waves-effect waves-light"><i
-                                                                                                        className="mdi mdi-close"></i></button>
-                                                                                                </td>
-                                                                                            </tr>
-                                                                                            </tbody>
                                                                                         </table>
                                                                                     </div> : ""
                                                                             }
@@ -1051,7 +1121,15 @@ const ContactProfile = observer(() => {
                                                                                 className="mdi mdi-account-circle me-1"></i> Změna stavu</h5>
                                                                             <div className="col-md-12">
                                                                                 <button onClick={confirmLead} type="button"
-                                                                                        className="mb-3 btn btn-primary waves-effect waves-light">Změnit stav na Lead
+                                                                                        className="mb-3 btn btn-primary waves-effect waves-light role_btn">Změnit stav na Lead
+                                                                                </button>
+
+                                                                                <button onClick={confirmLost} type="button"
+                                                                                        className="mb-3 btn btn-warning waves-effect waves-light role_btn">Změnit stav na Ztracený
+                                                                                </button>
+
+                                                                                <button onClick={confirmDelete} type="button"
+                                                                                        className="mb-3 btn btn-danger waves-effect waves-light role_btn">Smazat klienta
                                                                                 </button>
                                                                             </div>
                                                                         </div> : <div></div>

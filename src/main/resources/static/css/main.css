@@ -2,6 +2,7 @@
 
 body{
     font-family: 'Titillium Web', sans-serif !important;
+    font-weight: 400;
     color: #505050;
 }
 .header{
@@ -9,15 +10,147 @@ body{
     flex-direction: row;
     justify-content: flex-start;
 }
+.header h2{
+    color: #41c0bd;
+    font-weight: normal;
+    font-size: 60px;
+    margin: 0;
+}
+.header img{
+    width: 300px;
+    align-content: center;
+    margin-top: 25px;
+    float: right;
+
+}
 .header div{
     width: 50%;
 }
 .facture-info{
+    padding: 15px 100px;
+    border-radius: 5px;
+    color: #fff;
     background: #41c0bd;
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
 }
 .facture-info div{
+    display: inline-block;
     width: 50%;
+}
+.facture-info h4{
+    font-size: 22px;
+    font-weight: normal;
+    margin: 0;
+    margin-left: 10px;
+    margin-bottom: 10px;
+}
+.facture-info p{
+    font-size: 20px;
+    margin:  10px;
+}
+
+.facture-details{
+    display: flex;
+    margin-top: 25px;
+    margin-bottom: 50px;
+    justify-content: space-between;
+
+}
+.facture-details-left{
+    margin-bottom: 15px;
+}
+.facture-details > div{
+    width: 48%;
+}
+.facture-details-right{
+    width: 100%;
+    padding: 10px 15px;
+    box-sizing: border-box;
+    margin-bottom: 22px;
+    border-radius: 5px;
+    background: #e8e8e8;
+}
+.facture-details-left > div{
+    width: 100%;
+    padding: 10px 15px;
+    box-sizing: border-box;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    background: #e8e8e8;
+}
+.facture-details p{
+    font-size: 20px;
+}
+.facture-details p span{
+    float: right;
+}
+
+.facture-price{
+    width: 100%;
+    overflow: hidden;
+    background: #e8e8e8;
+}
+.facture-price table{
+    border-collapse: collapse;
+    width: 100%;
+}
+.facture-price table thead{
+    text-align: left;
+    width: 100%;
+    height: 70px;
+    background: #e8e8e8;
+}
+.facture-price table tbody{
+    border-top: 2px solid #fff;
+    width: 100%;
+    background: #e8e8e8;
+}
+.facture-price table tbody tr td{
+    padding: 20px 0px;
+    font-size: 18px;
+}
+.facture-price table thead tr th{
+    padding: 0;
+    margin: 0;
+}
+.facture-price div{
+    margin-top: 50px;
+    width: 100%;
+}
+.facture-price div p{
+    width: 50%;
+    float: right;
+    font-size: 20px;
+}
+.facture-price div p span{
+    float: right;
+    margin-right: 30px;
+    display: inline-block;
+    vertical-align: middle;
+}
+.facture-price div p span b{
+    font-size: 35px;
+    vertical-align: middle;
+}
+.facture-footer{
+    background: #41c0bd;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 200px;
+    padding: 50px 15px;
+    box-sizing: border-box;
+    border-radius: 5px;
+}
+.facture-footer a{
+    color: #fff;
+    text-decoration: none;
+    font-size: 20px;
+    font-weight: 300;
+}
+.facture-footer div{
+    text-align: center;
+    width: 33%;
+    display: inline-block;
 }

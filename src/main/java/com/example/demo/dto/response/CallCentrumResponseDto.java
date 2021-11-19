@@ -7,6 +7,7 @@ import lombok.experimental.FieldDefaults;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CallCentrumResponseDto {
+    private Long id;
     private String username;
     private String password;
     private String name;

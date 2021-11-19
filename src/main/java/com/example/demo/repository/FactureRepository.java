@@ -34,7 +34,7 @@ public interface FactureRepository extends JpaRepository<FactureEntity, Long> {
     Page<FactureEntity> findByFactureStatusOrderByDueDateDesc(FactureStatus generated, Pageable pageable);
 
 
-    FactureEntity findByUserId(Long userId);
+    Optional<FactureEntity> findByUserId(Long userId);
 
     boolean existsByUserId(Long userId);
 }

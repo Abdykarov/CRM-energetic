@@ -29,3 +29,9 @@ export const getDocumentPdf = async (factureId) => {
     const {data} = await $authHost.get('edr_api/factures/facture-request-pdf/' + factureId)
     return data
 }
+
+export const deleteFactureByUserId = async (userId) => {
+    console.log(userId)
+    const {data} = await $authHost.get('edr_api/factures/' + userId + '/delete')
+    return data
+}

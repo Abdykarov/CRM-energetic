@@ -189,7 +189,7 @@ const Registration = observer(() => {
                                                 <div className="row">
                                                     <div className="mb-3 col-md-4">
                                                         <label htmlFor="icoInput" className="form-label">Psč <span className="text-danger">*</span></label>
-                                                        <input value={ico} onChange={e => setIco(e.target.value)} type="number" className="form-control" id="icoInput" required/>
+                                                        <input value={ico} onChange={e => setIco(e.target.value)} type="number" placeholder="Zadat Poštovní směrovací číslo" className="form-control" id="icoInput" required/>
                                                     </div>
 
                                                     <div className="mb-3 col-md-8">
@@ -315,7 +315,7 @@ const Registration = observer(() => {
 
                                                     <div className="col-md-6 mb-3">
                                                         <label htmlFor="icoInput" className="form-label">Psč <span className="text-danger">*</span></label>
-                                                        <input value={ico} onChange={e => setIco(e.target.value)} type="number" className="form-control" id="icoInput" required/>
+                                                        <input value={ico} onChange={e => setIco(e.target.value)} type="number" placeholder="Zadat Poštovní směrovací číslo" className="form-control" id="icoInput" required/>
                                                     </div>
 
                                                     <div className="col-md-6 mb-3">

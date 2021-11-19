@@ -18,3 +18,11 @@ export const edrRegistrate = async (edrLink, username, password) => {
     const {data} = await $host.post('edr_api/edr/registrate', {edrLink, username, password})
     return data
 }
+
+export const findPerson = async (name,surname) => {
+    if(surname === undefined){
+        surname = "";
+    }
+    const {data} = await $authHost.get('edr_api/user/search?name=' + name + '&surname=' + surname)
+    return data
+}

@@ -4,7 +4,7 @@ import React from 'react';
 import {useHistory} from "react-router-dom";
 import {CONTACT_PROFILE_ROUTE} from "../../utils/const";
 import {setDocumentState} from "../../http/contactAPI";
-import {getDocumentPdf} from "../../http/factureAPI";
+import {deleteFactureByUserId, getDocumentPdf} from "../../http/factureAPI";
 
 const FactureItem = ({facture}) => {
     const history = useHistory()
@@ -24,6 +24,17 @@ const FactureItem = ({facture}) => {
             }).catch((err) => {
             console.log(err);
         });
+    }
+
+    const removeFacture = async () => {
+        try {
+            let response
+            let id = facture.id
+            response =  await deleteFactureByUserId(facture.user.id)
+            window.location.reload();
+        } catch (e) {
+            alert(e.response.data.message)
+        }
     }
 
     function roleClassSwitch(param) {
@@ -80,7 +91,7 @@ const FactureItem = ({facture}) => {
                     className="mdi mdi-download"></i></button>
             </td>
             <td>
-                <button type="button" className="btn btn-danger waves-effect waves-light"><i
+                <button type="button" onClick={removeFacture} className="btn btn-danger waves-effect waves-light"><i
                     className="mdi mdi-close"></i></button>
             </td>
         </tr>

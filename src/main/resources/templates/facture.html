@@ -1,55 +1,265 @@
 <!DOCTYPE HTML>
 
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="cs" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <title>Student Details</title>
-    <link rel="stylesheet" th:href="@{css/main.css}"></link>
-    <!--    <link type="stylesheet" href="http://localhost:8080/css/main.css"/>-->
+    <style>
+        body{
+            font-family: 'Titillium Web', sans-serif !important;
+            font-weight: 400;
+            color: #505050;
+        }
+        .header{
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+        }
+        .header h2{
+            color: #41c0bd;
+            font-weight: normal;
+            font-size: 60px;
+            margin: 0;
+        }
+        .header img{
+            width: 300px;
+            align-content: center;
+            margin-top: 25px;
+            float: right;
+
+        }
+        .header div{
+            width: 50%;
+        }
+        .facture-info{
+            padding: 15px 100px;
+            border-radius: 5px;
+            box-sizing: border-box;
+            overflow: hidden;
+            color: #fff;
+            background: #41c0bd;
+            display: block;
+            width: 100%;
+        }
+        .facture-info div{
+            display: inline-block;
+            width: 49%;
+            padding: 10px 15px;
+            box-sizing: border-box;
+            float: left;
+        }
+        .facture-info h4{
+            font-size: 22px;
+            font-weight: normal;
+            margin: 0;
+            margin-left: 10px;
+            margin-bottom: 10px;
+        }
+        .facture-info p{
+            font-size: 17px;
+            margin:  10px;
+        }
+
+        .facture-details{
+            display: block;
+            width: 100%;
+            overflow: hidden;
+            margin-top: 25px;
+            margin-bottom: 50px;
+        }
+        .facture-details-left{
+            margin-bottom: 15px;
+        }
+        .facture-details > div{
+            width: 49% !important;
+            display: inline-block;
+            float: left;
+        }
+        .facture-details-right{
+            margin-left: 1%;
+            padding: 10px 15px;
+            box-sizing: border-box;
+            margin-bottom: 30px;
+            border-radius: 5px;
+            background: #e8e8e8;
+        }
+        .facture-details-left > div{
+            padding: 10px 15px;
+            box-sizing: border-box;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            background: #e8e8e8;
+        }
+        .facture-details p{
+            font-size: 17px;
+        }
+        .facture-details p span{
+            float: right;
+        }
+
+        .facture-price{
+            width: 100%;
+            overflow: hidden;
+            background: #e8e8e8;
+        }
+        .facture-price table{
+            border-collapse: collapse;
+            width: 100%;
+        }
+        .facture-price table thead{
+            text-align: left;
+            width: 100%;
+            height: 70px;
+            background: #e8e8e8;
+        }
+        .facture-price table tbody{
+            border-top: 2px solid #fff;
+            width: 100%;
+            background: #e8e8e8;
+        }
+        .facture-price table tbody tr td{
+            padding: 20px 10px;
+            box-sizing: border-box;
+            font-size: 15px;
+            font-weight: 400;
+            color: #000000;
+        }
+        .facture-price table thead tr th{
+            padding: 0;
+            margin: 0;
+            padding: 20px 15px;
+            font-size: 15px;
+            font-weight: 400;
+            box-sizing: border-box;
+            color: #000000;
+        }
+        .facture-price div{
+            margin-top: 50px;
+            width: 100%;
+        }
+        .facture-price div p{
+            font-size: 15px;
+            padding-left: 20px;
+        }
+        .facture-price div p span{
+            float: right;
+            margin-right: 10px;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .facture-price div p span b .price{
+            float: none;
+            margin-right: 5px;
+        }
+        .facture-price div p span b{
+            font-size: 30px;
+            color: #000000;
+            padding-left: 10px;
+            vertical-align: middle;
+        }
+        .facture-footer{
+            background: #41c0bd;
+            width: 100%;
+            display: block;
+            overflow: hidden;
+            margin-top: 200px;
+            padding: 50px 15px;
+            box-sizing: border-box;
+            border-radius: 5px;
+        }
+        .facture-footer > div{
+            width: 33%;
+            display: inline-block;
+            float: left;
+        }
+        .facture-footer a{
+            color: #fff;
+            text-decoration: none;
+            font-size: 20px;
+            font-weight: 300;
+            text-align: center;
+        }
+        .facture-footer div{
+            width: 33%;
+            display: inline-block;
+        }
+    </style>
 </head>
 <body>
-<div>
-            <div class="header">
-                <div>
-                    <h2 class="text-xl font-bold">FAKTURA č<span th:text="${factureId}"></span>
-                    </h2>
-                </div>
-                <div>
-                </div>
-            </div>
-            <div class="facture-info">
-                <div> <p><span th:text="${name}"></span></p>
-                    <p><span th:text="${surname}"></span></p>
-                    <p><span th:text="${ico}"></span></p>
-                    <p><span th:text="${area}"></span></p>
-                    <p><span th:text="${phone}"></span></p>
-                    <p><span th:text="${email}"></span></p>
-                    <p><span th:text="${creationDate}"></span></p>
-                    <p><span th:text="${untilDate}"></span></p>
-                    <p><span th:text="${price}"></span></p>
-                    <p><span th:text="${vs}"></span></p></div>
-                <div> <p><span th:text="${name}"></span></p>
-                    <p><span th:text="${surname}"></span></p>
-                    <p><span th:text="${ico}"></span></p>
-                    <p><span th:text="${area}"></span></p>
-                    <p><span th:text="${phone}"></span></p>
-                    <p><span th:text="${email}"></span></p>
-                    <p><span th:text="${creationDate}"></span></p>
-                    <p><span th:text="${untilDate}"></span></p>
-                    <p><span th:text="${price}"></span></p>
-                    <p><span th:text="${vs}"></span></p></div>
-            </div>
-            <div class="facture-details">
+    <div class="header">
+        <div>
+            <p class="text-xl font-bold">FAKTURA č<span th:text="${factureId}"></span>
+            </p>
+        </div>
+        <div>
+            <img src="/logoEDR.png" alt=""></img>
+        </div>
+    </div>
+    <div class="facture-info">
+        <div class="facture-info-left">
+            <p><span th:text="${name}"></span> <span th:text="${surname}"></span></p>
+            <p><span th:text="${ico}"></span></p>
+            <p><span th:text="${area}"></span></p>
+            <p><span th:text="${phone}"></span></p>
+            <p><span th:text="${email}"></span></p>
+        </div>
 
+        <div class="facture-info-right">
+            <p>DODAVATEL</p>
+            <p>Energetické družstvo vlastníků</p>
+            <p>fotovoltaických elektráren</p>
+            <p>Zelinkovice 92</p>
+            <p>739 42 Frýdek-Místek</p>
+            <br></br> <br></br>
+            <p>IČ: 09921192</p>
+            <p>DIČ: CZ09921192</p>
+        </div>
+    </div>
+    <div class="facture-details">
+        <div class="facture-details-left">
+            <div>
+                <p>Datum vystavení: <span th:text="${creationDate}"></span></p>
+                <p>Datum splatnosti: <span th:text="${untilDate}"></span></p>
             </div>
-            <div class="facture-price">
-
+            <div>
+                <p>Způsob platby: <span>bankovním převodem</span></p>
             </div>
-            <div class="facture-footer">
+        </div>
+        <div class="facture-details-right">
+            <p>Banka: <span>FIO BANKA a.s.</span></p>
+            <p>Bankovní účet: <span>2201943530/2010</span></p>
+            <p>Iban: <span>xxxxxxxxxxxxxxx</span></p>
+            <p>Variabilní symbol: <span th:text="${vs}"></span></p>
+        </div>
 
-            </div>
-
-</div>
+    </div>
+    <div class="facture-price">
+        <table>
+            <thead>
+            <tr>
+                <th>Název položky</th>
+                <th>Množství</th>
+                <th>Cena za položku</th>
+                <th>Sazba DPH</th>
+                <th>DPH</th>
+                <th>Cena celkem</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>Základní členský vklad</td>
+                <td>1</td>
+                <td>5 CZK</td>
+                <td>0</td>
+                <td>0</td>
+                <td><span th:text="${price}"></span> CZK</td>
+            </tr>
+            </tbody>
+        </table>
+        <div>
+            <p>CENA CELKEM S DPH <span><b><span class="price" th:text="${price}"></span></b>CZK</span></p>
+        </div>
+    </div>
 
 </body>
 

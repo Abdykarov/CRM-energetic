@@ -1,9 +1,6 @@
 package com.example.demo.service.imp;
 
-import com.example.demo.domain.DocumentStatus;
-import com.example.demo.domain.FactureEntity;
-import com.example.demo.domain.FactureStatus;
-import com.example.demo.domain.UserEntity;
+import com.example.demo.domain.*;
 import com.example.demo.dto.fio.FioResponseDto;
 import com.example.demo.dto.fio.TransactionResponseDto;
 import com.example.demo.dto.request.FactureRequestDto;
@@ -66,6 +63,7 @@ public class FactureServiceImp implements FactureService {
     private final NoteRepository noteRepository;
     private final FactureRepository factureRepository;
     private final FactureMapper factureMapper;
+    private final NotificationServiceImpl notificationService;
 
     @Autowired
     private final RestTemplate restTemplate;
@@ -86,7 +84,7 @@ public class FactureServiceImp implements FactureService {
         studentMap.put("name", factureEntity.getUser().getName());
         studentMap.put("surname", factureEntity.getUser().getSurname());
         studentMap.put("ico", factureEntity.getUser().getIco());
-        studentMap.put("area", factureEntity.getUser().getArea());
+        studentMap.put("area", factureEntity.getUser().getArea().getName());
         studentMap.put("phone", factureEntity.getUser().getPhone());
         studentMap.put("email", factureEntity.getUser().getEmail());
         studentMap.put("creationDate", factureEntity.getCreatedAt());
@@ -175,6 +173,7 @@ public class FactureServiceImp implements FactureService {
         return list;
     }
 
+
     @Override
     public List<FactureResponseDto> findAll() {
         List<FactureEntity> all = factureRepository.findAll();
@@ -204,13 +203,13 @@ public class FactureServiceImp implements FactureService {
                 .setTotalPrice(BigDecimal.valueOf(5))
                 .setUser(user);
 
-        factureRepository.save(factureEntity);
+        final FactureEntity save = factureRepository.save(factureEntity);
         user.setFactureGenerated(true);
         user.setFactureGeneratedDate(LocalDateTime.now());
         user.setFactureStatus(DocumentStatus.GENERATED);
         return HttpStatus.ACCEPTED;
     }
-
+    
     @Override
     @Transactional
     public void readFioFactures() {
@@ -245,6 +244,7 @@ public class FactureServiceImp implements FactureService {
             if(!(facture.getTotalPrice() == null)){
                 if(totalReqestPayments.compareTo(facture.getTotalPrice()) >= 0){
                     facture.setFactureStatus(FactureStatus.PAID);
+                    notificationService.createNotification(facture.getUser().getId(), null, "zaplatil fakturu, stav faktury se změnil na ZAPLACENÝ", NotificationDescType.FACTURE_PAID);
                     log.info("Notification | Facture VS {} is paid!", facture.getVarSymbol());
                 }
             }
@@ -311,7 +311,8 @@ public class FactureServiceImp implements FactureService {
 
     @Override
     public FactureResponseDto findById(Long userId) {
-        final FactureEntity facture = factureRepository.findByUserId(userId);
+        final FactureEntity facture = factureRepository.findByUserId(userId)
+                .orElseThrow(() -> new EntityNotFoundException("Facture with such user id not found"));
         return factureMapper.toResponse(facture);
     }
 
@@ -320,7 +321,8 @@ public class FactureServiceImp implements FactureService {
     public HttpStatus deleteFacture(Long userId) {
         final UserEntity user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User didnt find"));
-        final FactureEntity facture = factureRepository.findByUserId(userId);
+        final FactureEntity facture = factureRepository.findByUserId(userId)
+                .orElseThrow(() -> new EntityNotFoundException("Facture with such user id not found"));
         factureRepository.delete(facture);
         user.setFactureGeneratedDate(null);
         user.setFactureGenerated(false);

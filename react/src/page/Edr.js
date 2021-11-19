@@ -115,7 +115,7 @@ const Edr = () => {
                                                     <th>Město</th>
                                                     <th>PSČ</th>
                                                     <th>Počet bodů</th>
-                                                    <th style={{width: '85px'}}>Osobní Stranka</th>
+                                                    <th style={{width: '85px'}}>Osobní stránka</th>
                                                 </tr>
                                                 </thead>
                                                 <EdrTable></EdrTable>

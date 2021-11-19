@@ -44,7 +44,7 @@ const Auth = observer(() => {
                                        placeholder="Enter your email" />
                             </div>
                             <div className="mb-3">
-                                <label htmlFor="password" className="form-label">Héslo</label>
+                                <label htmlFor="password" className="form-label">Heslo</label>
                                 <div className="input-group input-group-merge">
                                     <Form.Control type="password" value={password} onChange={e => setPassword(e.target.value)} id="password" className="form-control"
                                            placeholder="Enter your password" />
@@ -54,7 +54,7 @@ const Auth = observer(() => {
                                 </div>
                             </div>
                             <div className="text-center d-grid">
-                                <Button onClick={click} type="submit" id="trigger" className="btn btn-primary">Přihlasit</Button>
+                                <Button onClick={click} type="submit" id="trigger" className="btn btn-primary">Přihlásit</Button>
                             </div>
 
                         </Form>

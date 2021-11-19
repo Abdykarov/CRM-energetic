@@ -15,7 +15,7 @@ const ManagerItem = ({manager}) => {
                         <img src="images/users/user-3.jpg"
                              className="rounded-circle img-thumbnail avatar-xl" alt="profile-image" />
 
-                        <h4 className="mt-3"><a href="extras-profile.html" className="text-dark">{manager.name} {manager.surname}</a></h4>
+                        <h4 className="mt-3"><a href={CONTACT_PROFILE_ROUTE + '/' + manager.id} className="text-dark">{manager.name} {manager.surname}</a></h4>
                         <p className="text-muted">@Manažer <span> | </span> <span> <a href="#"
                                                                                     className="text-pink">{manager.email}</a> </span>
                         </p>

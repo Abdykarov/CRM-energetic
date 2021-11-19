@@ -7,6 +7,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -18,11 +19,16 @@ public class NotificationEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
-    String type;
-    Long activeUserId;
-    Long passiveUserId;
-    String description;
+    @Enumerated(EnumType.STRING)
+    NotificationDescType notificationDescType;
+    @ManyToOne
+    @JoinColumn(name = "fk_active_user")
+    UserEntity activeUser;
+    @ManyToOne
+    @JoinColumn(name = "fk_passive_user")
+    UserEntity passiveUser;
+    String text;
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)
-    private Date createdAt;
+    LocalDateTime createdAt;
 }

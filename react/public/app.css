@@ -27,6 +27,39 @@
     font-weight: bold;
     margin-top: 5px;
 }
+.document_state{
+    background: #fff;
+    text-align: center;
+    padding: 7px 15px;
+    border: 1px solid #cecece;
+    border-radius: 5px;
+}
+.foundContacts{
+    margin: 0;
+    padding: 0;
+}
+.foundContacts li{
+    background: #fff;
+    padding: 10px 15px;
+    list-style: none;
+}
+.foundContacts li a{
+    color: #000;
+    transition: all .3s;
+}
+.foundContacts li a:hover{
+    color: #41c0bd;
+}
+.role_btn{
+    margin-right: 25px;
+    margin-bottom: 25px;
+}
+.mail_icon{
+    margin-left: 30px;
+}
+.mail_icon img{
+    width: 25px;
+}
 .watt_header{
     padding: 25px 0px;
     background: url("images/bg-watt.jpg") center -40px;
@@ -87,6 +120,7 @@
 .dark{
     opacity: 0;
     visibility: hidden;
+    display: none;
 }
 .hwFilter{
     transition: .2s;

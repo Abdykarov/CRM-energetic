@@ -14,8 +14,20 @@ export const fetchSalesmans = async () =>{
     const {data} = await $authHost.get('edr_api/user/contact/salesmans/')
     return data
 }
+
+export const fetchCallCentrums = async () =>{
+    const {data} = await $authHost.get('edr_api/user/contact/callcentrums/')
+    return data
+}
+
 export const fetchSalesmanContacts = async (id) => {
     let link = 'edr_api/user/'+ id + '/contacts/'
+    const {data} = await $authHost.get(link)
+    return data
+}
+
+export const fetchSalesmanLeads = async (id) => {
+    let link = 'edr_api/user/'+ id + '/leads/'
     const {data} = await $authHost.get(link)
     return data
 }
@@ -39,8 +51,8 @@ export const fetchLastContracts = async () =>{
     return data
 }
 
-export const exportJson = async () =>{
-    const {data} = await $authHost.get('edr_api/user/export-json')
+export const exportContacts = async () =>{
+    const {data} = await $authHost.get('api/v1/contacts/export/csv')
     return data
 }
 
@@ -67,6 +79,15 @@ export const fetchUserById = async (id) =>{
 
 export const updateToLead = async (id) =>{
     const {data} = await $authHost.get('edr_api/user/to_lead/' + id)
+    return data
+}
+export const updateToLost = async (id) =>{
+    const {data} = await $authHost.get('edr_api/user/to_lost/' + id)
+    return data
+}
+
+export const deleteUser = async (id) =>{
+    const {data} = await $authHost.get('edr_api/user/delete/' + id)
     return data
 }
 
@@ -131,6 +152,12 @@ export const fetchSalesmanCount = async () => {
     const {data} = await $authHost.get('edr_api/user/count/salesman')
     return data
 }
+
+export const fetchCallCentrumCount = async () => {
+    const {data} = await $authHost.get('edr_api/user/count/callcentrum')
+    return data
+}
+
 
 export const createAdmin = async (name, phone, surname, email, username, password) => {
     const {data} = await $authHost.post('edr_api/user/create/admin/',{name, phone, surname, email, username, password})
@@ -293,4 +320,28 @@ export const getDocumentState = async (id, document) => {
 export const setDocumentState = async (id, document, status) => {
     const {data} = await $authHost.get('edr_api/user/document-state/' + id + '/' + document + '/' + status)
     return data
+}
+
+
+export const getFilteredContacts = async (contactName, contactSurname, contactState, filterType, contactsSize, pageNumber) =>{
+    console.log(contactName, contactSurname, contactState, filterType, contactsSize, pageNumber);
+    if(contactName === '' && contactSurname === ''){
+        const {data} = await $authHost.get('api/v1/contacts/filter' + '?filterType=' + filterType + '&contactState=' + contactState + '&size=' + contactsSize + '&page=' + pageNumber)
+        return data
+    }
+    else if (contactName === '' && contactSurname !== ''){
+        const {data} = await $authHost.get('api/v1/contacts/filter' + '?filterType=' + filterType + '&contactState=' + contactState +
+            '&surname=' + contactSurname + '&size=' + contactsSize + '&page=' + pageNumber)
+        return data
+    }
+    else if (contactName !== '' && contactSurname === ''){
+        const {data} = await $authHost.get('api/v1/contacts/filter' + '?filterType=' + filterType + '&contactState=' + contactState +
+            '&name=' + contactName + '&size=' + contactsSize + '&page=' + pageNumber)
+        return data
+    }
+    else{
+        const {data} = await $authHost.get('api/v1/contacts/filter' + '?filterType=' + filterType + '&contactState=' + contactState +
+            '&name=' + contactName + '&surname=' + contactSurname + '&size=' + contactsSize + '&page=' + pageNumber)
+        return data
+    }
 }

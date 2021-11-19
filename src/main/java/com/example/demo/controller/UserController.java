@@ -116,6 +116,12 @@ public class UserController {
         return userService.saveSalesman(salesmanRequestDto);
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')")
+    @PostMapping("/create/callcentrum/")
+    public CallCentrumResponseDto createCallCentrum(@RequestBody CallCentrumRequestDto callCentrumRequestDto) {
+        return userService.saveCallCentrum(callCentrumRequestDto);
+    }
+
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_SALESMAN')")
     @PostMapping("/create/contact/")
     public ContactResponseDto createContact(@RequestBody ContactRequestDto contactRequestDto) {
@@ -134,12 +140,17 @@ public class UserController {
         return userService.getManagerCount();
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER', 'ROLE_SALESMAN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')")
     @GetMapping("/count/salesman")
     public Integer getSalesmanCount() {
         return userService.getSalesmanCount();
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')")
+    @GetMapping("/count/callcentrum")
+    public Integer getCallCentrumCount() {
+        return userService.getCallCentrumCount();
+    }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/contact/admins")
@@ -153,11 +164,18 @@ public class UserController {
         return userService.getManagers();
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER', 'ROLE_SALESMAN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')")
     @GetMapping("/contact/salesmans")
     public List<SalesmanResponseDto> getSalesmans() {
         return userService.getSalesmans();
     }
+
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')")
+    @GetMapping("/contact/callcentrums")
+    public List<CallCentrumResponseDto> getCallCentrums() {
+        return userService.getCallCentrums();
+    }
+
 
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_SALESMAN'   )")
     @GetMapping("/contact/contacts")
@@ -170,6 +188,13 @@ public class UserController {
     public List<ContactResponseDto> getSalesmanContacts(@PathVariable Long salesmanId) {
         return userService.getSalesmanContacts(salesmanId);
     }
+
+//    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_SALESMAN')")
+//    @GetMapping("/{salesmanId}/contacts/")
+//    public List<LeadResponseDto> getSalesmanLeads(@PathVariable Long salesmanId) {
+//        return userService.getSalesmanLeads(salesmanId);
+//    }
+
 
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_SALESMAN')")
     @GetMapping("/contact/leads")
@@ -227,6 +252,18 @@ public class UserController {
     @GetMapping("/to_lead/{id}")
     public UserResponseDto changeToLead(@PathVariable Long id) {
         return userService.changeToLead(id);
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_SALESMAN')")
+    @GetMapping("/to_lost/{id}")
+    public void changeToLost(@PathVariable Long id) {
+        userService.changeToLost(id);
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_SALESMAN')")
+    @GetMapping("/delete/{id}")
+    public void deleteUser(@PathVariable Long id) {
+        userService.deleteUser(id);
     }
 
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_SALESMAN')")
@@ -384,5 +421,9 @@ public class UserController {
         return userService.exportJsonFile();
     }
 
+    @GetMapping("/search")
+    public List<UserResponseDto> findPerson(@RequestParam(required = true) String name, @RequestParam(required = true) String surname){
+        return userService.findPerson(name, surname);
+    }
 
 }

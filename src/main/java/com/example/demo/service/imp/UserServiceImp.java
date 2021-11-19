@@ -57,6 +57,8 @@ public class UserServiceImp implements UserDetailsService, UserService {
     private final RoleRepository roleRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final CallCentrumServiceImpl callCentrumService;
+    private final CallCentrumMapper callCentrumMapper;
+    private final NotificationServiceImpl notificationService;
 
     @Override
     @Transactional
@@ -121,8 +123,8 @@ public class UserServiceImp implements UserDetailsService, UserService {
         final CallCentrumRequestDto callCentrumRequestDto = new CallCentrumRequestDto()
                 .setUsername("cc")
                 .setPassword("123")
-                .setName("Pavel")
-                .setSurname("Pavlivec")
+                .setName("Adam")
+                .setSurname("Štejner")
                 .setAreaId(1L);
         callCentrumService.createCallCentrum(callCentrumRequestDto);
 
@@ -274,6 +276,30 @@ public class UserServiceImp implements UserDetailsService, UserService {
 
     @Override
     @Transactional
+    public CallCentrumResponseDto saveCallCentrum(CallCentrumRequestDto callCentrumRequestDto) {
+        log.info("Saving a new call centrum | Request dto {}", callCentrumRequestDto);
+        UserEntity userEntity = callCentrumMapper.toEntity(callCentrumRequestDto);
+        if (userRepository.existsByUsername(callCentrumRequestDto.getUsername())) {
+            throw new RuntimeException("Call centrum with such username exists");
+        }
+        final AreaEntity area = areaRepository.findById(callCentrumRequestDto.getAreaId())
+                .orElseThrow(() -> new EntityNotFoundException("Area doesnt exist"));
+        userEntity.setArea(area);
+        userEntity.setPassword(passwordEncoder.encode(callCentrumRequestDto.getPassword()));
+
+        RoleEntity role = roleService.findByName("CC");
+        Set<RoleEntity> roleSet = new HashSet<>();
+        roleSet.add(role);
+        userEntity.setRoles(roleSet);
+        UserEntity save = userRepository.save(userEntity);
+        final CallCentrumResponseDto responseDto = callCentrumMapper.toResponse(save);
+        log.info("Saving a new call centrum | Response dto {}", responseDto);
+
+        return responseDto;
+    }
+
+    @Override
+    @Transactional
     public ContactResponseDto saveContact(ContactRequestDto contactRequestDto) {
         final UserEntity salesmanEntity = userRepository.findByIdAndRoles_Name(contactRequestDto.getSalesmanId(), "SALESMAN");
         UserEntity edrEntity = null;
@@ -301,6 +327,7 @@ public class UserServiceImp implements UserDetailsService, UserService {
         userEntity.setSalesman(salesmanEntity);
         userEntity.setReferal(edrEntity);
         UserEntity save = userRepository.save(userEntity);
+        notificationService.createNotification(null, save.getId(), "Nový kontakt býl vytvořen", NotificationDescType.NEW_CONTACT_CREATED);
         return contactMapper.toResponse(save);
     }
 
@@ -320,6 +347,11 @@ public class UserServiceImp implements UserDetailsService, UserService {
     public List<ContactResponseDto> getSalesmanContacts(Long salesmanId) {
         List<UserEntity> all = userRepository.findBySalesmanId(salesmanId);
         return all.stream().map(contactMapper::toResponse).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<LeadResponseDto> getSalesmanLeads(Long salesmanId) {
+        return null;
     }
 
     @Override
@@ -388,6 +420,12 @@ public class UserServiceImp implements UserDetailsService, UserService {
     }
 
     @Override
+    public Integer getCallCentrumCount() {
+        List<UserEntity> salesmanEntities = userRepository.findByRoles_Name("CC");
+        return salesmanEntities.size();
+    }
+
+    @Override
     public List<AdminResponseDto> getAdmins() {
         List<UserEntity> adminEntities = userRepository.findByRoles_Name("ADMIN");
         List<AdminResponseDto> collection = adminEntities.stream()
@@ -412,6 +450,33 @@ public class UserServiceImp implements UserDetailsService, UserService {
                 .map(user -> salesmanMapper.toResponse(user))
                 .collect(Collectors.toList());
         return collection;
+    }
+
+    @Override
+    public List<CallCentrumResponseDto> getCallCentrums() {
+        List<UserEntity> salesmanEntities = userRepository.findByRoles_Name("CC");
+        List<CallCentrumResponseDto> collection = salesmanEntities.stream()
+                .map(user -> callCentrumMapper.toResponse(user))
+                .collect(Collectors.toList());
+        return collection;
+    }
+
+    @Override
+    public List<UserResponseDto> findPerson(String name, String surname) {
+        log.info("Searching contact by name={} and surname={}", name, surname);
+        List<UserEntity> userResponseDtos = new ArrayList<UserEntity>();
+
+        if(surname == ""){
+            userResponseDtos = userRepository.findTop10ByNameIgnoreCase(name);
+        } else{
+            userResponseDtos = userRepository.findTop10ByNameIgnoreCaseAndSurnameIgnoreCase(name, surname);
+        }
+        final List<UserResponseDto> collect = userResponseDtos.stream()
+                .map(user -> userMapper.toResponse(user))
+                .collect(Collectors.toList());
+        log.info("Searching contacts | Returning list : {}", collect);
+
+        return collect;
     }
 
     @Override
@@ -487,8 +552,31 @@ public class UserServiceImp implements UserDetailsService, UserService {
         userEntity.setRoles(roleSet);
         userEntity.setRoleChangedDate(LocalDateTime.now());
         UserEntity save = userRepository.save(userEntity);
+        notificationService.createNotification(null, userId, "Změnil se stav na lead u kontakta", NotificationDescType.CHANGED_STATE);
         return userMapper.toResponse(save);
     }
+
+    @Override
+    @Transactional
+    public void changeToLost(Long userId) {
+        final UserEntity userEntity = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User doesnt exist"));
+        RoleEntity lead = roleService.findByName("LOST");
+        Set<RoleEntity> roleSet = new HashSet<>();
+        roleSet.add(lead);
+        userEntity.setRoles(roleSet);
+        userEntity.setRoleChangedDate(LocalDateTime.now());
+    }
+
+
+    @Override
+    @Transactional
+    public void deleteUser(Long userId) {
+        final UserEntity userEntity = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User doesnt exist"));
+        userRepository.deleteById(userId);
+    }
+
 
     @Override
     public UserResponseDto changeToApplicant(Long userId) {

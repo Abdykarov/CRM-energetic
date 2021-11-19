@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, {useContext, useEffect} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {Context} from "../index";
 import {exportJson, fetchApplicants, fetchContacts, fetchLeads} from "../http/contactAPI";
 import LeadTable from "../component/tables/LeadTable";
@@ -7,25 +7,142 @@ import ApplicantTable from "../component/tables/ApplicantTable";
 import {CONTACT_PROFILE_ROUTE} from "../utils/const";
 import HeaderItem from "../component/items/HeaderItem";
 import Footer from "../component/Footer";
+import {findLeads, getFilteredLeads} from "../http/leadAPI";
+import {findApplicants, getFilteredApplicants} from "../http/applicantAPI";
+import axios from "axios";
 
 const Applicant = () => {
     const {applicant} = useContext(Context)
+    const user = useContext(Context)
+    const [contactsSize,setContactsSize] = useState(15)
+    const [pageNumber,setPageNumber] = useState(0)
+    const [pagesCount,setPagesCount] = useState(0)
+    const [filterType,setFilterType] = useState('byId')
+
     useEffect(() => {
-        fetchApplicants().then(data => {
-            applicant.setContacts(data)
+        findApplicants(contactsSize, pageNumber).then(data => {
+            applicant.setContacts(data.users)
+            applicant.setTotalCount(data.totalItems)
+            applicant.setPage(data.currentPage)
+            applicant.setTotalPages(data.totalPages)
+            setPagesCount(data.totalPages)
             console.log(data)
         })
     }, [])
 
     const hwFilter = async () => {
+        document.getElementById("syselFilter").classList.add("dark");
+        document.getElementById("fveFilter").classList.add("dark");
+        document.getElementById("factureFilter").classList.add("dark");
+        document.getElementById("requestFilter").classList.add("dark");
         document.getElementById("hwFilter").classList.remove("dark");
     }
 
     const syselFilter = async () => {
+        document.getElementById("fveFilter").classList.add("dark");
+        document.getElementById("factureFilter").classList.add("dark");
+        document.getElementById("requestFilter").classList.add("dark");
+        document.getElementById("hwFilter").classList.add("dark");
+        document.getElementById("syselFilter").classList.remove("dark");
+    }
+
+    const fveFilter = async () => {
+        document.getElementById("syselFilter").classList.add("dark");
+        document.getElementById("factureFilter").classList.add("dark");
+        document.getElementById("requestFilter").classList.add("dark");
+        document.getElementById("hwFilter").classList.add("dark");
+        document.getElementById("fveFilter").classList.remove("dark");
+    }
+
+
+    const requestFilter = async () => {
+        document.getElementById("syselFilter").classList.add("dark");
+        document.getElementById("fveFilter").classList.add("dark");
+        document.getElementById("factureFilter").classList.add("dark");
+        document.getElementById("requestFilter").classList.remove("dark");
+        document.getElementById("hwFilter").classList.add("dark");
+    }
+
+
+    const factureFilter = async () => {
+        document.getElementById("syselFilter").classList.add("dark");
+        document.getElementById("fveFilter").classList.add("dark");
+        document.getElementById("factureFilter").classList.remove("dark");
+        document.getElementById("requestFilter").classList.add("dark");
+        document.getElementById("hwFilter").classList.add("dark");
+    }
+
+
+    const changeSize = async(size) => {
+        setContactsSize(size);
         try {
-            alert("sysel")
+            let response
+            response = await getFilteredApplicants(filterType, contactsSize, pageNumber)
+            applicant.setTotalPages(response.totalPages)
+            applicant.setContacts(response.users)
+            applicant.setTotalCount(response.totalItems)
+            applicant.setPage(response.currentPage)
+            setPagesCount(response.totalPages)
+            console.log(response)
+
         } catch (e) {
             alert(e.response.data.message)
+        }
+    }
+
+
+    const changePage = async(pageNum) => {
+        console.log(pageNum)
+        setPageNumber(pageNum);
+        try {
+            let response
+            response = await getFilteredApplicants(filterType, contactsSize, pageNum)
+            applicant.setContacts(response.users)
+            applicant.setTotalCount(response.totalItems)
+            applicant.setPage(response.currentPage)
+            applicant.setTotalPages(response.totalPages)
+        } catch (e) {
+            alert(e.response.data.message)
+        }
+    }
+
+    const searchByType = async(type) => {
+
+        setFilterType(type);
+        try {
+            let response
+            response = await getFilteredApplicants(type, contactsSize, pageNumber)
+            applicant.setContacts(response.users)
+            applicant.setTotalCount(response.totalItems)
+            applicant.setPage(response.currentPage)
+            applicant.setTotalPages(response.totalPages)
+        } catch (e) {
+            alert(e.response.data.message)
+        }
+    }
+
+    const importUsers = async () => {
+        let file = document.getElementById("import-file").files[0];
+        console.log(file);
+        if (!(file == null)){
+
+            let formData = new FormData();
+            formData.append('file', file);
+            axios.post(
+                process.env.REACT_APP_API_URL + "api/v1/applicants/import/csv",
+                formData,
+                {
+                    headers: {
+                        "Content-type": "multipart/form-data",
+                    },
+                }
+            )
+                .then(res => {
+                    window.location.reload();
+                })
+                .catch(err => {
+                    console.log(err);
+                })
         }
     }
 
@@ -43,13 +160,16 @@ const Applicant = () => {
                                     <div className="card-body">
                                         <div className="row mb-2">
                                             <div className="col-sm-4">
-
                                             </div>
                                             <div className="col-sm-8">
                                                 <div className="text-sm-end mt-2 mt-sm-0">
-                                                    <button type="button" className="btn btn-light mb-2 me-1">Import
-                                                    </button>
-                                                    <a href="http://localhost:8080/edr_api/user/export-json" className="btn btn-light mb-2">Export</a>
+                                                    <input type="file" id="import-file" onChange={importUsers} hidden/>
+
+                                                    <label className="btn btn-light mb-2 me-1"
+                                                           htmlFor="import-file">Import</label>
+
+                                                    <a href="http://localhost:8080/api/v1/applicants/export/csv"
+                                                       className="btn btn-light mb-2">Export</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -64,17 +184,19 @@ const Applicant = () => {
                                             <div className="col-sm-3">
                                                 <label htmlFor="status-select" className="me-2">Filtrovat podle</label>
                                                 <div className="me-sm-3 mt-2">
-                                                    <select className="form-select my-1 my-md-0" id="status-select">
-                                                        <option value="id">Id</option>
-                                                        <option value="name">Jméno</option>
-                                                        <option value="surname">Příjmení</option>
-                                                        <option value="email">Email</option>
-                                                        <option value="area">Kraj</option>
-                                                        <option value="hwSunMonitor" onClick={hwFilter}>HW Sun Monitor</option>
-                                                        <option value="sysel" onClick={syselFilter}>Smlouva Sysel</option>
-                                                        <option value="connectedFve">Zapojená FVE</option>
-                                                        <option value="facture">Faktura</option>
-                                                        <option value="edrRequest">Přihláška</option>
+                                                    <select value={filterType} onChange={e => searchByType(e.target.value)} className="form-select my-1 my-md-0" id="status-select">
+                                                        <option value="byId">Není</option>
+                                                        <option value="byName">Jméno</option>
+                                                        <option value="bySurname">Příjmení</option>
+                                                        <option value="byMale">Pohlaví</option>
+                                                        <option value="byEmail">Email</option>
+                                                        <option value="byArea">Kraj</option>
+                                                        <option value="bySalesman">Obchodní zástupce</option>
+                                                        <option value="byHwSunMonitorGenerated" onClick={hwFilter}>HW Sun Monitor</option>
+                                                        <option value="bySyselAgreementGenerated" onClick={syselFilter}>Sysel Agreement</option>
+                                                        <option value="byConnectedFveGenerated" onClick={fveFilter}>Zapojená FVE</option>
+                                                        <option value="byFactureGenerated" onClick={factureFilter}>Faktura</option>
+                                                        <option value="byRequestToEdrGenerated" onClick={requestFilter}>Přihláška</option>
 
                                                     </select>
                                                 </div>
@@ -82,32 +204,56 @@ const Applicant = () => {
                                             <div className="col-sm-3 dark" id="hwFilter">
                                                 <label htmlFor="status-select" className="me-2">Podle stavu HW</label>
                                                 <div className="me-sm-3 mt-2">
-                                                    <select className="form-select my-1 my-md-0" id="status-select">
-                                                        <option value="generatedHw">Generovaný</option>
-                                                        <option value="sentHw">Odeslaný</option>
-                                                        <option value="signedHw">Podepsaný</option>
+                                                    <select value={filterType} onChange={e => searchByType(e.target.value)} className="form-select my-1 my-md-0" id="status-select">
+                                                        <option value="byHwSunMonitorGenerated">Generovaný</option>
+                                                        <option value="byHwSunMonitorSent">Odeslaný</option>
+                                                        <option value="byHwSunMonitorSigned">Podepsaný</option>
                                                     </select>
                                                 </div>
                                             </div>
-
-                                            <div className="col-sm-3">
-                                                <label htmlFor="status-select" className="me-2">Sortovat</label>
+                                            <div className="col-sm-3 dark" id="syselFilter">
+                                                <label htmlFor="status-select" className="me-2">Podle stavu Sysel</label>
                                                 <div className="me-sm-3 mt-2">
-                                                    <select className="form-select my-1 my-md-0">
-                                                        <option value="asc">Vzestupně</option>
-                                                        <option value="desc">Sestupně</option>
+                                                    <select value={filterType} onChange={e => searchByType(e.target.value)} className="form-select my-1 my-md-0" id="status-select">
+                                                        <option value="bySyselAgreementGenerated">Generovaný</option>
+                                                        <option value="bySyselAgreementSent">Odeslaný</option>
+                                                        <option value="bySyselAgreementSigned">Podepsaný</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div className="col-sm-3 dark" id="fveFilter">
+                                                <label htmlFor="status-select" className="me-2">Podle stavu Fve</label>
+                                                <div className="me-sm-3 mt-2">
+                                                    <select value={filterType} onChange={e => searchByType(e.target.value)} className="form-select my-1 my-md-0" id="status-select">
+                                                        <option value="byConnectedFveGenerated">Generovaný</option>
+                                                        <option value="byConnectedFveSent">Odeslaný</option>
+                                                        <option value="byConnectedFveSigned">Podepsaný</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div className="col-sm-3 dark" id="factureFilter">
+                                                <label htmlFor="status-select" className="me-2">Podle stavu faktury</label>
+                                                <div className="me-sm-3 mt-2">
+                                                    <select value={filterType} onChange={e => searchByType(e.target.value)} className="form-select my-1 my-md-0" id="status-select">
+                                                        <option value="byFactureGenerated">Generovaný</option>
+                                                        <option value="byFactureSent">Odeslaný</option>
+                                                        <option value="byFacturePaid">Zaplacený</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div className="col-sm-3 dark" id="requestFilter">
+                                                <label htmlFor="status-select" className="me-2">Podle stavu přihlášky</label>
+                                                <div className="me-sm-3 mt-2">
+                                                    <select value={filterType} onChange={e => searchByType(e.target.value)} className="form-select my-1 my-md-0" id="status-select">
+                                                        <option value="byRequestToEdrGenerated">Generovaný</option>
+                                                        <option value="byRequestToEdrSent">Odeslaný</option>
+                                                        <option value="byRequestToEdrSigned">Podepsaný</option>
+                                                        <option value="byRequestToEdrAccepted">Schvalený</option>
                                                     </select>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div className="row">
-                                            <div className="col-sm-9">
 
-                                            </div>
-                                            <div className="text-sm-end mt-2 mb-2 col-sm-3">
-                                                <button type="button" className="btn btn-success waves-effect waves-light">Filtrovat</button>
-                                            </div>
-                                        </div>
 
 
                                         <div className="table-responsive">
@@ -139,37 +285,28 @@ const Applicant = () => {
                                                     <th>Zapojená FVE</th>
                                                     <th>Přihláška</th>
                                                     <th>Faktura</th>
-                                                    <th>Osobní Stranka</th>
+                                                    <th>Osobní stránka</th>
                                                 </tr>
                                                 </thead>
                                                 <ApplicantTable></ApplicantTable>
                                             </table>
                                         </div>
 
+                                        <select value={contactsSize} onChange={e => changeSize(e.target.value)}>
+                                            <option value="15">15</option>
+                                            <option value="35">35</option>
+                                            <option value="50">50</option>
+                                            <option value="100">100</option>
+                                            <option value="250">250</option>
+                                        </select>
                                         <ul className="pagination pagination-rounded justify-content-end mb-0">
-                                            <li className="page-item">
-                                                <a className="page-link" href="#" aria-label="Previous">
-                                                    <span aria-hidden="true">«</span>
-                                                    <span className="visually-hidden">Previous</span>
-                                                </a>
-                                            </li>
-                                            <li className="page-item active"><a className="page-link"
-                                                                                href="#">1</a></li>
-                                            <li className="page-item"><a className="page-link"
-                                                                         href="#">2</a></li>
-                                            <li className="page-item"><a className="page-link"
-                                                                         href="#">3</a></li>
-                                            <li className="page-item"><a className="page-link"
-                                                                         href="#">4</a></li>
-                                            <li className="page-item"><a className="page-link"
-                                                                         href="#">5</a></li>
-                                            <li className="page-item">
-                                                <a className="page-link" href="#" aria-label="Next">
-                                                    <span aria-hidden="true">»</span>
-                                                    <span className="visually-hidden">Next</span>
-                                                </a>
-                                            </li>
+                                            {
+                                                Array.from(Array(pagesCount), (e, i) => {
+                                                    return <li className="page-item" key={i}><button className="page-link" onClick={() => changePage(i)}>{i}</button></li>
+                                                })
+                                            }
                                         </ul>
+
 
                                     </div>
                                 </div>

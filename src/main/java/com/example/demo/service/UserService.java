@@ -110,4 +110,18 @@ public interface UserService {
     List<LeadResponseDto> getLastContracts();
 
     ResponseEntity<byte[]> exportJsonFile();
+
+    Integer getCallCentrumCount();
+
+    CallCentrumResponseDto saveCallCentrum(CallCentrumRequestDto callCentrumRequestDto);
+
+    List<CallCentrumResponseDto> getCallCentrums();
+
+    List<UserResponseDto> findPerson(String name, String surname);
+
+    void changeToLost(Long id);
+
+    void deleteUser(Long id);
+
+    List<LeadResponseDto> getSalesmanLeads(Long salesmanId);
 }

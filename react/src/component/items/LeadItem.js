@@ -41,6 +41,20 @@ const LeadItem = ({contact}) => {
         }
     }
 
+    function edrContractStateFactory(param) {
+        switch(param) {
+            case 'GENERATED':
+                return 'Vygenerovaný';
+            case 'SENT':
+                return 'Odeslaný';
+            case 'SIGNED':
+                return 'Podepsaný';
+            default:
+                return 'Žádný';
+        }
+    }
+
+
     return (
         <tr>
             <td>
@@ -92,59 +106,9 @@ const LeadItem = ({contact}) => {
                 }
             </td>
             <td>
-                {
-                    contact.connectedFveSigned === false ?
-                        "Ne"
-                        :
-                        "Ano"
-                }
-            </td>
-            <td>
-                    {
-                        (contractStatus === "GENERATED") ?
-                            <select value={contractStatus} onChange={e => setContract(e.target.value)} className="form-select my-1 my-md-0" id="status-select">
-                                <option value="GENERATED" selected>Vygenerovaný</option>
-                                <option value="SENT">Odeslaný</option>
-                                <option value="SIGNED">Podepsaný</option>
-                                <option value="NONE">Žádný</option>
-                            </select>
-                            :
-                            ""
-                    }
-                    {
-                        (contractStatus === "SENT") ?
-                            <select value={contractStatus} onChange={e => setContract(e.target.value)} className="form-select my-1 my-md-0" id="status-select">
-                                <option value="GENERATED">Vygenerovaný</option>
-                                <option value="SENT" selected>Odeslaný</option>
-                                <option value="SIGNED">Podepsaný</option>
-                                <option value="NONE">Žádný</option>
-                            </select>
-                            :
-                            ""
-                    }
-                    {
-                        (contractStatus === "SIGNED") ?
-                            <select value={contractStatus} onChange={e => setContract(e.target.value)} className="form-select my-1 my-md-0" id="status-select">
-                                <option value="GENERATED">Vygenerovaný</option>
-                                <option value="SENT">Odeslaný</option>
-                                <option value="SIGNED" selected>Podepsaný</option>
-                                <option value="NONE">Žádný</option>
-                            </select>
-                            :
-                            ""
-                    }
-                    {
-                        (contractStatus === "NONE") ?
-                            <select value={contractStatus} onChange={e => setContract(e.target.value)} className="form-select my-1 my-md-0" id="status-select">
-                                <option value="GENERATED">Vygenerovaný</option>
-                                <option value="SENT">Odeslaný</option>
-                                <option value="SIGNED">Podepsaný</option>
-                                <option value="NONE" selected={true}>Žádný</option>
-                            </select>
-                            :
-                            ""
-                    }
-
+                <div className="document_state">
+                    {edrContractStateFactory(contact.edrContractStatus)}
+                </div>
             </td>
             <td><a href={CONTACT_PROFILE_ROUTE + '/'+ contact.id} className="action-icon">
                 <img src="https://cdn.pixabay.com/photo/2020/07/14/13/07/icon-5404125_1280.png" alt="" width="35px"/>

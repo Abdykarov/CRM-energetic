@@ -1,20 +1,27 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {
-    ADMIN_ROUTE, APPLICANT_ROUTE,
+    ADMIN_ROUTE, APPLICANT_ROUTE, CALLCENTRUM_ROUTE,
     CONTACTS_ROUTE,
     DASHBOARD_ROUTE, EDR_ROUTE, FACTURE_ROUTE, INBOX_ROUTE, LEAD_ROUTE,
-    MANAGER_ROUTE,
+    MANAGER_ROUTE, NOTIFICATION_ROUTE,
     SALESMAN_ROUTE, WATT_CATALOG, WATT_MAIN, WATT_REFERALS, WATT_ROUTE
 } from "../utils/const";
 import {Context} from "../index";
 import {observer} from "mobx-react-lite";
-import {fetchAdminCoint, fetchManagerCount, fetchSalesmanCount, fetchUserByUsername} from "../http/contactAPI";
+import {
+    fetchAdminCoint,
+    fetchCallCentrumCount,
+    fetchManagerCount,
+    fetchSalesmanCount,
+    fetchUserByUsername
+} from "../http/contactAPI";
 
 const LeftSidebar = observer(() => {
     const {user} = useContext(Context)
     const [adminCount, setAdminCount] = useState(0)
     const [managerCount, setManagerCount] = useState(0)
     const [salesmanCount, setSalesmanCount] = useState(0)
+    const [callCentrumCount, setCallCentrumCount] = useState(0)
 
     useEffect(() => {
 
@@ -32,6 +39,10 @@ const LeftSidebar = observer(() => {
 
         fetchSalesmanCount().then(data => {
             setSalesmanCount(data)
+        })
+
+        fetchCallCentrumCount().then(data => {
+            setCallCentrumCount(data)
         })
 
 
@@ -92,7 +103,7 @@ const LeftSidebar = observer(() => {
                                         <li>
                                             <a href={DASHBOARD_ROUTE}>
                                                 <i className="mdi mdi-view-dashboard-outline"></i>
-                                                <span> Hlavní stranka </span>
+                                                <span> Hlavní stránka </span>
                                             </a>
                                         </li>
                                 }
@@ -121,9 +132,9 @@ const LeftSidebar = observer(() => {
                                 {
                                     user.role === "ROLE_ADMIN" || user.role === "ROLE_MANAGER" ?
                                         <li>
-                                            <a href={SALESMAN_ROUTE}>
+                                            <a href={CALLCENTRUM_ROUTE}>
                                                 <i className="fe-user-check"></i>
-                                                <span className="badge bg-success rounded-pill float-end">{salesmanCount}</span>
+                                                <span className="badge bg-success rounded-pill float-end">{callCentrumCount}</span>
                                                 <span> Call centrum </span>
                                             </a>
                                         </li>
@@ -192,6 +203,13 @@ const LeftSidebar = observer(() => {
                                         </li>
                                         : ""
                                 }
+                                <li className="menu-title">Notifikace</li>
+                                <li>
+                                    <a href={NOTIFICATION_ROUTE}>
+                                        <i className="fe-credit-card"></i>
+                                        <span> Notifikace </span>
+                                    </a>
+                                </li>
                                 {
                                     user.role === "ROLE_ADMIN" || user.role === "ROLE_MANAGER" ?
                                         <li className="menu-title">Komunikace</li>

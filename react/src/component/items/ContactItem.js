@@ -88,7 +88,7 @@ const ContactItem = ({contact}) => {
                 <span className={roleClassSwitch(contact.roles[0].name)}>{roleTextSwitch(contact.roles[0].name)}</span>
             </td>
             <td>
-                {contact.area.name}
+                {contact.area === null ? "Nemá kraj" : contact.area.name}
             </td>
             <td>
                 {contact.ico}
@@ -97,7 +97,7 @@ const ContactItem = ({contact}) => {
                 {contact.contactPerson}
             </td>
             <td>
-                <a href={CONTACT_PROFILE_ROUTE + '/' + contact.salesman.id} className="text-body fw-semibold">{contact.salesman.name} {contact.salesman.surname}</a>
+                {contact.salesman === null ? "Nemá oz" : <a href={CONTACT_PROFILE_ROUTE + '/' + contact.salesman.id} className="text-body fw-semibold">{contact.salesman.name} {contact.salesman.surname}</a>}
             </td>
             <td>
                 { contact.referal === null ? "Nemá kampan" : <a href={CONTACT_PROFILE_ROUTE + '/' + contact.referal.id} className="text-body fw-semibold">{contact.referal.name} {contact.referal.surname}</a>
@@ -112,27 +112,7 @@ const ContactItem = ({contact}) => {
                     <div>Nemá</div>
                 }
             </td>
-            <td>
-                <div className="form-check">
-                    {
-                        (contact.concurrentFveInstalled === true) ?
-                            "Má konkurenční FVE"
-                            :
-                            <div>
-                                {(contact.connectedFveSigned === false) ?
-                                    <input type="checkbox" onChange={setFve} className="form-check-input"
-                                    />
-                                    :
-                                    <input checked disabled type="checkbox" className="form-check-input"
-                                    />
-                                }
-                                <label className="form-check-label"
-                                       htmlFor="fve">Nainstalovaná FVE od Solid Sun</label>
-                            </div>
-                    }
 
-                </div>
-            </td>
             <td>
                 <a href={CONTACT_PROFILE_ROUTE + '/'+ contact.id} className="action-icon"> <i
                     className="mdi mdi-square-edit-outline"></i></a>
