@@ -2,12 +2,28 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {Context} from "../index";
 import {
-    deleteContract, deleteEdrRequest, deleteFve, deleteSysel, deleteUser, deleteUserFacture,
-    fetchUserById, sendEdrRegistrationLink, setEdrContractGenerated, setEdrContractSent, setEdrContractSigned,
-    updateToAccepted, updateToApplicant,
-    updateToCurrent, updateToEdr,
-    updateToLead, updateToLost,
-    updateToPotential, updateUserEntity, uploadSignedContract
+    createInvite,
+    deleteContract,
+    deleteEdrRequest,
+    deleteFve,
+    deleteSysel,
+    deleteUser,
+    deleteUserFacture,
+    fetchUserById,
+    sendEdrRegistrationLink,
+    sendInviteLink,
+    setEdrContractGenerated,
+    setEdrContractSent,
+    setEdrContractSigned,
+    updateToAccepted,
+    updateToApplicant,
+    updateToCurrent,
+    updateToEdr,
+    updateToLead,
+    updateToLost,
+    updateToPotential,
+    updateUserEntity,
+    uploadSignedContract
 } from "../http/contactAPI";
 import {useHistory, useParams} from "react-router-dom";
 import {CONTACT_PROFILE_ROUTE, CONTACTS_ROUTE, DASHBOARD_ROUTE, LEAD_ROUTE, LOGIN_ROUTE} from "../utils/const";
@@ -16,8 +32,9 @@ import axios from "axios";
 import {edrRegistrate, login} from "../http/userAPI";
 import {createEdrNote, fetchCommunicationByUserId, fetchEdrNotesByUserId} from "../http/mailAPI";
 import Footer from "../component/Footer";
-import {deleteFactureByUserId, fetchFactureByUserId, generateFacture} from "../http/factureAPI";
+import {deleteFactureByUserId, fetchFactureByUserId, fetchInviteByUserId, generateFacture} from "../http/factureAPI";
 import FactureTable from "../component/tables/FactureTable";
+import {deleteInvite} from "../http/inviteAPI";
 
 const ContactProfile = observer(() => {
     const {user} = useContext(Context)
@@ -27,6 +44,7 @@ const ContactProfile = observer(() => {
     const [selectedContractFile, setSelectedContractFile] = useState(null)
     const [role,setRole] = useState('')
     const [facture,setFacture] = useState(null)
+    const [invite,setInvite] = useState(null)
     const [generatedFacture, setGeneratedFacture] = useState('')
     const [updatedName, setUpdatedName] = useState('')
     const [updatedSurname, setUpdatedSurname] = useState('')
@@ -80,6 +98,13 @@ const ContactProfile = observer(() => {
                     console.log(data)
                 })
             }
+            if(data.requestToEdrGenerated){
+                let userId = id;
+                fetchInviteByUserId(userId).then(data => {
+                    setInvite(data);
+                    console.log(data)
+                })
+            }
             console.log(data)
         })
 
@@ -121,24 +146,27 @@ const ContactProfile = observer(() => {
     // REQEUST TO EDR
 
     const generateEdrRequest= async () => {
-        fetch(process.env.REACT_APP_API_URL + "edr_api/edr_request/generate/" + id, {
-            method: 'get',
-            headers: new Headers({
-                'Authorization': 'Bearer '+ localStorage.getItem('token'),
-                'Content-Type': 'application/json'
-            })
-        }) // FETCH BLOB FROM IT
-            .then((response) => response.blob())
-            .then((blob) => { // RETRIEVE THE BLOB AND CREATE LOCAL URL
-                var _url = window.URL.createObjectURL(blob);
-                window.open(_url, "_blank"); // window.open + focus
-            }).catch((err) => {
-            console.log(err);
-        });
+        try {
+            let response
+            response = await createInvite(id)
+            window.location.reload();
+        } catch (e) {
+            alert(e.response.data.message)
+        }
+    }
+
+    const sendInvite = async () => {
+        try {
+            let response
+            response = await sendInviteLink(id)
+            window.location.reload();
+        } catch (e) {
+            alert(e.response.data.message)
+        }
     }
 
     const fetchEdrRequest = async () => {
-        fetch(process.env.REACT_APP_API_URL + "edr_api/edr_request/fetch/" + id, {
+        fetch(process.env.REACT_APP_API_URL + "edr_api/edr_request/generate/" + id, {
             method: 'get',
             headers: new Headers({
                 'Authorization': 'Bearer '+ localStorage.getItem('token'),
@@ -456,6 +484,17 @@ const ContactProfile = observer(() => {
         }
     }
 
+    const removeInvite = async () => {
+        try {
+            let response;
+            let inviteId = invite.id;
+            response =  await deleteInvite(inviteId)
+            window.location.reload();
+        } catch (e) {
+            alert(e.response.data.message)
+        }
+    }
+
     const removeFacture = async () => {
         try {
             let response
@@ -663,6 +702,10 @@ const ContactProfile = observer(() => {
                 return 'VYPRŠENÍ';
             case 'NEW':
                 return 'NOVÝ';
+            case 'EDR':
+                return 'EDR';
+            case 'APPLICANT':
+                return 'UCHAZEČ';
             case 'LOST':
                 return 'ZTRACENÝ';
             case 'DEFERRED':
@@ -814,9 +857,9 @@ const ContactProfile = observer(() => {
                                               <p className="text-muted"><span className={roleClassSwitch(role)}>{roleTextSwitch(role)}</span>
                                             </p>
 
-                                            <a href={'mailto:' + contact.email}
-                                                    className="btn btn-danger btn-xs waves-effect mb-2 waves-light">Odeslat email
-                                            </a>
+                                            <p
+                                                    className="btn btn-danger btn-xs email-btn  mb-2 waves-light"> {contact.email}
+                                            </p>
 
                                             <div className="text-start mt-3">
                                                 <h4 className="font-13 text-uppercase">Role :
@@ -829,45 +872,6 @@ const ContactProfile = observer(() => {
                                                 <p className="text-muted mb-2 font-13"><strong>Telefon :</strong><span
                                                     className="ms-2">{contact.phone}</span></p>
 
-                                                <p className="text-muted mb-2 font-13"><strong>Email :</strong> <span
-                                                    className="ms-2">{contact.email}</span></p>
-
-                                                {contact.contactPerson !== null
-                                                    ?
-                                                    <p className="text-muted mb-2 font-13"><strong>Kontaktní osoba :</strong> <span
-                                                        className="ms-2">{contact.contactPerson}</span></p>
-                                                    : ""
-                                                }
-                                                <p className="text-muted mb-2 font-13"><strong>Obchodní zástupce :</strong> <span
-                                                    className="ms-2">{salesmanName} {salesmanSurname}</span></p>
-                                                <p className="text-muted mb-1 font-13"><strong>Kraj :</strong> <span
-                                                    className="ms-2">{areaName}</span></p>
-                                                <p className="text-muted mb-1 font-13"><strong>Psč :</strong> <span
-                                                    className="ms-2">{contact.ico}</span></p>
-                                                <p className="text-muted mb-1 font-13"><strong>Poslední změna role :</strong> <span
-                                                    className="ms-2">{contact.roleChangedDate}</span></p>
-                                                <p className="text-muted mb-1 font-13"><strong>Kampan :</strong> <span
-                                                    className="ms-2">{referalName} {referalSurname}</span></p>
-                                                <p className="text-muted mb-1 font-13"><strong>Poslední změna role :</strong> <span
-                                                    className="ms-2">{contact.roleChangedDate}</span></p>
-                                                {
-                                                    (role === "LEAD") ?
-                                                        <div>
-                                                            <p className="text-muted mb-1 font-13"><strong>Vygenerovaná smlouva :</strong> <span
-                                                                className="ms-2">{ contact.edrContractGenerated ? 'Ano' : 'Ne'}</span></p>
-                                                            <p className="text-muted mb-1 font-13"><strong>Podepsaná smlouva :</strong> <span
-                                                                className="ms-2">{ contact.edrContractSigned ? 'Ano' : 'Ne'}</span></p>
-                                                        </div>
-                                                        : <div></div>
-                                                }
-                                                {
-                                                    (role === "APPLICANT") ?
-                                                        <div>
-                                                            <p className="text-muted mb-1 font-13"><strong>Vygenerovaná faktura :</strong> <span
-                                                                className="ms-2">{ contact.factureGenerated ? 'Ano' : 'Ne'}</span></p>
-                                                        </div>
-                                                        : <div></div>
-                                                }
                                             </div>
 
 
@@ -954,6 +958,45 @@ const ContactProfile = observer(() => {
                                                                 {
                                                                     (role === "APPLICANT") ?
                                                                         <div className="col-md-12">
+                                                                            <h4>Příhláška</h4>
+
+                                                                            <button onClick={generateEdrRequest} type="button" className="mb-3 mt-2 btn btn-info waves-effect waves-light"><i
+                                                                                className="mdi mdi-cloud-outline me-1"></i> Vygenerovat příhlášku do sýstemu
+                                                                            </button> <br/>
+                                                                            <button onClick={fetchEdrRequest} type="button" className="mb-3 mt-2 btn btn-info waves-effect waves-light"><i
+                                                                                className="mdi mdi-cloud-outline me-1"></i> Vytisknout příhlášku
+                                                                            </button> <br/>
+                                                                            <button type="button" onClick={sendInvite} className="mb-3 btn btn-dark waves-effect waves-light"><i
+                                                                                className="mdi mdi-cloud-outline me-1"></i> Zaslat příhlášku do mailu
+                                                                            </button>
+                                                                            {
+                                                                                invite !== null ?
+                                                                                    <div className="table-responsive">
+                                                                                        <table className="table table-centered table-nowrap table-striped"
+                                                                                               id="products-datatable">
+                                                                                            <thead>
+                                                                                            <tr>
+                                                                                                <th>Dátum vytvoření</th>
+                                                                                                <th>Stav příhlášky</th>
+                                                                                                <th>Detaily</th>
+                                                                                                <th>Odstranit</th>
+                                                                                            </tr>
+                                                                                            </thead>
+                                                                                            <tbody>
+                                                                                            <tr>
+                                                                                                <td>{invite.createdAt}</td>
+                                                                                                <td>{invite.inviteStatus}</td>
+                                                                                                <td><a href={'http://85.255.2.224/registration/view/invite/'+invite.uniqueCode}>Info</a></td>
+                                                                                                <td>
+                                                                                                    <button type="button" onClick={removeInvite} className="btn btn-danger waves-effect waves-light"><i
+                                                                                                        className="mdi mdi-close"></i></button>
+                                                                                                </td>
+                                                                                              </tr>
+                                                                                            </tbody>
+                                                                                        </table>
+                                                                                    </div> : ""
+                                                                            }
+                                                                            <br/><br/>
                                                                             <h4>Faktura</h4>
                                                                             <button onClick={createFacture} type="button" className="mb-3 mt-2 btn btn-info waves-effect waves-light"><i
                                                                                 className="mdi mdi-cloud-outline me-1"></i> Vygenerovat fakturu
@@ -1012,31 +1055,7 @@ const ContactProfile = observer(() => {
                                                                                         </table>
                                                                                     </div> : ""
                                                                             }
-                                                                            <br/><br/>
-                                                                            <h4>Příhláška</h4>
 
-                                                                            <button onClick={generateEdrRequest} type="button" className="mb-3 mt-2 btn btn-info waves-effect waves-light"><i
-                                                                                className="mdi mdi-cloud-outline me-1"></i> Vygenerovat příhlášku do sýstemu
-                                                                            </button> <br/>
-                                                                            <button type="button"
-                                                                                    className="mb-3 btn btn-dark waves-effect waves-light"><i
-                                                                                className="mdi mdi-cloud-outline me-1"></i> Zaslat příhlášku s fakturou do mailu
-                                                                            </button>
-                                                                            {
-                                                                                facture !== null ?
-                                                                                    <div className="table-responsive">
-                                                                                        <table className="table table-centered table-nowrap table-striped"
-                                                                                               id="products-datatable">
-                                                                                            <thead>
-                                                                                            <tr>
-                                                                                                <th>Dátum vytvoření</th>
-                                                                                                <th>Dátum odeslaní</th>
-                                                                                                <th>Stav příhlášky</th>
-                                                                                            </tr>
-                                                                                            </thead>
-                                                                                        </table>
-                                                                                    </div> : ""
-                                                                            }
 
                                                                         </div>
                                                                         : <div></div>
@@ -1135,6 +1154,38 @@ const ContactProfile = observer(() => {
                                                                         </div> : <div></div>
                                                                 }
                                                                 {
+                                                                    (role === "LOST")?
+                                                                        <div className="row">
+                                                                            <h5 className="mb-4 text-uppercase"><i
+                                                                                className="mdi mdi-account-circle me-1"></i> Změna stavu</h5>
+                                                                            <div className="col-md-12">
+                                                                                <button onClick={confirmLead} type="button"
+                                                                                        className="mb-3 btn btn-primary waves-effect waves-light role_btn">Změnit stav na Lead
+                                                                                </button>
+
+                                                                                <button onClick={confirmDelete} type="button"
+                                                                                        className="mb-3 btn btn-danger waves-effect waves-light role_btn">Smazat klienta
+                                                                                </button>
+                                                                            </div>
+                                                                        </div> : <div></div>
+                                                                }
+                                                                {
+                                                                    (role === "DEFERRED")?
+                                                                        <div className="row">
+                                                                            <h5 className="mb-4 text-uppercase"><i
+                                                                                className="mdi mdi-account-circle me-1"></i> Změna stavu</h5>
+                                                                            <div className="col-md-12">
+                                                                                <button onClick={confirmLead} type="button"
+                                                                                        className="mb-3 btn btn-primary waves-effect waves-light role_btn">Změnit stav na Lead
+                                                                                </button>
+
+                                                                                <button onClick={confirmDelete} type="button"
+                                                                                        className="mb-3 btn btn-danger waves-effect waves-light role_btn">Smazat klienta
+                                                                                </button>
+                                                                            </div>
+                                                                        </div> : <div></div>
+                                                                }
+                                                                {
                                                                     (role === "LEAD")?
                                                                         <div className="row">
                                                                             <h5 className="mb-4 text-uppercase"><i
@@ -1142,6 +1193,14 @@ const ContactProfile = observer(() => {
                                                                             <div className="col-md-12">
                                                                                 <button onClick={confirmApplicant} type="button"
                                                                                         className="mb-3 btn btn-primary waves-effect waves-light">Změnit stav na úchazeče
+                                                                                </button>
+
+                                                                                <button onClick={confirmLost} type="button"
+                                                                                        className="mb-3 btn btn-warning waves-effect waves-light role_btn">Změnit stav na Ztracený
+                                                                                </button>
+
+                                                                                <button onClick={confirmDelete} type="button"
+                                                                                        className="mb-3 btn btn-danger waves-effect waves-light role_btn">Smazat klienta
                                                                                 </button>
                                                                             </div>
                                                                         </div> : <div></div>
@@ -1156,12 +1215,14 @@ const ContactProfile = observer(() => {
                                                                                         className="mb-3 btn btn-primary waves-effect waves-light">Zgenerirovat a odeslat odkaz na registraci v sýstemu
 
                                                                                 </button>
-                                                                                <div className="mb-3 form-check">
-                                                                                    <input type="checkbox" className="form-check-input"
-                                                                                           id="customCheck1"/>
-                                                                                    <label className="form-check-label"
-                                                                                           htmlFor="customCheck1">Potvrdit</label>
-                                                                                </div>
+                                                                                <br/>
+                                                                                <button onClick={confirmLost} type="button"
+                                                                                        className="mb-3 btn btn-warning waves-effect waves-light role_btn">Změnit stav na Ztracený
+                                                                                </button>
+
+                                                                                <button onClick={confirmDelete} type="button"
+                                                                                        className="mb-3 btn btn-danger waves-effect waves-light role_btn">Smazat klienta
+                                                                                </button>
                                                                             </div>
                                                                         </div> : <div></div>
                                                                 }

@@ -15,7 +15,7 @@ const RegestrationReferal = observer(() => {
     const [city, setCity] = useState(null)
     const [jobPosition, setJobPosition] = useState(null)
     const history = useHistory()
-    const {referalLink} = useParams()
+    const {referenceLink} = useParams()
     const referealCreate = async () => {
 
         try {

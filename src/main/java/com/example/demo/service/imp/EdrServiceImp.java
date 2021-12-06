@@ -6,10 +6,7 @@ import com.example.demo.dto.response.ApplicantResponseDto;
 import com.example.demo.dto.response.EdrResponseDto;
 import com.example.demo.exception.UserStateControlException;
 import com.example.demo.mapper.EdrMapper;
-import com.example.demo.repository.EdrLinkRepository;
-import com.example.demo.repository.ReferalLinkRepository;
-import com.example.demo.repository.RoleRepository;
-import com.example.demo.repository.UserRepository;
+import com.example.demo.repository.*;
 import com.example.demo.service.EdrService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,6 +40,7 @@ public class EdrServiceImp implements UserDetailsService,EdrService {
     private final RoleServiceImp roleService;
     private final RoleRepository roleRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final AreaRepository areaRepository;
     private final EdrMapper edrMapper;
     private final EdrLinkRepository edrLinkRepository;
     private final ReferalLinkRepository referalLinkRepository;
@@ -51,7 +49,7 @@ public class EdrServiceImp implements UserDetailsService,EdrService {
      * Generate referal link which is reffered to edr user
      * Create referal link entity with link, edr user
      * Return generated referal link
-     * @param Edr user id
+     * @param
      * @return Generated Referal link
      */
     @Override
@@ -321,13 +319,13 @@ public class EdrServiceImp implements UserDetailsService,EdrService {
         log.info("Find all");
         Page<UserEntity> pageUsers;
 
-        pageUsers = userRepository.findByRoles_Name("APPLICANT", paging);
+        pageUsers = userRepository.findByRoles_Name("EDR", paging);
 
         users = pageUsers.getContent();
-        final List<ApplicantResponseDto> applicantResponseDtos = applicantMapper.toListResponse(users);
+        final List<EdrResponseDto> edrResponseDtos = edrMapper.toListResponse(users);
 
         Map<String, Object> response = new HashMap<>();
-        response.put("users", applicantResponseDtos);
+        response.put("users", edrResponseDtos);
         response.put("currentPage", pageUsers.getNumber());
         response.put("totalItems", pageUsers.getTotalElements());
         response.put("totalPages", pageUsers.getTotalPages());
@@ -383,8 +381,7 @@ public class EdrServiceImp implements UserDetailsService,EdrService {
 
     @Override
     @Transactional(readOnly = true)
-    public Map<String, Object> queryFilter(String filterType,
-                                           String name, String surname, int page, int size) {
+    public Map<String, Object> queryFilter(String filterType, int page, int size) {
         List<UserEntity> users = new ArrayList<UserEntity>();
         Pageable paging = PageRequest.of(page, size);
         log.info("Filtering contacts");
@@ -408,63 +405,15 @@ public class EdrServiceImp implements UserDetailsService,EdrService {
         else if(filterType.equals("bySalesman")) {
             pageUsers = userRepository.findByRoles_NameOrderBySalesman_NameAscSalesman_SurnameAsc("APPLICANT", paging);
         }
-        else if(filterType.equals("byHwsunMonitorGenerated")) {
-            pageUsers = userRepository.findByRoles_NameOrderByHwsunMonitorGeneratedDesc("APPLICANT", paging);
-        }
-        else if(filterType.equals("byHwsunMonitorSent")) {
-            pageUsers = userRepository.findByRoles_NameOrderByHwsunMonitorSentDesc("APPLICANT", paging);
-        }
-        else if(filterType.equals("byHwsunMonitorSigned")) {
-            pageUsers = userRepository.findByRoles_NameOrderByHwsunMonitorSignedDesc("APPLICANT", paging);
-        }
-        else if(filterType.equals("bySyselAgreementGenerated")) {
-            pageUsers = userRepository.findByRoles_NameOrderBySyselAgreementGeneratedDesc("APPLICANT", paging);
-        }
-        else if(filterType.equals("bySyselAgreementSent")) {
-            pageUsers = userRepository.findByRoles_NameOrderBySyselAgreementSentDesc("APPLICANT", paging);
-        }
-        else if(filterType.equals("bySyselAgreementSigned")) {
-            pageUsers = userRepository.findByRoles_NameOrderBySyselAgreementSignedDesc("APPLICANT", paging);
-        }
-        else if(filterType.equals("byConnectedFveGenerated")) {
-            pageUsers = userRepository.findByRoles_NameOrderByConnectedFveGeneratedDesc("APPLICANT", paging);
-        }
-        else if(filterType.equals("byConnectedFveSent")) {
-            pageUsers = userRepository.findByRoles_NameOrderByConnectedFveSentDesc("APPLICANT", paging);
-        }
-        else if(filterType.equals("byConnectedFveSigned")) {
-            pageUsers = userRepository.findByRoles_NameOrderByConnectedFveSignedDesc("APPLICANT", paging);
-        }
-        else if(filterType.equals("byRequestToEdrGenerated")) {
-            pageUsers = userRepository.findByRoles_NameOrderByRequestToEdrGenerated("APPLICANT", paging);
-        }
-        else if(filterType.equals("byRequestToEdrSent")) {
-            pageUsers = userRepository.findByRoles_NameOrderByRequestToEdrSent("APPLICANT", paging);
-        }
-        else if(filterType.equals("byRequestToEdrSigned")) {
-            pageUsers = userRepository.findByRoles_NameOrderByRequestToEdrSigned("APPLICANT", paging);
-        }
-        else if(filterType.equals("byRequestToEdrAccepted")) {
-            pageUsers = userRepository.findByRoles_NameOrderByRequestToEdrAccepted("APPLICANT", paging);
-        }
-        else if(filterType.equals("byFactureGenerated")) {
-            pageUsers = userRepository.findByRoles_NameOrderByFactureGeneratedDesc("APPLICANT", paging);
-        }
-        else if(filterType.equals("byFactureSent")) {
-            pageUsers = userRepository.findByRoles_NameOrderByFactureSentDesc("APPLICANT", paging);
-        }
-        else if(filterType.equals("byFacturePaid")) {
-            pageUsers = userRepository.findByRoles_NameOrderByFacturePaidDesc("APPLICANT", paging);
-        }
         else{
-            pageUsers = userRepository.findByRoles_Name("APPLICANT", paging);
+            pageUsers = userRepository.findByRoles_Name("EDR", paging);
         }
 
         users = pageUsers.getContent();
-        final List<ApplicantResponseDto> applicantResponseDtos = applicantMapper.toListResponse(users);
+        final List<EdrResponseDto> edrResponseDtos = edrMapper.toListResponse(users);
 
         Map<String, Object> response = new HashMap<>();
-        response.put("users", applicantResponseDtos);
+        response.put("users", edrResponseDtos);
         response.put("currentPage", pageUsers.getNumber());
         response.put("totalItems", pageUsers.getTotalElements());
         response.put("totalPages", pageUsers.getTotalPages());

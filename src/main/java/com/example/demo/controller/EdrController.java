@@ -91,7 +91,7 @@ public class EdrController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size){
         try {
-            final Map<String, Object> response = edrService.queryFilter(filterType, name, surname, page, size);
+            final Map<String, Object> response = edrService.queryFilter(filterType, page, size);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);

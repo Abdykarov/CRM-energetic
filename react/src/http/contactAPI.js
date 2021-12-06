@@ -131,6 +131,19 @@ export const deleteEdrRequest = async (id) =>{
     return data
 }
 
+export const createInvite = async (id) =>{
+    const {data} = await $authHost.get('api/v1/invites/' + id)
+    return data
+}
+
+export const sendInviteLink = async (id) =>{
+    const {data} = await $authHost.get('api/v1/invites/email/' + id)
+    return data
+}
+
+
+
+
 export const deleteUserFacture = async (id) =>{
     const {data} = await $authHost.get('edr_api/factures/' + id + '/delete')
     return data

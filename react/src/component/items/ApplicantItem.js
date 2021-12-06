@@ -133,6 +133,9 @@ const ApplicantItem = ({applicant}) => {
                            htmlFor="customCheck2">&nbsp;</label>
                 </div>
             </td>
+            <td><a href={CONTACT_PROFILE_ROUTE + '/'+ applicant.id} className="action-icon">
+                <img src="https://cdn.pixabay.com/photo/2020/07/14/13/07/icon-5404125_1280.png" alt="" width="35px"/>
+            </a></td>
             <td className="table-user">
                 <a href={CONTACT_PROFILE_ROUTE + '/' + applicant.id} className="text-body fw-semibold">{applicant.name}</a>
             </td>
@@ -191,9 +194,6 @@ const ApplicantItem = ({applicant}) => {
                     {factureStateFactory(factureStatus)}
                 </div>
             </td>
-            <td><a href={CONTACT_PROFILE_ROUTE + '/'+ applicant.id} className="action-icon">
-                <img src="https://cdn.pixabay.com/photo/2020/07/14/13/07/icon-5404125_1280.png" alt="" width="35px"/>
-            </a></td>
         </tr>
     );
 };

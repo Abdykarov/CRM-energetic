@@ -248,6 +248,7 @@ const Contacts = observer(() => {
                                                                    htmlFor="customCheck1">&nbsp;</label>
                                                         </div>
                                                     </th>
+                                                    <th style={{width: '85px'}}>Osobní stránka</th>
                                                     <th>Kontakt</th>
                                                     <th>Jméno</th>
                                                     <th>Příjmení</th>
@@ -261,7 +262,6 @@ const Contacts = observer(() => {
                                                     <th>Obchodní zástupce</th>
                                                     <th>Kampaň</th>
                                                     <th>Konkurentní FVE</th>
-                                                    <th style={{width: '85px'}}>Osobní stránka</th>
                                                 </tr>
                                                 </thead>
                                                 <ContactTable></ContactTable>

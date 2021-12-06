@@ -166,11 +166,15 @@ public class MailServiceImp implements MailService {
             } catch (Exception ex) {
                 log.error("Exception arise at the time of read mail");
                 ex.printStackTrace();
+                inbox.close(true);
+                store.close();
+
             }
 
         } catch (MessagingException e) {
             log.error("Exception while connecting to server: " + e.getLocalizedMessage());
             e.printStackTrace();
+            inbox.close(true);
             System.exit(2);
         }
     }

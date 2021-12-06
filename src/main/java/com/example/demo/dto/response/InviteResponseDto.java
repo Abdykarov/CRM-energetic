@@ -1,26 +1,16 @@
-package com.example.demo.domain;
+package com.example.demo.dto.response;
 
+import com.example.demo.domain.InviteStatus;
 import lombok.Data;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.*;
-import java.math.BigDecimal;
 import java.time.LocalDate;
 
-@Entity
 @Data
-@EntityListeners(AuditingEntityListener.class)
-public class InviteEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+public class InviteResponseDto {
     private Long id;
-    @OneToOne
-    @JoinColumn(name = "userId")
-    private UserEntity user;
-    @Enumerated(EnumType.STRING)
-    private InviteStatus inviteStatus;
-    private LocalDate createdAt;
+    private String inviteStatus;
     private String uniqueCode;
+    private LocalDate createdAt;
     private String name;
     private String surname;
     private String titul;

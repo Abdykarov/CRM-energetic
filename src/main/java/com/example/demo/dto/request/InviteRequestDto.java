@@ -1,25 +1,9 @@
-package com.example.demo.domain;
+package com.example.demo.dto.request;
 
 import lombok.Data;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.*;
-import java.math.BigDecimal;
-import java.time.LocalDate;
-
-@Entity
 @Data
-@EntityListeners(AuditingEntityListener.class)
-public class InviteEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-    @OneToOne
-    @JoinColumn(name = "userId")
-    private UserEntity user;
-    @Enumerated(EnumType.STRING)
-    private InviteStatus inviteStatus;
-    private LocalDate createdAt;
+public class InviteRequestDto {
     private String uniqueCode;
     private String name;
     private String surname;

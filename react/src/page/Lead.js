@@ -219,6 +219,7 @@ const Lead = () => {
                                                                    htmlFor="customCheck1">&nbsp;</label>
                                                         </div>
                                                     </th>
+                                                    <th style={{width: '85px'}}>Osobní stránka</th>
                                                     <th>Kontakt</th>
                                                     <th>Jméno</th>
                                                     <th>Příjmení</th>
@@ -232,7 +233,6 @@ const Lead = () => {
                                                     <th>PSČ</th>
                                                     <th>Kampaň</th>
                                                     <th>Supersmlouva/Dílčí supersmlouva</th>
-                                                    <th style={{width: '85px'}}>Osobní stránka</th>
                                                 </tr>
                                                 </thead>
                                                 <LeadTable></LeadTable>

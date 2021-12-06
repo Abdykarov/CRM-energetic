@@ -20,6 +20,13 @@ export const fetchFactureByUserId = async (userId) => {
     return data
 }
 
+
+export const fetchInviteByUserId = async (userId) => {
+    const {data} = await $authHost.get('api/v1/invites/get/' + userId)
+    return data
+}
+
+
 export const generateFacture = async (userId) => {
     const {data} = await $authHost.post('edr_api/factures/generate-request', {userId})
     return data

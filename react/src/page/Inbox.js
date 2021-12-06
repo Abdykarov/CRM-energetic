@@ -92,7 +92,7 @@ const Inbox = observer(() => {
                                                                            onClick={() => openEmailText(item.body)} href="#" className="subject">{item.subject}&nbsp;&ndash;&nbsp;
                                                                             <span className="teaser">{item.body.substring(0, 60)}</span>
                                                                         </a>
-                                                                        <div className="date">{item.emailDate.substring(0,10)}</div>
+                                                                        <div className="date">{item.emailDate}</div>
                                                                     </div>
                                                                 </li>
                                                             )

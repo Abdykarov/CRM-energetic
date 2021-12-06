@@ -266,9 +266,10 @@ const Applicant = () => {
                                                             <input type="checkbox" className="form-check-input"
                                                                    id="customCheck1" />
                                                             <label className="form-check-label"
-                                                                   htmlFor="customCheck1">&nbsp;</label>
+                                                                htmlFor="customCheck1">&nbsp;</label>
                                                         </div>
                                                     </th>
+                                                    <th>Osobní stránka</th>
                                                     <th>Kontakt</th>
                                                     <th>Jméno</th>
                                                     <th>Příjmení</th>
@@ -285,7 +286,6 @@ const Applicant = () => {
                                                     <th>Zapojená FVE</th>
                                                     <th>Přihláška</th>
                                                     <th>Faktura</th>
-                                                    <th>Osobní stránka</th>
                                                 </tr>
                                                 </thead>
                                                 <ApplicantTable></ApplicantTable>

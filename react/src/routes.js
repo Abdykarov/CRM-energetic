@@ -12,10 +12,10 @@ import {
     LOGIN_ROUTE,
     MANAGER_ROUTE, NOTIFICATION_ROUTE,
     REGISTRATION_ADMIN_ROUTE,
-    REGISTRATION_CONTACT_ROUTE,
+    REGISTRATION_CONTACT_ROUTE, REGISTRATION_INVITE_ROUTE,
     REGISTRATION_MANAGER_ROUTE, REGISTRATION_REFERAL_ROUTE,
     REGISTRATION_SALESMAN_ROUTE,
-    SALESMAN_ROUTE, WATT_CATALOG, WATT_REFERALS,
+    SALESMAN_ROUTE, VIEW_INVITE_ROUTE, WATT_CATALOG, WATT_REFERALS,
     WATT_ROUTE
 } from "./utils/const";
 import Lead from "./page/Lead";
@@ -37,6 +37,8 @@ import CallCentrum from "./page/CallCentrum";
 import WattCatalog from "./page/WattCatalog";
 import WattReferals from "./page/WattReferals";
 import NotificationPage from "./page/NotificationPage";
+import InviteRegistration from "./page/InviteRegistration";
+import InviteView from "./page/InviteView";
 
 export const authRoutes = [
     {
@@ -114,6 +116,10 @@ export const authRoutes = [
     {
         path: REGISTRATION_ADMIN_ROUTE,
         Component: Registration
+    },
+    {
+        path: VIEW_INVITE_ROUTE + '/:uniqueCode',
+        Component: InviteView
     }
 ]
 
@@ -125,6 +131,10 @@ export const publicRoutes = [
     {
         path: CREATE_EDR_ROUTE + '/:edrLink',
         Component: EdrRegistration
+    },
+    {
+        path: REGISTRATION_INVITE_ROUTE + '/:uniqueCode',
+        Component: InviteRegistration
     },
     {
         path: REGISTRATION_REFERAL_ROUTE + '/:referenceLink',

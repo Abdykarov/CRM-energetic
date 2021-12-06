@@ -152,10 +152,10 @@ const LeftSidebar = observer(() => {
                                             <div className="collapse show" id="sidebarDashboards">
                                                 <ul className="nav-second-level">
                                                     <li>
-                                                        <a href={CONTACTS_ROUTE}>Kontakty</a>
+                                                        <a href={CONTACTS_ROUTE}>Nový zákazník </a>
                                                     </li>
                                                     <li>
-                                                        <a href={LEAD_ROUTE}>Leady</a>
+                                                        <a href={LEAD_ROUTE}>V procesu</a>
                                                     </li>
                                                     <li>
                                                         <a href={APPLICANT_ROUTE}>Uchazeči</a>

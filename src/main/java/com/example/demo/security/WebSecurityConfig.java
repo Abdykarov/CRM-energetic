@@ -60,6 +60,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/edr_api/edr/registrate",
                         "/edr_api/user/admin",
                         "/edr_api/user/admin/",
+                        "/api/v1/invites",
                         "/swagger-ui.html/**",
                         "/configuration/**",
                         "/swagger-resources/**",

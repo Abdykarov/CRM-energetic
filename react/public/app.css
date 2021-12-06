@@ -187,6 +187,78 @@
     background: #fff;
     position: fixed;
 }
+.invite_main{
+    width: 100%;
+    height: 100vh;
+    padding: 50px 150px;
+    overflow: scroll;
+    background: #fff;
+    position: fixed;
+}
+.invite-top h2{
+    line-height: 40px;
+    font-weight: bold;
+    font-size: 25px;
+}
+.invite-top h4{
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 30px;
+}
+.invite-wrapper{
+    max-width: 70%;
+    margin: 0 auto;
+}
+.invite-wrapper h5{
+    font-weight: bold;
+    margin-top: 25px;
+    font-size: 18px;
+    margin-bottom: 15px;
+}
+.invite-wrapper p{
+    margin-top: 10px;
+    font-size: 19px;
+}
+.invite-button{
+    width: 100%;
+}
+.email-btn{
+    cursor: text;
+    user-select: all;
+}
+.invite-button button{
+    float: right;
+    background: #41c0bd;
+    color: #fff;
+    font-size: 22px;
+    text-transform: uppercase;
+    padding: 10px 25px;
+    border: 1px solid transparent;
+    transition: all .3s;
+}
+.invite-button button:hover{
+    border-color: #41c0bd;
+    background: #fff;
+    color: #000;
+}
+.gray_input{
+    padding: 5px 15px;
+    outline-color: #9a9a9a;
+    width: 100%;
+    border: none;
+    height: 45px;
+    cursor: pointer;
+    border-radius: 5px;
+    background: #d5d4d4;
+    transition: all .2s;
+}
+.gray_input:hover{
+    opacity: 0.7;
+}
+.invite-top{
+    text-align: center;
+}
+
 .auth-user-testimonial{
     bottom: 8rem;
 }

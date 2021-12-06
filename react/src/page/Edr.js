@@ -105,6 +105,7 @@ const Edr = () => {
                                                                    htmlFor="customCheck1">&nbsp;</label>
                                                         </div>
                                                     </th>
+                                                    <th style={{width: '85px'}}>Osobní stránka</th>
                                                     <th>Kontakt</th>
                                                     <th>Jméno</th>
                                                     <th>Příjmení</th>
@@ -115,7 +116,6 @@ const Edr = () => {
                                                     <th>Město</th>
                                                     <th>PSČ</th>
                                                     <th>Počet bodů</th>
-                                                    <th style={{width: '85px'}}>Osobní stránka</th>
                                                 </tr>
                                                 </thead>
                                                 <EdrTable></EdrTable>
