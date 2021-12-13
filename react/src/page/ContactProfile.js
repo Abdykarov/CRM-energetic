@@ -605,6 +605,10 @@ const ContactProfile = observer(() => {
         document.getElementById("lead-modal").classList.add("show");
     }
 
+    const showDetails = async () => {
+        document.getElementById("details-modal").classList.add("show");
+    }
+
     const confirmLost = async () => {
         document.getElementById("lost-modal").classList.add("show");
     }
@@ -638,6 +642,21 @@ const ContactProfile = observer(() => {
             let data;
             let userId = contact.id;
             data = await generateFacture(userId);
+            setGeneratedFacture(true);
+            fetchFactureByUserId(userId).then(data => {
+                setFacture(data);
+                console.log(data)
+            })
+        } catch (e) {
+            alert(e.response.data.message)
+        }
+    }
+
+    const payFacture = async () => {
+        try {
+            let data;
+            let userId = contact.id;
+            data = await payFactureFunc(userId);
             setGeneratedFacture(true);
             fetchFactureByUserId(userId).then(data => {
                 setFacture(data);
@@ -825,6 +844,274 @@ const ContactProfile = observer(() => {
                     </div>
                 </div>
             </div>
+            <div className="modal fade" id="details-modal" tabIndex="-1" aria-labelledby="scrollableModalTitle" aria-modal="true" role="dialog">
+                <div className="details modal-dialog modal-dialog-scrollable" role="document">
+                    <div className="modal-content">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title" id="scrollableModalTitle">Detailní info Sysel a Solid CRM</h5>
+                                <button onClick={closeApplicant} type="button" className="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                            </div>
+                            <div className="modal-body">
+                                <h4>Klient:</h4>
+                                <div className="row">
+                                    <div className="col-md-4">
+                                        <div className="details-parametr">
+                                            <p> Číslo OP <span><input type="text" readOnly/></span>
+                                            </p>
+                                        </div>
+                                        <div className="details-parametr">
+                                            <p>
+                                                Jméno klienta <span><input type="text" readOnly/></span>
+                                            </p>
+                                        </div>
+                                        <div className="details-parametr">
+                                            <p> Alias <span><input type="text" readOnly/></span>
+                                            </p>
+                                        </div>
+                                        <div className="details-parametr">
+                                            <p>  Email <span><input type="text" readOnly/></span>
+                                            </p>                                   </div>
+                                        <div className="details-parametr">
+                                            <p> Telefon <span><input type="text" readOnly/></span>
+                                            </p>                                   </div>
+                                        <div className="details-parametr">
+                                            <p>  Poznámka OZ <span><input type="text" readOnly/></span>
+                                            </p>                                   </div>
+                                        <div className="details-parametr">
+                                            <p>   Poznámka BackOffice <span><input type="text" readOnly/></span>
+                                            </p>                                   </div>
+                                        <div className="details-parametr">
+                                            <p> <b> Instalační adresa</b>
+                                            </p>                                   </div>
+                                        <div className="details-parametr">
+                                            <p>
+                                                Ulice <span><input type="text" readOnly/></span>
+                                            </p>
+                                        </div>
+                                        <div className="details-parametr">
+                                            <p>
+                                                Město <span><input type="text" readOnly/></span>
+                                            </p>
+                                        </div>
+                                        <div className="details-parametr">
+                                            <p>
+                                                PSČ <span><input type="text" readOnly/></span>
+                                            </p>
+                                        </div>
+
+                                    </div>
+                                    <div className="col-md-4">
+                                        <div className="details-parametr">
+                                            <p> Schůzka <span><input type="text" readOnly/></span>
+                                            </p>
+                                        </div>
+                                        <div className="details-parametr">
+                                            <p>
+                                                Stav klienta <span><input type="text" readOnly/></span>
+                                            </p>
+                                        </div>
+                                        <div className="details-parametr">
+                                            <p>ID Obchodního zástupce  <span><input type="text" readOnly/></span>
+                                            </p>
+                                        </div>
+                                        <div className="details-parametr">
+                                            <p>ID BackOffice <span><input type="text" readOnly/></span>
+                                            </p>
+                                        </div>
+                                        <div className="details-parametr">
+                                            <p>Hodnocení klienta <span><input type="text" readOnly/></span>
+                                            </p>
+                                        </div>
+                                        <div className="details-parametr">
+                                            <p>Datum vytvoření <span><input type="text" readOnly/></span>
+                                            </p>
+                                        </div>
+                                        <div className="details-parametr">
+                                            <p>Uživatel, který lead vytvořil / automat <span><input type="text" readOnly/></span>
+                                            </p>
+                                        </div>
+                                        <div className="details-parametr">
+                                            <p>Datum poslední úpravy <span><input type="text" readOnly/></span>
+                                            </p>
+                                        </div>
+                                        <div className="details-parametr">
+                                            <p>Uživatel, který lead naposledy upravil <span><input type="text" readOnly/></span>
+                                            </p>
+                                        </div>
+                                        <div className="details-parametr">
+                                            <p>Štítek klienta / označení <span><input type="text" readOnly/></span>
+                                            </p>
+                                        </div>
+
+
+                                    </div>
+                                    <div className="col-md-4">
+                                        <div className="details-parametr">
+                                            <p>Informace o odmítnutí leadu <span><input type="text" readOnly/></span>
+                                            </p>
+                                        </div>
+                                        <div className="details-parametr">
+                                            <p>Datum následující akce <span><input type="text" readOnly/></span>
+                                            </p>
+                                        </div>
+                                        <div className="details-parametr">
+                                            <p>Datum podpisu smlouvy <span><input type="text" readOnly/></span>
+                                            </p>
+                                        </div>
+                                        <div className="details-parametr">
+                                            <p>Datum zrušení smlouvy (odstoupení) <span><input type="text" readOnly/></span>
+                                            </p>
+                                        </div>
+                                        <div className="details-parametr">
+                                            <p><b>Informace o Syslovi</b>
+                                            </p>
+                                        </div>
+                                        <div className="details-parametr">
+                                            <p>Datum přepnutí / odeslání do Sysel CRM <span><input type="text" readOnly/></span>
+                                            </p>
+                                        </div><div className="details-parametr">
+                                        <p>Zdali má sysla – jaký zájem projevil <span><input type="text" readOnly/></span>
+                                        </p>
+                                    </div>
+                                    <div className="details-parametr">
+                                        <p>Doplňující poznámka <span><input type="text" readOnly/></span>
+                                        </p>
+                                    </div>
+                                    </div>
+                                </div>
+                                <hr/>
+                                <h4>Cenové části:</h4>
+                                <div className="row">
+                                    <div className="col-md-6">
+                                        <div className="details-parametr">
+                                            <p>Cena bez DPH <span><input type="text" readOnly/></span>
+                                            </p>
+                                        </div>
+                                        <div className="details-parametr">
+                                            <p>Cena s DPH <span><input type="text" readOnly/></span>
+                                            </p>
+                                        </div>
+                                        <div className="details-parametr">
+                                            <p>Dotace <span><input type="text" readOnly/></span>
+                                            </p>
+                                        </div>
+                                        <div className="details-parametr">
+                                            <p>Měna <span><input type="text" readOnly/></span>
+                                            </p>
+                                        </div>
+                                        <div className="details-parametr">
+                                            <p>Poznámka k ceně <span><input type="text" readOnly/></span>
+                                            </p>
+                                        </div>
+                                        <div className="details-parametr">
+                                            <p><b>Slevy</b>
+                                            </p>
+                                        </div>
+                                        <div className="details-parametr">
+                                            <p>Výše slevy (fixní, %) <span><input type="text" readOnly/></span>
+                                            </p>
+                                        </div>
+                                        <div className="details-parametr">
+                                            <p>Důvod slevy <span><input type="text" readOnly/></span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <hr/>
+                                <h4>Technické informace o FVE:</h4>
+                                <div className="row">
+                                    <div className="col-md-6">
+                                        <div className="details-parametr">
+                                            <p>Informace o datasetu – poslední úprava + ID uživatele <span><input type="text" readOnly/></span>
+                                            </p>
+                                        </div>
+                                        <div className="details-parametr">
+                                            <p>ID sestavy <span><input type="text" readOnly/></span>
+                                            </p>
+                                        </div>
+                                        <div className="details-parametr">
+                                            <p>Roční výnos <span><input type="text" readOnly/></span>
+                                            </p>
+                                        </div>
+                                        <div className="details-parametr">
+                                            <p>Výkon elektrárny <span><input type="text" readOnly/></span>
+                                            </p>
+                                        </div>
+                                        <div className="details-parametr">
+                                            <p>Řešení přebytků <span><input type="text" readOnly/></span>
+                                            </p>
+                                        </div>
+                                        <div className="details-parametr">
+                                            <p>Typ elektrárny (1F ~ 3F) <span><input type="text" readOnly/></span>
+                                            </p>
+                                        </div>
+                                        <div className="details-parametr">
+                                            <p>Typ střídače <span><input type="text" readOnly/></span>
+                                            </p>
+                                        </div>
+                                        <div className="details-parametr">
+                                            <p>Typ střídače 2 <span><input type="text" readOnly/></span>
+                                            </p>
+                                        </div>
+                                        <div className="details-parametr">
+                                            <p>Počet střídače 2 <span><input type="text" readOnly/></span>
+                                            </p>
+                                        </div>
+                                        <div className="details-parametr">
+                                            <p>Umístění střídače <span><input type="text" readOnly/></span>
+                                            </p>
+                                        </div>
+                                        <div className="details-parametr">
+                                            <p>Propojení střídače <span><input type="text" readOnly/></span>
+                                            </p>
+                                        </div>
+                                        <div className="details-parametr">
+                                            <p>Typ regulace <span><input type="text" readOnly/></span>
+                                            </p>
+                                        </div>
+                                        <div className="details-parametr">
+                                            <p>Typ regulace – fáze <span><input type="text" readOnly/></span>
+                                            </p>
+                                        </div>
+                                        <div className="details-parametr">
+                                            <p>Distribuční území (čez, pre, ed.g) <span><input type="text" readOnly/></span>
+                                            </p>
+                                        </div>
+                                        <div className="details-parametr">
+                                            <p>Typ baterií  <span><input type="text" readOnly/></span>
+                                            </p>
+                                        </div>
+                                        <div className="details-parametr">
+                                            <p>Počet baterií <span><input type="text" readOnly/></span>
+                                            </p>
+                                        </div>
+                                        <div className="details-parametr">
+                                            <p>Výkon baterií <span><input type="text" readOnly/></span>
+                                            </p>
+                                        </div>
+                                        <div className="details-parametr">
+                                            <p>Výkon baterií <span><input type="text" readOnly/></span>
+                                            </p>
+                                        </div>
+                                        <div className="details-parametr">
+                                            <p>Výkon baterií <span><input type="text" readOnly/></span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+                            <div className="modal-footer">
+                                <button onClick={closeApplicant} type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>                    </div>
+                </div>
+            </div>
                 <div className="content-page">
                     <div className="content">
 
@@ -872,6 +1159,7 @@ const ContactProfile = observer(() => {
                                                 <p className="text-muted mb-2 font-13"><strong>Telefon :</strong><span
                                                     className="ms-2">{contact.phone}</span></p>
 
+                                                <a onClick={showDetails} href="#">Detailní info</a>
                                             </div>
 
 
@@ -1000,6 +1288,9 @@ const ContactProfile = observer(() => {
                                                                             <h4>Faktura</h4>
                                                                             <button onClick={createFacture} type="button" className="mb-3 mt-2 btn btn-info waves-effect waves-light"><i
                                                                                 className="mdi mdi-cloud-outline me-1"></i> Vygenerovat fakturu
+                                                                            </button>
+                                                                            <button onClick={payFacture} type="button" className="mb-3 mt-2 btn btn-info waves-effect waves-light"><i
+                                                                                className="mdi mdi-cloud-outline me-1"></i> Uhradit fakturu
                                                                             </button>
                                                                             {
                                                                                 facture !== null ?

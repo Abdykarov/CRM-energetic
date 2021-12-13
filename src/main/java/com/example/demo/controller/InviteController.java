@@ -12,6 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import java.util.List;
 
 @RestController
@@ -51,7 +52,7 @@ public class InviteController {
 
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')")
     @GetMapping("/email/{userId}")
-    public void sendInvite(@PathVariable Long userId) {
+    public void sendInvite(@PathVariable Long userId) throws MessagingException {
         inviteService.sendInvite(userId);
     }
 

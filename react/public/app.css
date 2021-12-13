@@ -132,6 +132,10 @@
     background: rgba(0,0,0,.75);
     transition: all .2s;
 }
+.details-parametr span{
+    float: right;
+}
+
 .show{
     display: block;
 }
@@ -141,6 +145,9 @@
 }
 .modal-dialog {
     max-width: 800px;
+}
+.modal-dialog.details {
+    max-width: 1400px;
 }
 .edr_create .navbar-custom{
     position: static;

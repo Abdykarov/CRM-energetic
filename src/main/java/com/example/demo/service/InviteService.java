@@ -3,6 +3,7 @@ package com.example.demo.service;
 import com.example.demo.dto.request.InviteRequestDto;
 import com.example.demo.dto.response.InviteResponseDto;
 
+import javax.mail.MessagingException;
 import java.util.List;
 
 public interface InviteService {
@@ -19,5 +20,5 @@ public interface InviteService {
 
     InviteResponseDto findByLink(String code);
 
-    void sendInvite(Long userId);
+    void sendInvite(Long userId) throws MessagingException;
 }

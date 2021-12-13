@@ -5,10 +5,8 @@ body{
     font-weight: 400;
     color: #505050;
 }
-.header{
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
+.header tbody tr td{
+    width: 50%;
 }
 .header h2{
     color: #41c0bd;

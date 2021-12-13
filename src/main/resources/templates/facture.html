@@ -3,17 +3,37 @@
 <html lang="cs" xmlns:th="http://www.thymeleaf.org">
 
 <head>
+    <meta charset="UTF-8"></meta>
     <title>Student Details</title>
+    <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@200;300;400" rel="stylesheet"></link>
     <style>
         body{
             font-family: 'Titillium Web', sans-serif !important;
-            font-weight: 400;
+            font-weight: 200;
             color: #505050;
         }
-        .header{
-            display: flex;
-            flex-direction: row;
-            justify-content: flex-start;
+        .header tbody tr td{
+            width: 50%;
+        }
+        .facture-info p{
+            font-family: 'Titillium Web', sans-serif !important;
+            font-weight: 200;
+        }
+        .facture-info tr{
+            width: 100% !important;
+        }
+        .facture-info tr th{
+            vertical-align:top;
+            width: 50% !important;
+        }
+        .facture-info tr th div{
+            display: inline-block;
+            width: 100%;
+            padding: 5px 15px;
+        }
+        .facture-info tr th div span{
+            font-family: 'Titillium Web', sans-serif !important;
+            font-weight: 200;
         }
         .header h2{
             color: #41c0bd;
@@ -32,21 +52,12 @@
             width: 50%;
         }
         .facture-info{
-            padding: 15px 100px;
             border-radius: 5px;
-            box-sizing: border-box;
             overflow: hidden;
             color: #fff;
             background: #41c0bd;
             display: block;
             width: 100%;
-        }
-        .facture-info div{
-            display: inline-block;
-            width: 49%;
-            padding: 10px 15px;
-            box-sizing: border-box;
-            float: left;
         }
         .facture-info h4{
             font-size: 22px;
@@ -57,7 +68,6 @@
         }
         .facture-info p{
             font-size: 17px;
-            margin:  10px;
         }
 
         .facture-details{
@@ -186,35 +196,41 @@
     </style>
 </head>
 <body>
-    <div class="header">
-        <div>
-            <p class="text-xl font-bold">FAKTURA č<span th:text="${factureId}"></span>
-            </p>
-        </div>
-        <div>
-            <img src="/logoEDR.png" alt=""></img>
-        </div>
-    </div>
-    <div class="facture-info">
-        <div class="facture-info-left">
-            <p><span th:text="${name}"></span> <span th:text="${surname}"></span></p>
-            <p><span th:text="${ico}"></span></p>
-            <p><span th:text="${area}"></span></p>
-            <p><span th:text="${phone}"></span></p>
-            <p><span th:text="${email}"></span></p>
-        </div>
+    <table class="header">
+        <tbody>
+            <tr>
+                <td>
+                    <p class="text-xl font-bold">FAKTURA č<span th:text="${factureId}"></span>
+                    </p>
+                </td>
+                <td>
+                    <img th:src="@{classpath:static/images/logoEDR.png}" alt="logoEDR"></img>
 
-        <div class="facture-info-right">
-            <p>DODAVATEL</p>
-            <p>Energetické družstvo vlastníků</p>
-            <p>fotovoltaických elektráren</p>
-            <p>Zelinkovice 92</p>
-            <p>739 42 Frýdek-Místek</p>
-            <br></br> <br></br>
-            <p>IČ: 09921192</p>
-            <p>DIČ: CZ09921192</p>
-        </div>
-    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="facture-info">
+        <tr>
+            <th>
+                <div><span th:text="${name}"></span> <span th:text="${surname}"></span></div>
+                <div><span th:text="${ico}"></span></div>
+                <div><span th:text="${area}"></span></div>
+                <div><span th:text="${phone}"></span></div>
+                <div><span th:text="${email}"></span></div>
+            </th>
+            <th>
+                <p>DODAVATEL</p>
+                <p>Energetické družstvo vlastníků</p>
+                <p>fotovoltaických elektráren</p>
+                <p>Zelinkovice 92</p>
+                <p>739 42 Frýdek-Místek</p>
+                <br></br> <br></br>
+                <p>IČ: 09921192</p>
+                <p>DIČ: CZ09921192</p>
+            </th>
+        </tr>
+    </table>
     <div class="facture-details">
         <div class="facture-details-left">
             <div>

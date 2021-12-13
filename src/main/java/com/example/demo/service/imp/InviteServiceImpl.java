@@ -9,9 +9,16 @@ import com.example.demo.repository.InviteRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.InviteService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
@@ -32,7 +39,9 @@ public class InviteServiceImpl implements InviteService {
     private final InviteMapper inviteMapper;
     private final UserRepository userRepository;
     private final MailServiceImp mailServiceImp;
-
+    @Autowired
+    private final TemplateEngine templateEngine;
+    private final JavaMailSender javaMailSender;
     @Override
     public List<InviteResponseDto> findAll() {
         return null;
@@ -144,7 +153,7 @@ public class InviteServiceImpl implements InviteService {
     }
 
     @Override
-    public void sendInvite(Long userId) {
+    public void sendInvite(Long userId) throws MessagingException {
 
         InviteEntity inviteEntity = inviteRepository.findByUser_Id(userId);
         UserEntity user = inviteEntity.getUser();
@@ -168,19 +177,24 @@ public class InviteServiceImpl implements InviteService {
         session.setDebug(true);
 
         try {
-
+            Context context = new Context();
+            context.setVariable("user", user);
             MimeMessage message = new MimeMessage(session);
             message.setFrom(new InternetAddress(username));
             message.setRecipients(Message.RecipientType.TO,
                     InternetAddress.parse(user.getEmail()));   // like inzi769@gmail.com
             message.setSubject("Online přihláška", "UTF-8");
-            message.setText("Dobrý den, posíláme Vám váš unikatní odkaz do online přihlášky " + "http://85.255.2.224/registration/invite/" + inviteEntity.getUniqueCode(), "UTF-8");
+            String processedHtml = templateEngine.process("inviteEmail", context);
+            message.setContent(processedHtml, "text/html; charset=utf-8");
 
             Transport.send(message);
             user.setRequestToEdrStatus(DocumentStatus.SENT);
             user.setRequestToEdrSent(true);
+
         } catch (MessagingException e) {
             throw new RuntimeException(e);
         }
+
+
     }
 }
